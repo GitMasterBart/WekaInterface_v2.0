@@ -29,7 +29,7 @@ public class WekaClassifier {
      * @return String with results of 10-fold cross validation.
      * @throws Exception
      */
-    public String test(Instances instances, String classifier) throws Exception {
+    public Evaluation test(Instances instances, String classifier) throws Exception {
         weka.classifiers.Classifier rule;
         switch (classifier){
             case "ZeroR":
@@ -52,7 +52,7 @@ public class WekaClassifier {
         }
         Evaluation evaluation = new Evaluation(instances);
         evaluation.crossValidateModel(rule, instances, 10, new Random(1));
-        return evaluation.toSummaryString();
+        return evaluation;
     }
 
     public List<String> getClassifierNames(){

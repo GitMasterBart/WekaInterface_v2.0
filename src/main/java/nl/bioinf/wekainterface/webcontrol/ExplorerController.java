@@ -4,6 +4,7 @@ import nl.bioinf.wekainterface.model.DataReader;
 import nl.bioinf.wekainterface.model.LabelCounter;
 import nl.bioinf.wekainterface.model.WekaClassifier;
 import nl.bioinf.wekainterface.service.ClassificationService;
+import nl.bioinf.wekainterface.service.FileService;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -41,6 +42,8 @@ public class ExplorerController {
     private WekaClassifier wekaClassifier;
     @Autowired
     private ClassificationService classificationService;
+    @Autowired
+    private FileService fileService;
 
     @GetMapping(value = "/upload")
     public String getFileUpload(Model model){
@@ -78,22 +81,18 @@ public class ExplorerController {
 
     @PostMapping(value = "/explorer")
     public String postExplorerPage(@RequestParam(name = "inputFile", required = false) MultipartFile multipart,
-                                   @RequestParam(name = "filename", required = false) String demoFile,
+                                   @RequestParam(name = "filename", required = false) String demoFileName,
                                    @RequestParam(name = "classifier") String classifierName,
                                    Model model, RedirectAttributes redirect) throws Exception {
-        File arffFile;
+        Instances instances;
 
         if (!multipart.isEmpty()){
-            arffFile = File.createTempFile("temp-", ".arff", new File(tempFolder));
-            InputStream inputStream = multipart.getInputStream();
-            FileUtils.copyInputStreamToFile(inputStream, arffFile);
+            instances = fileService.getInstancesFromMultipart(multipart);
         } else {
-            String arffFilePath = exampleFilesFolder + '/' + demoFile;
-            arffFile = new File(arffFilePath);
+            instances = fileService.getInstancesFromDemoFile(demoFileName);
         }
 
-        Evaluation evaluation = classificationService.classify(arffFile, classifierName);
-
+        Evaluation evaluation = wekaClassifier.test(instances, classifierName);
         redirect.addFlashAttribute("evaluation", evaluation);
         return "redirect:/explorer/results";
     }

@@ -14,8 +14,17 @@
     <h2 th:text="#{results.title}"></h2>
   </div>
   <hr>
-  <div th:each="result:${results}">
-    <div th:text="${result}"></div>
+  <div th:object="${evaluation}">
+    <pre th:text="#{results.correct} + *{correct()}"></pre>
+    <pre th:text="#{results.perc.correct} + *{pctCorrect()} + '%'"></pre>
+    <pre th:text="#{results.incorrect} + *{incorrect()}"></pre>
+    <pre th:text="#{results.perc.incorrect} + *{pctIncorrect()} + '%'"></pre>
+    <pre th:text="#{results.kappa} + *{kappa()}"></pre>
+    <pre th:text="#{results.mean.abs} + *{meanAbsoluteError()}"></pre>
+    <pre th:text="#{results.mean.squared} + *{rootMeanSquaredError()}"></pre>
+    <pre th:text="#{results.relative.abs} + *{relativeAbsoluteError()} + '%'"></pre>
+    <pre th:text="#{results.relative.squared} + *{rootRelativeSquaredError()} + '%'"></pre>
+    <pre th:text="#{results.instances.num} + *{numInstances()}"></pre>
   </div>
 </div>
 

@@ -44,7 +44,7 @@ public class DataReader implements Reader{
      * @throws IOException if file doesn't exist
      */
     @Override
-    public Instances CsvToArff(File file) throws IOException {
+    public Instances readCsv(File file) throws IOException {
         CSVLoader loader = new CSVLoader();
         loader.setSource(file);
         Instances data = loader.getDataSet();
