@@ -92,16 +92,18 @@ public class ExplorerController {
             instances = fileService.getInstancesFromDemoFile(demoFileName);
         }
 
+
         Evaluation evaluation = wekaClassifier.test(instances, classifierName);
+
         redirect.addFlashAttribute("evaluation", evaluation);
         return "redirect:/explorer/results";
     }
 
     @GetMapping(value = "/explorer/results")
     public String getResultsPage(Model model) throws Exception {
-        File file = new File("/Users/Marijke/wekafiles/data/weather.nominal.arff");
+        File file = new File("/Users/bengels/weka-3-9-4/data/weather.nominal.arff");
         Instances instances = dataReader.readArff(file);
-        Evaluation evaluation = wekaClassifier.test(instances, "ZeroR");
+        String evaluation = wekaClassifier.test(instances, "ZeroR");
         model.addAttribute(evaluation);
         return "results";
     }
