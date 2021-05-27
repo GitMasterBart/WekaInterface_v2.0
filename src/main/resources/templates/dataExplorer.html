@@ -11,7 +11,7 @@
 </head>
 <body>
 
-<div th:include="~{fragments :: navbar}"></div>
+<div th:include="~{fragments/general-fragments :: navbar}"></div>
 
     <label for="attribute">Attributes</label><br>
     <select id="attribute" th:data-map="${data}" th:data-cl="${classLabel}"
@@ -29,7 +29,7 @@
     </div>
 </div>
 
-<div th:include="~{fragments :: footer}"></div>
+<div th:include="~{fragments/general-fragments :: footer}"></div>
 
 </body>
 </html>
