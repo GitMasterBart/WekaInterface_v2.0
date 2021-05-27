@@ -1,0 +1,43 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <label for="algorithm">Algorithm</label>
+    <select id="algorithm" onchange="getAlgorithmParams(this.value)">
+        <option value="">Select Algorithm</option>
+        <option value="ZeroR">ZeroR</option>
+        <option value="OneR">OneR</option>
+        <option value="NaiveBayes">Naive Bayes</option>
+        <option value="IBK">IBK</option>
+        <option value="J48">J48</option>
+    </select>
+
+    <div id="algParams">
+        <div id="ZeroR" hidden th:insert="~{/fragments/parameter-fragments :: ZeroR}"></div>
+        <div id="OneR" hidden th:insert="~{/fragments/parameter-fragments :: OneR}"></div>
+        <div id="NaiveBayes" hidden th:insert="~{/fragments/parameter-fragments :: NaiveBayes}"></div>
+        <div id="IBK" hidden th:insert="~{/fragments/parameter-fragments :: IBK}"></div>
+        <div id="J48" hidden th:insert="~{/fragments/parameter-fragments :: J48}"></div>
+    </div>
+
+<script>
+    getAlgorithmParams = function (elementID){
+        hideAllFragments();
+        if(elementID !== ""){
+            document.getElementById(elementID).hidden = false;
+        }
+    }
+    hideAllFragments = function (){
+        document.getElementById("ZeroR").hidden = true;
+        document.getElementById("OneR").hidden = true;
+        document.getElementById("NaiveBayes").hidden = true;
+        document.getElementById("IBK").hidden = true;
+        document.getElementById("J48").hidden = true;
+    }
+</script>
+</body>
+</html>

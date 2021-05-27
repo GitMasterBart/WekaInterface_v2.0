@@ -1,0 +1,71 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+<!--    Author: Jelle 387615-->
+    <meta charset="UTF-8">
+    <title>Klessify</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+
+<div th:insert="~{fragments :: navbar}"></div>
+
+<div class="jumbotron text-left">
+    <div class="container text-center">
+        <h1 class="jumbotron-heading" th:text="#{title.contact}">_Contact_</h1>
+        <p class="lead" th:text="#{subtitle.contact}">_Contact Subtitle_</p>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row justify-content-center m-3">
+
+        <div class="card m-3" style="width: 18rem;">
+            <img th:src="@{'images\marijke.jpeg'}" width="auto" height="auto" class="card-img-top" alt="marijke picture">
+            <div class="card-body">
+                <h5 class="card-title">Marijke Eggink</h5>
+                <p class="card-text" th:text="#{marijke.info}"></p>
+                <p>m.eggink@st.hanze.nl</p>
+            </div>
+        </div>
+
+        <div class="card m-3" style="width: 18rem;">
+            <img src="..." class="card-img-top" alt="...">
+            <div class="card-body">
+                <h5 class="card-title">Bart Engels</h5>
+                <p class="card-text" th:text="#{bart.info}"></p>
+                <p>b.engels@st.hanze.nl</p>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row justify-content-center m-3">
+
+        <div class="card m-3" style="width: 18rem;">
+            <img th:src="@{'images\jelle.jpg'}" width="286" height="300" class="card-img-top" alt="jelle picture" src="">
+            <div class="card-body">
+                <h5 class="card-title">Jelle Becirspahic</h5>
+                <p class="card-text" th:text="#{jelle.info}"></p>
+                <p>j.d.becirspahic@st.hanze.nl</p>
+            </div>
+        </div>
+
+        <div class="card m-3" style="width: 18rem;">
+            <img src="..." class="card-img-top" alt="...">
+            <div class="card-body">
+                <h5 class="card-title">Michiel Noback</h5>
+                <p class="card-text" th:text="#{michiel.info}"></p>
+                <p>m.noback@pl.hanze.nl</p>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<div th:insert="~{fragments :: footer}"></div>
+
+</body>
+</html>

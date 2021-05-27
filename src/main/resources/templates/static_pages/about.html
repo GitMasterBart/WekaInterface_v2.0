@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Klessify</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div th:insert="~{fragments :: navbar}"></div>
+
+
+
+<section class="py-5 text-center container">
+    <div class="row py-lg-5">
+        <div class="col-lg-6 col-md-8 mx-auto">
+            <h1 class="fw-light" th:text="#{navbar.about}">_offline_</h1>
+            <h5 class="fw-light" th:text=" #{WekaAlgorithms.information}"> _offline_</h5>
+        </div>
+    </div>
+
+
+</section>
+
+
+<div th:insert="~{fragments :: footer}"></div>
+</body>
+</html>

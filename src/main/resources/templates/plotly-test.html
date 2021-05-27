@@ -1,0 +1,45 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+
+<label for="attribute">Class</label><br>
+<select id="attribute" onchange="plotGraph(this.value)">
+    <option value="outlook">outlook</option>
+    <option value="temperature">temperature</option>
+    <option value="humidity">humidity</option>
+    <option value="windy">windy</option>
+    <option value="play">play</option>
+</select>
+
+<div id="graph" style="width: 50%; margin: auto"></div>
+
+<script>
+
+    let data = {"outlook": {"sunny" : 5, "overcast" : 4, "rainy" : 5},
+                "temperature": {"hot" : 4, "mild" : 6, "cool" : 4},
+                "humidity": {"high" : 7, "normal" : 7},
+                "windy": {"TRUE" : 6, "FALSE" : 8},
+                "play": {"yes": 9, "no":5}}
+
+    plotGraph = function (className){
+        console.log(Object.keys(data[className]));
+        console.log(Object.values(data[className]));
+        let plotData = [{
+            x : Object.keys(data[className]),
+            y : Object.values(data[className]),
+            type: 'bar'
+        }];
+        Plotly.newPlot('graph', plotData);
+    }
+
+
+</script>
+
+</body>
+</html>

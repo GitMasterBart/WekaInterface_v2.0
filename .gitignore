@@ -1,0 +1,11 @@
+.gradle/
+.idea/
+gradle/
+build/
+out/
+gradlew.bat
+gradlew
+
+*.class
+*.iml
+applications.properties

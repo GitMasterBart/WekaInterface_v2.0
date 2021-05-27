@@ -1,0 +1,24 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <!--@author Marijke Eggink-->
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <title>Klessify</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div th:insert="~{fragments :: navbar}"></div>
+
+<div class="container">
+  <div class="row">
+    <h2 th:text="#{results.title}"></h2>
+  </div>
+  <hr>
+  <div th:each="result:${results}">
+    <div th:text="${result}"></div>
+  </div>
+</div>
+
+<div th:insert="~{fragments :: footer}"></div>
+</body>
+</html>
