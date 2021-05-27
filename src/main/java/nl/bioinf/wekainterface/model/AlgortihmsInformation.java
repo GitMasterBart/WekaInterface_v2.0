@@ -2,9 +2,9 @@ package nl.bioinf.wekainterface.model;
 
 public class AlgortihmsInformation {
     private final String name;
-    private final String information;
+    private final String[] information;
 
-    public AlgortihmsInformation(String name, String informtation) {
+    public AlgortihmsInformation(String name, String[] informtation) {
         this.name = name;
         this.information = informtation;
     }
@@ -13,7 +13,7 @@ public class AlgortihmsInformation {
         return name;
     }
 
-    public String getInformation() {
+    public String[] getInformation() {
         return information;
     }
 }
