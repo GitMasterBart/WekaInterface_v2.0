@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 /**
  * @author Bart Engels
@@ -23,10 +26,12 @@ public class HistoryController {
 
     @GetMapping(value = "/history")
     public String getHistoryPage(Model model){
-        String[] strings = {"9", "9"};
-        serializationService.serialization(new AlgortihmsInformation("ONER", strings ));
-
-        model.addAttribute("info" , serializationService.deserialization().toString());
+        String[] strings = {"9","0"};
+        ArrayList<Object> algorithmsInformation = new ArrayList<>();
+        algorithmsInformation.add(new AlgortihmsInformation("OneR" , strings));
+        algorithmsInformation.add(new AlgortihmsInformation("ZeroR" , strings));
+        serializationService.serialization(algorithmsInformation);
+        model.addAttribute("info" , serializationService.deserialization());
 
         return "hisotrydummypage";
     }

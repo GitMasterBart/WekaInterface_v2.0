@@ -5,8 +5,18 @@
     <title>Title</title>
 </head>
 <body>
+<table>
+    <thead>
+    <tr>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="i:${info}" th:object="${info}">
+        <td th:text="${i.algorithmsInformation}">_title_</td>
+    </tr>
+    </tbody>
+</table>
 
-<h1 th:text="${info}"></h1>
 
 
 </body>
