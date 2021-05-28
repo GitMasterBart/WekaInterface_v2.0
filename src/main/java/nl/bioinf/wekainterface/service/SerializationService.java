@@ -33,23 +33,18 @@ public class SerializationService {
     }
 
     public ArrayList<AlgortihmsInformation> deserialization(){
-    AlgortihmsInformation e = null;
         try {
         FileInputStream fileIn = new FileInputStream(serializationPath);
         ObjectInputStream in = new ObjectInputStream(fileIn);
-        AlgortihmsInformation algortihmsInformation = null;
-        AlgortihmsInformation[] woj = new AlgortihmsInformation[5];
-        ArrayList<AlgortihmsInformation> woi = new ArrayList<>();
-        woi = (ArrayList<AlgortihmsInformation>)in.readObject();
-        //e = (AlgortihmsInformation) in.readObject();
+        AlgortihmsInformation algortihmsInformation;
+        AlgortihmsInformation[] algortihmsInformations = new AlgortihmsInformation[5];
+        ArrayList<AlgortihmsInformation> algortihmsInformationArrayList = new ArrayList<>();
+        algortihmsInformationArrayList = (ArrayList<AlgortihmsInformation>)in.readObject();
         in.close();
         fileIn.close();
-        return woi;
+        return algortihmsInformationArrayList;
     } catch (IOException | ClassNotFoundException i) {
         i.printStackTrace();
        throw new RuntimeException("oops");
     }}
 }
-
-
-
