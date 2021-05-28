@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
-import java.util.Arrays;
+import java.util.ArrayList;
 
 /**
  * This class is a setup for the SerializationAlgorithmInformation
@@ -17,7 +17,8 @@ public class SerializationService {
     @Value("${serialization.path}")
     private String serializationPath;
 
-    public void serialization(Object e) {
+    public void serialization(ArrayList<Object> e) {
+        //algorithmsInformation.add((AlgortihmsInformation) e);
         try {
             FileOutputStream fileOut =
                     new FileOutputStream(serializationPath);
@@ -31,15 +32,19 @@ public class SerializationService {
         }
     }
 
-    public AlgortihmsInformation deserialization(){
-    AlgortihmsInformation e;
+    public ArrayList<AlgortihmsInformation> deserialization(){
+    AlgortihmsInformation e = null;
         try {
-        FileInputStream fileIn = new FileInputStream("/tmp/algorithmeData.ser");
+        FileInputStream fileIn = new FileInputStream(serializationPath);
         ObjectInputStream in = new ObjectInputStream(fileIn);
-        e = (AlgortihmsInformation) in.readObject();
+        AlgortihmsInformation algortihmsInformation = null;
+        AlgortihmsInformation[] woj = new AlgortihmsInformation[5];
+        ArrayList<AlgortihmsInformation> woi = new ArrayList<>();
+        woi = (ArrayList<AlgortihmsInformation>)in.readObject();
+        //e = (AlgortihmsInformation) in.readObject();
         in.close();
         fileIn.close();
-        return e;
+        return woi;
     } catch (IOException | ClassNotFoundException i) {
         i.printStackTrace();
        throw new RuntimeException("oops");
