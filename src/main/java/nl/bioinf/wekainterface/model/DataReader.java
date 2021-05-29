@@ -44,9 +44,10 @@ public class DataReader implements Reader{
      * @throws IOException if file doesn't exist
      */
     @Override
-    public Instances readCsv(File file) throws IOException {
+    public Instances readCsv(File file, String delimiter) throws IOException {
         CSVLoader loader = new CSVLoader();
         loader.setSource(file);
+        loader.setFieldSeparator(delimiter);
         Instances data = loader.getDataSet();
         data.setClassIndex(data.numAttributes() - 1);
         return data;
@@ -83,18 +84,6 @@ public class DataReader implements Reader{
         saver.setFile(tempFile);
         saver.writeBatch();
         return tempFile.toString();
-    }
-
-    /**
-     * Not implemented yet
-     * @param instances
-     * @throws IOException
-     */
-    @Override
-    public void saveArff(Instances instances) throws IOException {
-        ArffSaver saver = new ArffSaver();
-        saver.setFile(new File(tempFolder));
-        saver.writeBatch();
     }
 
     /**
