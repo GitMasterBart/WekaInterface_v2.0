@@ -83,11 +83,12 @@ public class ExplorerController {
     public String postExplorerPage(@RequestParam(name = "inputFile", required = false) MultipartFile multipart,
                                    @RequestParam(name = "filename", required = false) String demoFileName,
                                    @RequestParam(name = "classifier") String classifierName,
+                                   @RequestParam(name = "delimiter") String delimiter,
                                    Model model, RedirectAttributes redirect) throws Exception {
         Instances instances;
 
         if (!multipart.isEmpty()){
-            instances = fileService.getInstancesFromMultipart(multipart);
+            instances = fileService.getInstancesFromMultipart(multipart, delimiter);
         } else {
             instances = fileService.getInstancesFromDemoFile(demoFileName);
         }
@@ -103,7 +104,7 @@ public class ExplorerController {
     public String getResultsPage(Model model) throws Exception {
         File file = new File("/Users/bengels/weka-3-9-4/data/weather.nominal.arff");
         Instances instances = dataReader.readArff(file);
-        String evaluation = wekaClassifier.test(instances, "ZeroR");
+        Evaluation evaluation = wekaClassifier.test(instances, "ZeroR");
         model.addAttribute(evaluation);
         return "results";
     }
