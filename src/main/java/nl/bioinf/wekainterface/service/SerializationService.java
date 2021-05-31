@@ -17,7 +17,7 @@ public class SerializationService {
     @Value("${serialization.path}")
     private String serializationPath;
 
-    public void serialization(ArrayList<Object> e) {
+    public void serialization(ArrayList<AlgortihmsInformation> e) {
         //algorithmsInformation.add((AlgortihmsInformation) e);
         try {
             FileOutputStream fileOut =

@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org">
 <head>
-<!--    Author: Jelle 387615-->
+    <!--    Author: Jelle 387615-->
     <meta charset="UTF-8">
     <title>Klessify</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
@@ -11,12 +11,7 @@
 
 <div th:insert="~{fragments/general-fragments :: navbar}"></div>
 
-<div class="jumbotron text-left">
-    <div class="container text-center">
-        <h1 class="jumbotron-heading" th:text="#{title.contact}">_Contact_</h1>
-        <p class="lead" th:text="#{subtitle.contact}">_Contact Subtitle_</p>
-    </div>
-</div>
+<div th:insert="~{fragments/general-fragments :: jumbotron(contact)}"></div>
 
 <div class="container">
     <div class="row justify-content-center m-3">
@@ -31,7 +26,7 @@
         </div>
 
         <div class="card m-3" style="width: 18rem;">
-            <img src="images\bart.jpeg" class="card-img-top" alt="images Bart Engels">
+            <img th:src="@{'images\bart.jpeg'}" class="card-img-top" alt="...">
             <div class="card-body">
                 <h5 class="card-title">Bart Engels</h5>
                 <p class="card-text" th:text="#{bart.info}"></p>
@@ -44,7 +39,7 @@
     <div class="row justify-content-center m-3">
 
         <div class="card m-3" style="width: 18rem;">
-            <img th:src="@{'images\jelle.jpg'}" width="286" height="300" class="card-img-top" alt="jelle picture" src="">
+            <img th:src="@{'images\jelle.jpg'}" width="auto" height="auto" class="card-img-top" alt="jelle picture" src="">
             <div class="card-body">
                 <h5 class="card-title">Jelle Becirspahic</h5>
                 <p class="card-text" th:text="#{jelle.info}"></p>
@@ -53,7 +48,7 @@
         </div>
 
         <div class="card m-3" style="width: 18rem;">
-            <img src="..." class="card-img-top" alt="...s">
+            <img src="..." class="card-img-top" alt="...">
             <div class="card-body">
                 <h5 class="card-title">Michiel Noback</h5>
                 <p class="card-text" th:text="#{michiel.info}"></p>

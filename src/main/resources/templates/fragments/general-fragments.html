@@ -37,32 +37,15 @@
     </div>
 </nav>
 
-
-<footer th:fragment="footer" class="bg-light text-center text-lg-start">
-    <hr>
-    <div class="row">
-        <div class="col-4 text-center">
-            <h6>Hanze contact info</h6>
-            <hr style="width: 75%; margin: auto">
-            <p>Zernikeplein 11</p>
-            <p>9747 AS Groningen</p>
-            <p>(050) 595 55 55</p>
-        </div>
-        <div class="col-4 text-center">
-            <h6 th:text="#{student.names}">_Students_</h6>
-            <hr style="width: 75%; margin: auto">
-            <p>Bart Engels</p>
-            <p>Jelle Becirspahic</p>
-            <p>Marijke Eggink</p>
-        </div>
-        <div class="col-4 text-center">
-            <h6 th:text="#{student.email}">_Student_Email_</h6>
-            <hr style="width: 75%; margin: auto">
-            <p>b.engels@st.hanze.nl</p>
-            <p>j.d.becirspahic@st.hanze.nl</p>
-            <p>m.eggink@st.hanze.nl</p>
-        </div>
+<div class="jumbotron text-left" th:fragment="jumbotron(page)">
+    <div class="container">
+        <h1 class="jumbotron-heading text-center" th:text="#{'' + ${page} + '.title'}">Welcome</h1>
+        <p class="lead text-center" th:text="#{'' + ${page} + '.subtitle'}">Explore the features of Weka and discover machine learning.</p>
     </div>
+</div>
+
+
+<footer th:fragment="footer" class="bg-light text-center text-lg-start fixed-bottom">
     <!-- Copyright -->
     <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
         © 2020 Copyright:

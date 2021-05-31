@@ -19,7 +19,8 @@ public interface Reader {
     /**
      * Given a CSV, convert the CSV file to an Arff file and save it to a directory.
      */
-    Instances CsvToArff(File file) throws IOException;
+    Instances readCsv(File file, String delimiter) throws IOException;
+
 
     /**
      * Gets the names of all demo datasets that are included in WEKA
@@ -32,11 +33,5 @@ public interface Reader {
      * @param file Arff file
      */
     String saveArff(File file) throws IOException;
-
-    /**
-     * Saves given instances in an Arff file to a destination
-     * @param instances
-     */
-    void saveArff(Instances instances) throws IOException;
 }
 

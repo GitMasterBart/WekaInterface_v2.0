@@ -1,9 +1,11 @@
 package nl.bioinf.wekainterface.webcontrol;
 
+import nl.bioinf.wekainterface.model.AlgortihmsInformation;
 import nl.bioinf.wekainterface.model.DataReader;
 import nl.bioinf.wekainterface.model.LabelCounter;
 import nl.bioinf.wekainterface.model.WekaClassifier;
 import nl.bioinf.wekainterface.service.ClassificationService;
+import nl.bioinf.wekainterface.service.SerializationService;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,13 +19,15 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import weka.classifiers.evaluation.Evaluation;
 import weka.core.Instances;
 
+import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author Marijke Eggink, Jelle Becirspahic
+ * @author Marijke Eggink, Jelle Becirspahic, Bart Engels
  */
 
 @Controller
@@ -32,7 +36,6 @@ public class ExplorerController {
     private String exampleFilesFolder;
     @Value("${temp.data.path}")
     private String tempFolder;
-
     @Autowired
     private DataReader dataReader;
     @Autowired
@@ -41,6 +44,8 @@ public class ExplorerController {
     private WekaClassifier wekaClassifier;
     @Autowired
     private ClassificationService classificationService;
+    @Autowired
+    private SerializationService serializationService;
 
     @GetMapping(value = "/upload")
     public String getFileUpload(Model model){
@@ -77,10 +82,12 @@ public class ExplorerController {
     }
 
     @PostMapping(value = "/explorer")
+
     public String postExplorerPage(@RequestParam(name = "inputFile", required = false) MultipartFile multipart,
                                    @RequestParam(name = "filename", required = false) String demoFile,
                                    @RequestParam(name = "classifier") String classifierName,
-                                   Model model, RedirectAttributes redirect) throws Exception {
+                                   Model model, RedirectAttributes redirect,
+                                   HttpSession httpSession) throws Exception {
         File arffFile;
 
         if (!multipart.isEmpty()){
@@ -91,8 +98,15 @@ public class ExplorerController {
             String arffFilePath = exampleFilesFolder + '/' + demoFile;
             arffFile = new File(arffFilePath);
         }
+        if (httpSession.getAttribute("history") == null){
+            ArrayList<AlgortihmsInformation> algorithmsInformation = new ArrayList<>();
+            httpSession.setAttribute("history", algorithmsInformation);
 
-        String evaluation = classificationService.classify(arffFile, classifierName);
+        }
+        ArrayList<AlgortihmsInformation> history = (ArrayList<AlgortihmsInformation>)httpSession.getAttribute("history");
+        history.add(new AlgortihmsInformation(multipart.toString(), classifierName));
+        serializationService.serialization(history);
+        Evaluation evaluation = classificationService.classify(arffFile, classifierName);
 
         redirect.addFlashAttribute("evaluation", evaluation);
         return "redirect:/explorer/results";

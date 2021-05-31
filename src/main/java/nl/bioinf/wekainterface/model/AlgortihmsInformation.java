@@ -1,5 +1,7 @@
 package nl.bioinf.wekainterface.model;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import java.io.Serializable;
 
 public class AlgortihmsInformation implements Serializable {
