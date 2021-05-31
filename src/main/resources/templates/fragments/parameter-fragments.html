@@ -216,14 +216,20 @@
 
 <div th:fragment="J48">
     <form class="form">
-        <div th:insert="~{/fragments/parameter-fragments :: batchSizeParameter('J48')}"></div>
-        <div th:insert="~{/fragments/parameter-fragments :: confidenceFactorParameter('J48')}"></div>
-        <div th:insert="~{/fragments/parameter-fragments :: debugParameter('J48')}"></div>
-        <div th:insert="~{/fragments/parameter-fragments :: doNotCheckCapParameter('J48')}"></div>
-        <div th:insert="~{/fragments/parameter-fragments :: minNumObjectParameter('J48')}"></div>
-        <div th:insert="~{/fragments/parameter-fragments :: numDecimalsParameter('J48')}"></div>
-        <div th:insert="~{/fragments/parameter-fragments :: numFoldsParameter('J48')}"></div>
-        <div th:insert="~{/fragments/parameter-fragments :: prunedParameter('J48')}"></div>
+        <div class="row">
+            <div class="col-6">
+                <div th:insert="~{/fragments/parameter-fragments :: batchSizeParameter('J48')}"></div>
+                <div th:insert="~{/fragments/parameter-fragments :: confidenceFactorParameter('J48')}"></div>
+                <div th:insert="~{/fragments/parameter-fragments :: debugParameter('J48')}"></div>
+                <div th:insert="~{/fragments/parameter-fragments :: doNotCheckCapParameter('J48')}"></div>
+            </div>
+            <div class="col-6">
+                <div th:insert="~{/fragments/parameter-fragments :: minNumObjectParameter('J48')}"></div>
+                <div th:insert="~{/fragments/parameter-fragments :: numDecimalsParameter('J48')}"></div>
+                <div th:insert="~{/fragments/parameter-fragments :: numFoldsParameter('J48')}"></div>
+                <div th:insert="~{/fragments/parameter-fragments :: prunedParameter('J48')}"></div>
+            </div>
+        </div>
     </form>
 </div>
 

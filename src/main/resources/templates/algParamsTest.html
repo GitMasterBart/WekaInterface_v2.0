@@ -19,7 +19,7 @@
         <option value="J48">J48</option>
     </select>
     <br>
-    <div id="algParams" class="container" style="padding: 30px; border: dimgray 1px solid; border-radius: 5px">
+    <div id="algParams" class="container shadow" style="padding: 30px; border: dimgray 0 solid; border-radius: 5px">
         <div class="row justify-content-center">
             <div class="col-6">
                 <p>Algorithm parameters</p>
@@ -27,7 +27,7 @@
                 <div id="OneR" hidden th:insert="~{/fragments/parameter-fragments :: OneR}"></div>
                 <div id="NaiveBayes" hidden th:insert="~{/fragments/parameter-fragments :: NaiveBayes}"></div>
                 <div id="IBK" hidden th:insert="~{/fragments/parameter-fragments :: IBK}"></div>
-                <div id="J48" hidden th:insert="~{/fragments/parameter-fragments :: J48}"></div>
+                <div id="J48" hidden th:insert="~{/fragments/parameter-fragments :: J48}" class="container"></div>
             </div>
         </div>
     </div>
