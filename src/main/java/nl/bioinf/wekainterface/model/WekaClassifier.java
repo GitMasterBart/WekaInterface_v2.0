@@ -9,9 +9,6 @@ import weka.classifiers.rules.ZeroR;
 import weka.classifiers.trees.J48;
 import weka.core.Instances;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
@@ -29,7 +26,7 @@ public class WekaClassifier {
      * @return String with results of 10-fold cross validation.
      * @throws Exception
      */
-    public String test(Instances instances, String classifier) throws Exception {
+    public Evaluation test(Instances instances, String classifier) throws Exception {
         weka.classifiers.Classifier rule;
         switch (classifier){
             case "ZeroR":
@@ -52,7 +49,7 @@ public class WekaClassifier {
         }
         Evaluation evaluation = new Evaluation(instances);
         evaluation.crossValidateModel(rule, instances, 10, new Random(1));
-        return evaluation.toSummaryString();
+        return evaluation;
     }
 
     public List<String> getClassifierNames(){

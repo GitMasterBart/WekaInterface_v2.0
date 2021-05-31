@@ -5,6 +5,7 @@ import nl.bioinf.wekainterface.model.DataReader;
 import nl.bioinf.wekainterface.model.LabelCounter;
 import nl.bioinf.wekainterface.model.WekaClassifier;
 import nl.bioinf.wekainterface.service.ClassificationService;
+import nl.bioinf.wekainterface.service.FileService;
 import nl.bioinf.wekainterface.service.SerializationService;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import weka.classifiers.evaluation.Evaluation;
 import weka.core.Instances;
 
+import java.text.SimpleDateFormat;
 import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
@@ -104,7 +106,7 @@ public class ExplorerController {
 
         }
         ArrayList<AlgortihmsInformation> history = (ArrayList<AlgortihmsInformation>)httpSession.getAttribute("history");
-        history.add(new AlgortihmsInformation(multipart.toString(), classifierName));
+        history.add(new AlgortihmsInformation(demoFile, classifierName, new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")));
         serializationService.serialization(history);
         Evaluation evaluation = classificationService.classify(arffFile, classifierName);
 

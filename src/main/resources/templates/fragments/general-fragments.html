@@ -71,24 +71,13 @@
                 <tr th:each="i:${info}" th:object="${info}">
                     <td th:text="${i.algorithmsName}">_offline_</td>
                     <td th:text="${i.uploadFileDemoFileUsedAlgorithme}">_offline_</td>
-                    <td><p><span id="datetime"></span></p></td>
+                    <td th:text="${i.getSimpleDateFormat}">_offline_</td>
                 </tr>
                 </tbody>
             </table>
         </div>
     </section>
 
-
-
-
-
-
-    <script>
-        let dateTimeStamp = document.querySelector("#datetime")
-        var dt = new Date();
-        dateTimeStamp.innerHTML += dt.toLocaleTimeString();
-        dateTimeStamp.innerHTML += " " + dt.toLocaleDateString();
-    </script>
 
 </div>
 
