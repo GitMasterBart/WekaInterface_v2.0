@@ -4,22 +4,22 @@ import java.io.Serializable;
 
 public class AlgortihmsInformation implements Serializable {
     private static final long serialVersionUID = 1L;
-    private final String algorithmsInformation;
-    private final String[] algorithmsParameters;
+    private final String algorithmsName;
+    private final String uploadFileDemoFileUsedAlgorithme;
 
 
 
-    public AlgortihmsInformation(String algortihmsInformation, String[] algorithmsParameters) {
-        this.algorithmsInformation = algortihmsInformation;
-        this.algorithmsParameters = algorithmsParameters;
+    public AlgortihmsInformation(String algortihmsInformation, String algorithmsParameters) {
+        this.algorithmsName = algortihmsInformation;
+        this.uploadFileDemoFileUsedAlgorithme = algorithmsParameters;
     }
 
-    public String getAlgorithmsInformation() {
-        return algorithmsInformation;
+    public String getAlgorithmsName() {
+        return algorithmsName;
     }
 
-    public String[] getAlgorithmsParameters() {
-        return algorithmsParameters;
+    public String getUploadFileDemoFileUsedAlgorithme() {
+        return uploadFileDemoFileUsedAlgorithme;
     }
 
 

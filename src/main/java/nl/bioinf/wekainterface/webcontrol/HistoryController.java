@@ -26,10 +26,10 @@ public class HistoryController {
 
     @GetMapping(value = "/history")
     public String getHistoryPage(Model model){
-        String[] strings = {"9","0"};
+
         ArrayList<Object> algorithmsInformation = new ArrayList<>();
-        algorithmsInformation.add(new AlgortihmsInformation("OneR" , strings));
-        algorithmsInformation.add(new AlgortihmsInformation("ZeroR" , strings));
+        algorithmsInformation.add(new AlgortihmsInformation("OneR" , "weather.nominal.arff"));
+        algorithmsInformation.add(new AlgortihmsInformation("ZeroR" , "weather.nominal.arff"));
         serializationService.serialization(algorithmsInformation);
         model.addAttribute("info" , serializationService.deserialization());
 

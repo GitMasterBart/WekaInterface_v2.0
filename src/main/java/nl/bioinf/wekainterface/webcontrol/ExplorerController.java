@@ -100,10 +100,6 @@ public class ExplorerController {
 
     @GetMapping(value = "/explorer/results")
     public String getResultsPage(Model model) throws Exception {
-        File file = new File("/Users/bengels/weka-3-9-4/data/weather.nominal.arff");
-        Instances instances = dataReader.readArff(file);
-        String evaluation = wekaClassifier.test(instances, "ZeroR");
-        model.addAttribute(evaluation);
         return "results";
     }
 
