@@ -7,8 +7,6 @@ import weka.classifiers.evaluation.Evaluation;
 import weka.core.Instances;
 
 import java.io.File;
-import java.util.Arrays;
-import java.util.List;
 
 @Service
 public class ClassificationService {

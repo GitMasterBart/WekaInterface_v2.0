@@ -8,12 +8,8 @@
 </head>
 <body>
 <div th:insert="~{fragments/general-fragments :: navbar}"></div>
-<div class="jumbotron text-left">
-    <div class="container">
-        <h1 class="jumbotron-heading text-center" th:text="#{title}">Welcome</h1>
-        <p class="lead text-center" th:text="#{subtitle}">Explore the features of Weka and discover machine learning.</p>
-    </div>
-</div>
+
+<div th:insert="~{fragments/general-fragments :: jumbotron(home)}"></div>
 
 <div class="container">
     <div class="row m-4 justify-content-center">

@@ -17,17 +17,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 public class HistoryController {
-
-    @Autowired
-    private SerializationService serializationService;
-
-    @GetMapping(value = "/history")
-    public String getHistoryPage(Model model){
-        String[] strings = {"9", "9"};
-        serializationService.serialization(new AlgortihmsInformation("ONER", strings ));
-
-        model.addAttribute("info" , serializationService.deserialization().toString());
-
-        return "hisotrydummypage";
-    }
+//
+//    @Autowired
+//    private SerializationService serializationService;
+//
+//    @GetMapping(value = "/history")
+//    public String getHistoryPage(Model model){
+//        String[] strings = {"9", "9"};
+//        serializationService.serialization(new AlgortihmsInformation("ONER", strings ));
+//
+//        model.addAttribute("info" , serializationService.deserialization().toString());
+//
+//        return "hisotrydummypage";
+//    }
     }

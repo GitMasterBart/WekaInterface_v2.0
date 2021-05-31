@@ -4,94 +4,174 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script></head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
 
+
 <!--All algorithm parameters written by Author: Jelle 387615-->
+<svg  th:fragment="param-explaination(par)" xmlns="http://www.w3.org/2000/svg"
+     width="16" height="16" fill="currentColor" class="bi bi-question-circle"
+     viewBox="0 0 16 16">
+    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+    <path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286zm1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z"/>
+</svg>
+
+
+
 <div th:fragment="batchSizeParameter(algorithmName)">
-    <label th:for="batchsize + ${algorithmName}" class="form-label" th:text="#{max.batchsize}">BatchSize</label><br>
-    <input th:name="batchsize + ${algorithmName}" th:id="batchsize + ${algorithmName}" type="number" value="100"><br>
+    <div class="form-group">
+        <label th:for="batchsize + ${algorithmName}" class="control-label" th:text="#{max.batchsize}"
+        style="display: inline-block">BatchSize</label>
+        <a th:insert="~{fragments/parameter-fragments :: param-explaination(batchsize)}"
+              style="display: inline-block" th:title="#{batchsize.explaination}" data-toggle="tooltip"></a>
+        <br>
+        <input class="form-control" th:name="batchsize + ${algorithmName}" th:id="batchsize + ${algorithmName}" type="number" value="100" width="100px"><br>
+    </div>
 </div>
 
 <div th:fragment="debugParameter(algorithmName)">
-    <label th:for="debug + ${algorithmName}" class="form-label" th:text="#{debug.par}">debug</label><br>
-    <select th:id="debug + ${algorithmName}" th:name="debug + ${algorithmName}">
-        <option th:text="#{true}" value="true">True</option>
-        <option th:text="#{false}" value="false">False</option>
-    </select><br>
+    <div class="form-group">
+        <label th:for="debug + ${algorithmName}" class="control-label" th:text="#{debug.par}" style="display: inline-block">debug</label>
+        <span th:insert="~{fragments/parameter-fragments :: param-explaination(debug)}"
+              style="display: inline-block" th:title="#{debug.explaination}" data-toggle="tooltip"></span>
+        <br>
+        <select th:id="debug + ${algorithmName}" th:name="debug + ${algorithmName}" class="form-control">
+            <option th:text="#{true}" value="true">True</option>
+            <option th:text="#{false}" value="false">False</option>
+        </select>
+    </div>
 </div>
 
 <div th:fragment="doNotCheckCapParameter(algorithmName)">
-    <label th:text = "#{doNotCheck.par}" class="form-label" th:for='doNotCheckCapabilities + ${algorithmName}'>doNotCheckCapabilities</label><br>
-    <select th:id="doNotCheckCapabilities + ${algorithmName}" th:name="doNotCheckCapabilities + ${algorithmName}">
-        <option th:text="#{true}" value="true">True</option>
-        <option th:text="#{false}" value="false">False</option>
-    </select><br>
+    <div class="form-group">
+        <label th:text = "#{doNotCheck.par}" class="control-label" th:for='doNotCheckCapabilities + ${algorithmName}' style="display: inline-block"></label>
+        <span th:insert="~{fragments/parameter-fragments :: param-explaination(donotcheckcap)}"
+              style="display: inline-block" th:title="#{donotcheckcap.explaination}" data-toggle="tooltip"></span>
+        <br>
+        <select th:id="doNotCheckCapabilities + ${algorithmName}" th:name="doNotCheckCapabilities + ${algorithmName}" class="form-control">
+            <option th:text="#{true}" value="true">True</option>
+            <option th:text="#{false}" value="false">False</option>
+        </select>
+    </div>
 </div>
 
 <div th:fragment="numDecimalsParameter(algorithmName)">
-    <label th:text="#{num.decimal.par}" class="form-label"  th:for="numDecimalPlaces + ${algorithmName}">numDecimalPlaces</label><br>
-    <input th:id="numDecimalPlaces + ${algorithmName}" th:name="numDecimalPlaces + ${algorithmName}" type="number" value="2">
+    <div class="form-group">
+        <label th:text="#{num.decimal.par}" class="control-label"  th:for="numDecimalPlaces + ${algorithmName}" style="display: inline-block">numDecimalPlaces</label>
+        <span th:insert="~{fragments/parameter-fragments :: param-explaination(numdecimals)}"
+              style="display: inline-block" th:title="#{numdecimals.explaination}" data-toggle="tooltip"></span>
+        <br>
+        <input class="form-control" th:id="numDecimalPlaces + ${algorithmName}" th:name="numDecimalPlaces + ${algorithmName}" type="number" value="2">
+    </div>
 </div>
 
 <div th:fragment="minBucketSizeParameter(algorithmName)">
-    <label th:text="#{minBucketSize.par}" th:for="minBucketSize + ${algorithmName}">minBucketSize</label><br>
-    <input th:id="minBucketSize + ${algorithmName}" th:name="minBucketSize + ${algorithmName}" type="number" value="6"><br>
+    <div class="form-group">
+        <label class="control-label" th:text="#{minBucketSize.par}" th:for="minBucketSize + ${algorithmName}" style="display: inline-block">minBucketSize</label>
+        <span th:insert="~{fragments/parameter-fragments :: param-explaination(minbucket)}"
+             style="display: inline-block" th:title="#{minbucket.explaination}" data-toggle="tooltip"></span>
+        <br>
+        <input class="form-control" th:id="minBucketSize + ${algorithmName}" th:name="minBucketSize + ${algorithmName}" type="number" value="6">
+    </div>
 </div>
 
 <div th:fragment="confidenceFactorParameter(algorithmName)">
-    <label th:text="#{confidenceFactor.par}" class="form-label" th:for="confidenceFactor + ${algorithmName}">confidence factor</label><br>
-    <input th:id="confidenceFactor + ${algorithmName}" th:name="confidenceFactor + ${algorithmName}" type="number" value="0.25"><br>
+    <div class="form-group">
+        <label th:text="#{confidenceFactor.par}" class="control-label" th:for="confidenceFactor + ${algorithmName}" style="display: inline-block">confidence factor</label>
+        <span th:insert="~{fragments/parameter-fragments :: param-explaination(confactor)}"
+              style="display: inline-block" th:title="#{confactor.explaination}" data-toggle="tooltip"></span>
+        <br>
+        <input class="form-control" th:id="confidenceFactor + ${algorithmName}" th:name="confidenceFactor + ${algorithmName}" type="number" value="0.25">
+    </div>
 </div>
 
 <div th:fragment="minNumObjectParameter(algorithmName)">
-    <label th:text="#{minNumObj.par}" class="form-label" th:for="minNumObj + ${algorithmName}">minNumObj</label><br>
-    <input th:id="minNumObj + ${algorithmName}" th:name="minNumObj + ${algorithmName}" type="number" value="2" min="2"><br>
+    <div class="form-group">
+        <label th:text="#{minNumObj.par}" class="control-label" th:for="minNumObj + ${algorithmName}" style="display: inline-block">minNumObj</label>
+        <span th:insert="~{fragments/parameter-fragments :: param-explaination(minnumobj)}"
+              style="display: inline-block" th:title="#{minnumobj.explaination}" data-toggle="tooltip"></span>
+        <br>
+        <input class="form-control" th:id="minNumObj + ${algorithmName}" th:name="minNumObj + ${algorithmName}" type="number" value="2" min="2">
+    </div>
 </div>
 
 <div th:fragment="numFoldsParameter(algorithmName)">
-    <label th:text="#{numFold.par}" class="form-label" th:for="numFolds + ${algorithmName}">numFolds</label><br>
-    <input th:id="numFolds + ${algorithmName}" th:name="numFolds + ${algorithmName}" type="number" value="3"><br>
+    <div class="form-group">
+        <label th:text="#{numFold.par}" class="control-label" th:for="numFolds + ${algorithmName}" style="display: inline-block">numFolds</label>
+        <span th:insert="~{fragments/parameter-fragments :: param-explaination(numfolds)}"
+              style="display: inline-block" th:title="#{numfolds.explaination}" data-toggle="tooltip"></span>
+        <br>
+        <input class="form-control" th:id="numFolds + ${algorithmName}" th:name="numFolds + ${algorithmName}" type="number" value="3">
+    </div>
 </div>
 
 <div th:fragment="prunedParameter(algorithmName)">
-    <label th:text="#{pruned.par}" th:for="pruned + ${algorithmName}" class="form-label">pruned</label><br>
-    <select th:id="pruned + ${algorithmName}" th:name="pruned + ${algorithmName}">
-        <option th:text="#{true}" value="true">True</option>
-        <option th:text="#{false}" value="false">False</option>
-    </select><br>
+    <div class="form-group">
+        <label th:text="#{pruned.par}" th:for="pruned + ${algorithmName}" class="control-label" style="display: inline-block">pruned</label>
+        <span th:insert="~{fragments/parameter-fragments :: param-explaination(pruned)}"
+              style="display: inline-block" th:title="#{pruned.explaination}" data-toggle="tooltip"></span>
+        <br>
+        <select class="form-control" th:id="pruned + ${algorithmName}" th:name="pruned + ${algorithmName}">
+            <option th:text="#{true}" value="true">True</option>
+            <option th:text="#{false}" value="false">False</option>
+        </select>
+    </div>
 </div>
 
 <div th:fragment="laPlaceParameter(algorithmName)">
-    <label th:text="#{laPlace.par}" th:for="laPlace + ${algorithmName}" class="form-label">pruned</label><br>
-    <select th:id="laPlace + ${algorithmName}" th:name="laPlace + ${algorithmName}">
-        <option th:text="#{true}" value="true">True</option>
-        <option th:text="#{false}" value="false">False</option>
-    </select><br>
+    <div class="form-group">
+        <label th:text="#{laPlace.par}" th:for="laPlace + ${algorithmName}" class="control-label" style="display: inline-block">pruned</label>
+        <span th:insert="~{fragments/parameter-fragments :: param-explaination(laplace)}"
+              style="display: inline-block" th:title="#{laplace.explaination}" data-toggle="tooltip"></span>
+        <br>
+        <select class="form-control" th:id="laPlace + ${algorithmName}" th:name="laPlace + ${algorithmName}">
+            <option th:text="#{true}" value="true">True</option>
+            <option th:text="#{false}" value="false">False</option>
+        </select>
+    </div>
 </div>
 
 <div th:fragment="KnnParameter(algorithmName)">
-    <label th:text="#{knn.par}" th:for="KNN + ${algorithmName}">KNN</label><br>
-    <input th:id="KNN + ${algorithmName}" th:name="KNN + ${algorithmName}" type="number" value="1" min="1"><br>
+    <div class="form-group">
+        <label class="control-label" th:text="#{knn.par}" th:for="KNN + ${algorithmName}" style="display: inline-block">KNN</label>
+        <span th:insert="~{fragments/parameter-fragments :: param-explaination(knn)}"
+              style="display: inline-block" th:title="#{knn.explaination}" data-toggle="tooltip"></span>
+        <br>
+        <input class="form-control" th:id="KNN + ${algorithmName}" th:name="KNN + ${algorithmName}" type="number" value="1" min="1">
+    </div>
 </div>
 
 <div th:fragment="crossValidateParameter(algorithmName)">
-    <label th:text="#{crossValidate.par}" th:for="crossValidate + ${algorithmName}" class="form-label">cross validate</label><br>
-    <select th:id="crossValidate + ${algorithmName}" th:name="crossValidate + ${algorithmName}">
-        <option th:text="#{true}" value="true">True</option>
-        <option th:text="#{false}" value="false">False</option>
-    </select><br>
+    <div class="form-group">
+        <label th:text="#{crossValidate.par}" th:for="crossValidate + ${algorithmName}" class="control-label" style="display: inline-block">cross validate</label>
+        <span th:insert="~{fragments/parameter-fragments :: param-explaination(crossval)}"
+              style="display: inline-block" th:title="#{crossval.explaination}" data-toggle="tooltip"></span>
+        <br>
+        <select class="form-control" th:id="crossValidate + ${algorithmName}" th:name="crossValidate + ${algorithmName}">
+            <option th:text="#{true}" value="true">True</option>
+            <option th:text="#{false}" value="false">False</option>
+        </select>
+    </div>
 </div>
 
 <div th:fragment="nnSearchAlgorithmParameter(algorithmName)">
-    <label th:text="#{nnsearchAlgorithm.par}" th:for="nnSearchAlgorithm + ${algorithmName}">nnSearchAlgorithm</label><br>
-    <select th:id="nnSearchAlgorithm + ${algorithmName}" th:name="nnSearchAlgorithm + ${algorithmName}">
-        <option value="BallTree">BallTree</option>
-        <option value="CoverTree">CoverTree</option>
-        <option value="FilteredNeighbourSearch">FilteredNeighbourSearch</option>
-        <option value="KDTree">KDtree</option>
-        <option value="LinearNNSearch">LinearNNSearch</option>
-    </select><br>
+    <div class="form-group">
+        <label class="control-label" th:text="#{nnsearchAlgorithm.par}" th:for="nnSearchAlgorithm + ${algorithmName}" style="display: inline-block">nnSearchAlgorithm</label>
+        <span th:insert="~{fragments/parameter-fragments :: param-explaination(nnsearch)}"
+              style="display: inline-block" th:title="#{nnsearch.explaination}" data-toggle="tooltip"></span>
+        <br>
+        <select class="form-control" th:id="nnSearchAlgorithm + ${algorithmName}" th:name="nnSearchAlgorithm + ${algorithmName}">
+            <option value="BallTree">BallTree</option>
+            <option value="CoverTree">CoverTree</option>
+            <option value="FilteredNeighbourSearch">FilteredNeighbourSearch</option>
+            <option value="KDTree">KDtree</option>
+            <option value="LinearNNSearch">LinearNNSearch</option>
+        </select>
+    </div>
 </div>
 
 <div th:fragment="ZeroR">

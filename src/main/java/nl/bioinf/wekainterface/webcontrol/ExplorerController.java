@@ -84,16 +84,18 @@ public class ExplorerController {
     public String postExplorerPage(@RequestParam(name = "inputFile", required = false) MultipartFile multipart,
                                    @RequestParam(name = "filename", required = false) String demoFileName,
                                    @RequestParam(name = "classifier") String classifierName,
+                                   @RequestParam(name = "delimiter") String delimiter,
                                    Model model, RedirectAttributes redirect) throws Exception {
         Instances instances;
 
         if (!multipart.isEmpty()){
-            instances = fileService.getInstancesFromMultipart(multipart);
+            instances = fileService.getInstancesFromMultipart(multipart, delimiter);
         } else {
             instances = fileService.getInstancesFromDemoFile(demoFileName);
         }
 
         Evaluation evaluation = wekaClassifier.test(instances, classifierName);
+
         redirect.addFlashAttribute("evaluation", evaluation);
         return "redirect:/explorer/results";
     }
