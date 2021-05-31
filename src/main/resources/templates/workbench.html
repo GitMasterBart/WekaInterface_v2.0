@@ -1,0 +1,95 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!--@author Marijke Eggink-->
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>Klessify</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<script>
+    $(document).ready(function(){
+        $("#myTab a").click(function(e){
+            e.preventDefault();
+            $(this).tab('show');
+        });
+    });
+</script>
+<body>
+<div class="container pt-3">
+    <div class="border shadow rounded">
+        <div class="row">
+            <div class="col-3 ml-1">
+                <form th:action="@{'#'}" method="post">
+                    <div>
+                        <label for="file-name" th:text="#{form.select}"></label><br>
+                        <select class="form-select custom-select" id="file-name" name="filename">
+                            <option th:text="#{form.file.select}"></option>
+                            <option th:each="file: ${filenames}" th:value="${file}" th:text="${file}"></option>
+                        </select>
+                    </div>
+                    <div class="pt-2">
+                        <p th:text="#{form.upload}"></p>
+                    </div>
+                    <div class="custom-file">
+                        <input type="file" class="custom-file-input" id="inputFile">
+                        <label class="custom-file-label" for="inputFile" th:text="#{form.choose}"></label>
+                    </div>
+                    <input type="submit" value="submit" class="btn btn-outline-secondary">
+                    <input type="reset" value="reset" class="btn btn-outline-secondary">
+                </form>
+            </div>
+            <div class="col-8">
+                <ul id="myTab" class="nav nav-tabs">
+                    <li class="nav-item">
+                        <a href="#explorer" class="nav-link active">Explorer</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#classify" class="nav-link">Classify</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#history" class="nav-link">History</a>
+                    </li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane fade show active" id="explorer">
+                        <h4 class="mt-2">Explorer</h4>
+                        <div th:if="${data}">
+                            <label for="attribute">Attributes</label><br>
+                            <select id="attribute" th:data-map="${data}" th:data-cl="${classLabel}"
+                                    onchange="plotData(this.getAttribute('data-map'), this.value, this.getAttribute('data-cl'))"
+                                    onload="plotData(this.getAttribute('data-map'), this.value, this.getAttribute('data-cl'))">
+                                <option>Select attribute</option>
+                                <option th:each="attribute:${attributes}" th:text="${attribute}" th:value="${attribute}"></option>
+                            </select>
+                        </div>
+                        <div style="height: 400px; width: 800px">
+                            <div id="plot"></div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="classify">
+                        <h4 class="mt-2">Classify</h4>
+                        <p>Hier komt de classifier</p>
+<!--                        <p th:text="#{form.classifier.select}"></p>-->
+<!--                        <div th:each="name:${classifierNames}">-->
+<!--                            <input th:id="${name}" type="radio" name="classifier" th:value="${name}">-->
+<!--                            <label th:for="${name}" th:text="${name}"></label>-->
+<!--                        </div>-->
+<!--                        <input type="submit" value="Submit" class="btn btn-outline-secondary">-->
+<!--                        <input type="reset" value="Reset" class="btn btn-outline-secondary">-->
+                    </div>
+                    <div class="tab-pane fade" id="history">
+                        <h4 class="mt-2">History</h4>
+                        <p>Donec vel placerat quam, ut euismod risus. Sed a mi suscipit, elementum sem a, hendrerit velit. Donec at erat magna. Sed dignissim orci nec eleifend egestas. Donec eget mi consequat massa vestibulum laoreet. Mauris et ultrices nulla, malesuada volutpat ante. Fusce ut orci lorem. Donec molestie libero in tempus imperdiet. Cum sociis natoque penatibus et magnis.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+</body>
+</html>
