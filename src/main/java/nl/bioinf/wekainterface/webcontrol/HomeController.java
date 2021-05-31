@@ -13,16 +13,16 @@ public class HomeController {
 
     @GetMapping(value = "/home")
     public String getLandingPage(){
-        return "landingpage";
+        return "static_pages/landingpage";
     }
 
     @GetMapping(value = "/about")
     public String getFileUploadPage(){
-        return "about";
+        return "static_pages/about";
     }
 
     @GetMapping(value = "/contact")
     public String getContactPage(){
-        return "contact";
+        return "static_pages/contact";
     }
 }

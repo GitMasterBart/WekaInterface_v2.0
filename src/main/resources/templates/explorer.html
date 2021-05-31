@@ -12,11 +12,13 @@
 
 <div th:insert="~{fragments/general-fragments :: navbar}"></div>
 
+<div th:insert="~{fragments/general-fragments :: jumbotron(explorer)}"></div>
+
 <div class="container pt-3">
-  <div class="row">
-    <h2>Weka Workbench</h2>
-  </div>
-  <hr>
+<!--  <div class="row">-->
+<!--    <h2>Weka Workbench</h2>-->
+<!--  </div>-->
+<!--  <hr>-->
   <div class="row">
     <div class="col-4-md">
         <form th:action="@{'/explorer'}" method="POST" enctype="multipart/form-data">
