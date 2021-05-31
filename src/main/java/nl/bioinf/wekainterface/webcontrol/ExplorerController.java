@@ -45,27 +45,28 @@ public class ExplorerController {
     @Autowired
     private FileService fileService;
 
-    @GetMapping(value = "/upload")
-    public String getFileUpload(Model model){
+    @GetMapping(value = "/workbench")
+    public String getWorkbench(Model model){
         List<String> filenames = dataReader.getDataSetNames();
         model.addAttribute("filenames", filenames);
-        return "fileUpload";
+        return "workbench";
     }
 
-    @PostMapping(value = "/upload")
-    public String postFileUpload(@RequestParam(name = "filename") String fileName,
-                                 Model model, RedirectAttributes redirect) throws Exception {
-        String arffFilePath = exampleFilesFolder + '/' + fileName;
-
-        labelCounter.readData(new File(arffFilePath));
-        labelCounter.setGroups();
-        labelCounter.countLabels();
-        //redirect.addFlashAttribute("filename", fileName);
-        redirect.addFlashAttribute("data", labelCounter.mapToJSON());
-        redirect.addFlashAttribute("attributes", labelCounter.getAttributeArray());
-        redirect.addFlashAttribute("classLabel", labelCounter.getClassLabel());
-        return "redirect:/explorer";
-    }
+//
+//    @PostMapping(value = "/upload")
+//    public String postFileUpload(@RequestParam(name = "filename") String fileName,
+//                                 Model model, RedirectAttributes redirect) throws Exception {
+//        String arffFilePath = exampleFilesFolder + '/' + fileName;
+//
+//        labelCounter.readData(new File(arffFilePath));
+//        labelCounter.setGroups();
+//        labelCounter.countLabels();
+//        //redirect.addFlashAttribute("filename", fileName);
+//        redirect.addFlashAttribute("data", labelCounter.mapToJSON());
+//        redirect.addFlashAttribute("attributes", labelCounter.getAttributeArray());
+//        redirect.addFlashAttribute("classLabel", labelCounter.getClassLabel());
+//        return "redirect:/explorer";
+//    }
 
     @GetMapping(value = "/explorer")
     public String getExplorerPage(Model model){
@@ -98,11 +99,7 @@ public class ExplorerController {
     }
 
     @GetMapping(value = "/explorer/results")
-    public String getResultsPage(Model model) throws Exception {
-        File file = new File("/Users/Marijke/wekafiles/data/weather.nominal.arff");
-        Instances instances = dataReader.readArff(file);
-        Evaluation evaluation = wekaClassifier.test(instances, "ZeroR");
-        model.addAttribute(evaluation);
+    public String getResultsPage(Model model){
         return "results";
     }
 
