@@ -49,27 +49,28 @@ public class ExplorerController {
     @Autowired
     private SerializationService serializationService;
 
-    @GetMapping(value = "/upload")
-    public String getFileUpload(Model model){
+    @GetMapping(value = "/workbench")
+    public String getWorkbench(Model model){
         List<String> filenames = dataReader.getDataSetNames();
         model.addAttribute("filenames", filenames);
-        return "fileUpload";
+        return "workbench";
     }
 
-    @PostMapping(value = "/upload")
-    public String postFileUpload(@RequestParam(name = "filename") String fileName,
-                                 Model model, RedirectAttributes redirect) throws Exception {
-        String arffFilePath = exampleFilesFolder + '/' + fileName;
-
-        labelCounter.readData(new File(arffFilePath));
-        labelCounter.setGroups();
-        labelCounter.countLabels();
-        //redirect.addFlashAttribute("filename", fileName);
-        redirect.addFlashAttribute("data", labelCounter.mapToJSON());
-        redirect.addFlashAttribute("attributes", labelCounter.getAttributeArray());
-        redirect.addFlashAttribute("classLabel", labelCounter.getClassLabel());
-        return "redirect:/explorer";
-    }
+//
+//    @PostMapping(value = "/upload")
+//    public String postFileUpload(@RequestParam(name = "filename") String fileName,
+//                                 Model model, RedirectAttributes redirect) throws Exception {
+//        String arffFilePath = exampleFilesFolder + '/' + fileName;
+//
+//        labelCounter.readData(new File(arffFilePath));
+//        labelCounter.setGroups();
+//        labelCounter.countLabels();
+//        //redirect.addFlashAttribute("filename", fileName);
+//        redirect.addFlashAttribute("data", labelCounter.mapToJSON());
+//        redirect.addFlashAttribute("attributes", labelCounter.getAttributeArray());
+//        redirect.addFlashAttribute("classLabel", labelCounter.getClassLabel());
+//        return "redirect:/explorer";
+//    }
 
     @GetMapping(value = "/explorer")
     public String getExplorerPage(Model model){
