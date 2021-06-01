@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * @author Marijke Eggink, Jelle Becirspahic, Bart Engels
@@ -84,7 +85,6 @@ public class ExplorerController {
     }
 
     @PostMapping(value = "/explorer")
-
     public String postExplorerPage(@RequestParam(name = "inputFile", required = false) MultipartFile multipart,
                                    @RequestParam(name = "filename", required = false) String demoFile,
                                    @RequestParam(name = "classifier") String classifierName,
@@ -105,12 +105,20 @@ public class ExplorerController {
             httpSession.setAttribute("history", algorithmsInformation);
 
         }
-        ArrayList<AlgortihmsInformation> history = (ArrayList<AlgortihmsInformation>)httpSession.getAttribute("history");
-        history.add(new AlgortihmsInformation(demoFile, classifierName, new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")));
-        serializationService.serialization(history);
+
+        if (httpSession.getAttribute("uniqueId") == null){
+            String uniqueId = UUID.randomUUID().toString();
+            File serFile = File.createTempFile(uniqueId, ".ser", new File("/tmp/"));
+            httpSession.setAttribute("uniqueId", serFile);
+        }
+
         Evaluation evaluation = classificationService.classify(arffFile, classifierName);
+        ArrayList<AlgortihmsInformation> history = (ArrayList<AlgortihmsInformation>)httpSession.getAttribute("history");
+        history.add(new AlgortihmsInformation(demoFile, classifierName, new SimpleDateFormat("HH:mm:ss"), evaluation));
+        serializationService.serialization(history, (File) httpSession.getAttribute("uniqueId"));
 
         redirect.addFlashAttribute("evaluation", evaluation);
+        System.out.println(evaluation);
         return "redirect:/explorer/results";
     }
 

@@ -14,27 +14,24 @@ import java.util.ArrayList;
 
 @Service
 public class SerializationService {
-    @Value("${serialization.path}")
-    private String serializationPath;
 
-    public void serialization(ArrayList<AlgortihmsInformation> e) {
-        //algorithmsInformation.add((AlgortihmsInformation) e);
+    public void serialization(ArrayList<AlgortihmsInformation> algortihmsInformations, File uniqueID) {
         try {
             FileOutputStream fileOut =
-                    new FileOutputStream(serializationPath);
+                    new FileOutputStream(uniqueID);
             ObjectOutputStream out = new ObjectOutputStream(fileOut);
-            out.writeObject(e);
+            out.writeObject(algortihmsInformations);
             out.close();
             fileOut.close();
-            System.out.print("Serialized data is saved in /tmp/algorithmeData.ser");
+            //System.out.print("Serialized data is saved in /tmp/{random.string}.ser");
         } catch (IOException i) {
             i.printStackTrace();
         }
     }
 
-    public ArrayList<AlgortihmsInformation> deserialization(){
+    public ArrayList<AlgortihmsInformation> deserialization(File uniqueID){
         try {
-        FileInputStream fileIn = new FileInputStream(serializationPath);
+        FileInputStream fileIn = new FileInputStream(uniqueID);
         ObjectInputStream in = new ObjectInputStream(fileIn);
         AlgortihmsInformation algortihmsInformation;
         AlgortihmsInformation[] algortihmsInformations = new AlgortihmsInformation[5];

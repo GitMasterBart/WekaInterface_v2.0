@@ -1,5 +1,7 @@
 package nl.bioinf.wekainterface.model;
 
+import weka.classifiers.evaluation.Evaluation;
+
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.text.DateFormat;
@@ -12,13 +14,16 @@ public class AlgortihmsInformation implements Serializable {
     private final String algorithmsName;
     private final String uploadFileDemoFileUsedAlgorithme;
     private final SimpleDateFormat simpleDateFormat;
+    private final Evaluation evaluationAlgorithm;
 
 
 
-    public AlgortihmsInformation(String algortihmsInformation, String algorithmsParameters, SimpleDateFormat simpleDateFormat) {
+    public AlgortihmsInformation(String algortihmsInformation, String algorithmsParameters, SimpleDateFormat simpleDateFormat, Evaluation evaluationAlgorithm) {
         this.algorithmsName = algortihmsInformation;
         this.uploadFileDemoFileUsedAlgorithme = algorithmsParameters;
         this.simpleDateFormat = simpleDateFormat;
+        this.evaluationAlgorithm = evaluationAlgorithm;
+
     }
 
     public String getAlgorithmsName() {
@@ -33,5 +38,9 @@ public class AlgortihmsInformation implements Serializable {
         Date date = Calendar.getInstance().getTime();
         String strDate = simpleDateFormat.format(date);
         return strDate;
+    }
+
+    public Evaluation getEvaluationAlgorithm() {
+        return evaluationAlgorithm;
     }
 }
