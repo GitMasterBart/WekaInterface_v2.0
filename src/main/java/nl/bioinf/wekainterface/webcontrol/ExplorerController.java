@@ -48,7 +48,28 @@ public class ExplorerController {
     @GetMapping(value = "/workbench")
     public String getWorkbench(Model model){
         List<String> filenames = dataReader.getDataSetNames();
+        List<String> classifierNames = wekaClassifier.getClassifierNames();
         model.addAttribute("filenames", filenames);
+        model.addAttribute("classifierNames", classifierNames);
+        return "workbench";
+    }
+
+    @PostMapping(value = "/workbench")
+    public String postWorkbench(@RequestParam(name = "filename", required = false) String demoFileName,
+                                Model model, RedirectAttributes redirect) throws Exception {
+        String arffFilePath = exampleFilesFolder + '/' + demoFileName;
+
+        List<String> filenames = dataReader.getDataSetNames();
+        List<String> classifierNames = wekaClassifier.getClassifierNames();
+        model.addAttribute("filenames", filenames);
+        model.addAttribute("classifierNames", classifierNames);
+
+        labelCounter.readData(new File(arffFilePath));
+        labelCounter.setGroups();
+        labelCounter.countLabels();
+        model.addAttribute("data", labelCounter.mapToJSON());
+        model.addAttribute("attributes", labelCounter.getAttributeArray());
+        model.addAttribute("classLabel", labelCounter.getClassLabel());
         return "workbench";
     }
 
