@@ -120,6 +120,7 @@ public class ExplorerController {
             FileUtils.copyInputStreamToFile(inputStream, arffFile);
         } else {
             String arffFilePath = exampleFilesFolder + '/' + demoFile;
+            System.out.println(arffFilePath);
             arffFile = new File(arffFilePath);
         }
         if (httpSession.getAttribute("history") == null){
@@ -140,7 +141,6 @@ public class ExplorerController {
         serializationService.serialization(history, (File) httpSession.getAttribute("uniqueId"));
 
         redirect.addFlashAttribute("evaluation", evaluation);
-        System.out.println(evaluation);
         return "redirect:/explorer/results";
     }
 
@@ -151,8 +151,9 @@ public class ExplorerController {
 
     @GetMapping(value = "/test")
     public String plotWeatherData(Model model, HttpSession httpSession) throws IOException {
-        serializationService.deserialization((File) httpSession.getAttribute("uniqueId"));
-        String file = exampleFilesFolder +);
+        ArrayList<AlgortihmsInformation>  deserialization = serializationService.deserialization((File) httpSession.getAttribute("uniqueId"));
+        String file = exampleFilesFolder + '/' + deserialization.get(0).getAlgorithmsName();
+        System.out.println(file);
         labelCounter.readData(new File(file));
         labelCounter.setGroups();
         labelCounter.countLabels();
