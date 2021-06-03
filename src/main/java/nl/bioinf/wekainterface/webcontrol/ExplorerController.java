@@ -1,10 +1,12 @@
 package nl.bioinf.wekainterface.webcontrol;
 
+import nl.bioinf.wekainterface.model.AlgortihmsInformation;
 import nl.bioinf.wekainterface.model.DataReader;
 import nl.bioinf.wekainterface.model.LabelCounter;
 import nl.bioinf.wekainterface.model.WekaClassifier;
 import nl.bioinf.wekainterface.service.ClassificationService;
 import nl.bioinf.wekainterface.service.FileService;
+import nl.bioinf.wekainterface.service.SerializationService;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,13 +20,16 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import weka.classifiers.evaluation.Evaluation;
 import weka.core.Instances;
 
+import java.text.SimpleDateFormat;
+import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author Marijke Eggink, Jelle Becirspahic
+ * @author Marijke Eggink, Jelle Becirspahic, Bart Engels
  */
 
 @Controller
@@ -33,7 +38,6 @@ public class ExplorerController {
     private String exampleFilesFolder;
     @Value("${temp.data.path}")
     private String tempFolder;
-
     @Autowired
     private DataReader dataReader;
     @Autowired
@@ -43,7 +47,7 @@ public class ExplorerController {
     @Autowired
     private ClassificationService classificationService;
     @Autowired
-    private FileService fileService;
+    private SerializationService serializationService;
 
     @GetMapping(value = "/workbench")
     public String getWorkbench(Model model){
@@ -102,27 +106,37 @@ public class ExplorerController {
     }
 
     @PostMapping(value = "/explorer")
+
     public String postExplorerPage(@RequestParam(name = "inputFile", required = false) MultipartFile multipart,
-                                   @RequestParam(name = "filename", required = false) String demoFileName,
+                                   @RequestParam(name = "filename", required = false) String demoFile,
                                    @RequestParam(name = "classifier") String classifierName,
-                                   @RequestParam(name = "delimiter") String delimiter,
-                                   Model model, RedirectAttributes redirect) throws Exception {
-        Instances instances;
+                                   Model model, RedirectAttributes redirect,
+                                   HttpSession httpSession) throws Exception {
+        File arffFile;
 
         if (!multipart.isEmpty()){
-            instances = fileService.getInstancesFromMultipart(multipart, delimiter);
+            arffFile = File.createTempFile("temp-", ".arff", new File(tempFolder));
+            InputStream inputStream = multipart.getInputStream();
+            FileUtils.copyInputStreamToFile(inputStream, arffFile);
         } else {
-            instances = fileService.getInstancesFromDemoFile(demoFileName);
+            String arffFilePath = exampleFilesFolder + '/' + demoFile;
+            arffFile = new File(arffFilePath);
         }
-
-        Evaluation evaluation = wekaClassifier.test(instances, classifierName);
+        if (httpSession.getAttribute("history") == null){
+            ArrayList<AlgortihmsInformation> algorithmsInformation = new ArrayList<>();
+            httpSession.setAttribute("history", algorithmsInformation);
+        }
+        ArrayList<AlgortihmsInformation> history = (ArrayList<AlgortihmsInformation>)httpSession.getAttribute("history");
+        history.add(new AlgortihmsInformation(demoFile, classifierName, new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")));
+        serializationService.serialization(history);
+        Evaluation evaluation = classificationService.classify(arffFile, classifierName);
 
         redirect.addFlashAttribute("evaluation", evaluation);
         return "redirect:/explorer/results";
     }
 
     @GetMapping(value = "/explorer/results")
-    public String getResultsPage(Model model){
+    public String getResultsPage(Model model) throws Exception {
         return "results";
     }
 
