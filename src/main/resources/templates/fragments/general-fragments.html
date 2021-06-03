@@ -62,17 +62,25 @@
                 <thead>
                 <h1 th:text="${HistoryList}"></h1>
                 <tr>
-                    <th>Used File</th>
                     <th>Used Algorithme</th>
                     <th>Time/Date</th>
+                    <th>Used File</th>
+                    <th>Plot</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="i:${info}" th:object="${info}">
-                    <td th:text="${i.algorithmsName}">_offline_</td>
-                    <td th:text="${i.uploadFileDemoFileUsedAlgorithme}">_offline_</td>
-                    <td th:text="${i.getSimpleDateFormat}">_offline_</td>
-                </tr>
+                <td th:text="${msg}">_offline_</td>
+                <td th:text="${msg}">_offline_</td>
+                <td th:text="${msg}">_offline_</td>
+                <td th:text="${msg}">_offline_</td>
+                    <tr th:each="i:${info}" th:object="${info}" >
+                        <td th:text="${i.getSimpleDateFormat}">_offline_</td>
+                        <td th:text="${i.uploadFileDemoFileUsedAlgorithme}">_offline_</td>
+                        <td><a th:href="@{'/history/' + ${i.algorithmsName}  + '/' + ${i.uploadFileDemoFileUsedAlgorithme}}"
+                               th:text="${i.algorithmsName}" class="text-body"></a></td>
+                        <td><a th:href="@{'/history/' + ${i.algorithmsName}}"
+                           text="Plot" class="text-body"> plot </a></td>
+                    </tr>
                 </tbody>
             </table>
         </div>

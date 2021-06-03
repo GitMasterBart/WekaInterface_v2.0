@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * @author Marijke Eggink, Jelle Becirspahic, Bart Engels
@@ -155,25 +156,36 @@ public class ExplorerController {
     public String postExplorerPage(@RequestParam(name = "inputFile", required = false) MultipartFile multipart,
                                    @RequestParam(name = "filename", required = false) String demoFile,
                                    @RequestParam(name = "classifier") String classifierName,
-                                   @RequestParam(name = "delimiter") String delimiter,
                                    Model model, RedirectAttributes redirect,
                                    HttpSession httpSession) throws Exception {
-        Instances instances;
+        File arffFile;
 
         if (!multipart.isEmpty()){
-            instances = fileService.getInstancesFromMultipart(multipart);
+            arffFile = File.createTempFile("temp-", ".arff", new File(tempFolder));
+            InputStream inputStream = multipart.getInputStream();
+            FileUtils.copyInputStreamToFile(inputStream, arffFile);
         } else {
-            instances = fileService.getInstancesFromDemoFile(demoFile);
+            String arffFilePath = exampleFilesFolder + '/' + demoFile;
+            System.out.println(arffFilePath);
+            arffFile = new File(arffFilePath);
         }
-
         if (httpSession.getAttribute("history") == null){
             ArrayList<AlgortihmsInformation> algorithmsInformation = new ArrayList<>();
             httpSession.setAttribute("history", algorithmsInformation);
         }
+
+        if (httpSession.getAttribute("uniqueId") == null){
+            String uniqueId = UUID.randomUUID().toString();
+            File serFile = File.createTempFile(uniqueId, ".ser", new File("/tmp/"));
+            httpSession.setAttribute("uniqueId", serFile);
+        }
+
+        Evaluation evaluation = classificationService.classify(arffFile, classifierName);
+
         ArrayList<AlgortihmsInformation> history = (ArrayList<AlgortihmsInformation>)httpSession.getAttribute("history");
-        history.add(new AlgortihmsInformation(demoFile, classifierName, new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")));
-        serializationService.serialization(history);
-        Evaluation evaluation = wekaClassifier.test(instances, classifierName);
+        history.add(new AlgortihmsInformation(demoFile, classifierName, new SimpleDateFormat("HH:mm:ss")));
+        serializationService.serialization(history, (File) httpSession.getAttribute("uniqueId"));
+
         redirect.addFlashAttribute("evaluation", evaluation);
         return "redirect:/explorer/results";
     }
@@ -184,8 +196,9 @@ public class ExplorerController {
     }
 
     @GetMapping(value = "/test")
-    public String plotWeatherData(Model model) throws IOException {
-        String file = exampleFilesFolder + '/' + "weather.nominal.arff";
+    public String plotWeatherData(Model model, HttpSession httpSession) throws IOException {
+        String file = exampleFilesFolder + '/' + "weak.nominal.arff";
+        System.out.println(file);
         labelCounter.readData(new File(file));
         labelCounter.setGroups();
         labelCounter.countLabels();
