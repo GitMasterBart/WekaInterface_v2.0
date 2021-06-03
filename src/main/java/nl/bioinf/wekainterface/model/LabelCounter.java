@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Component;
 
+import weka.core.AttributeStats;
 import weka.core.Instance;
 import weka.core.Instances;
 import weka.experiment.Stats;
@@ -11,8 +12,7 @@ import weka.experiment.Stats;
 import java.io.File;
 import java.io.IOException;
 import java.math.RoundingMode;
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
+import java.text.*;
 import java.util.*;
 
 /**
@@ -25,6 +25,9 @@ public class LabelCounter {
     private Instances data;
     private List<String> attributeArray = new ArrayList<>();
     private Map<String, AttributeMap> groups = new HashMap<>();
+    private Map<String, Double> twoAttributeGroups = new HashMap<>();
+
+    private boolean onlyTwoAttributes = false;
 
     /**
      * Reads arff file and stores Instances in the class
@@ -33,7 +36,11 @@ public class LabelCounter {
      */
     public void readData(File file) throws IOException {
         DataReader reader = new DataReader();
-        this.data = reader.readArff(file);
+        if (file.getName().endsWith(".csv")){
+            this.data = reader.readCsv(file, ";");
+        }else{
+            this.data = reader.readArff(file);
+        }
     }
 
     /**
@@ -42,14 +49,40 @@ public class LabelCounter {
      * the labels for each attribute as its key and the occurrence of those labels as its value. The occurrence is set
      * at 0.
      */
-    public void setGroups(){
-        for (int classLabelIndex=0;classLabelIndex<this.data.classAttribute().numValues();classLabelIndex++) {
-            // Setting the class label as the key for the first Map, in the case of weather.nominal = {yes,no}
-            String classLabel = this.data.classAttribute().value(classLabelIndex);
-            // creating the 2nd Map with attribute names as keys and labels as value's
-            AttributeMap attributes = setAttributes();
+    public void setGroups() throws ParseException {
+        if (this.data.numAttributes() > 2){
 
-            this.groups.put(classLabel, attributes);
+            int numberOfValues = this.data.classAttribute().numValues();
+            if (this.data.classAttribute().isDate()){
+                AttributeStats stats = this.data.attributeStats(this.data.classIndex());
+                numberOfValues = stats.totalCount;
+            }
+            for (int classLabelIndex=0;classLabelIndex< numberOfValues;classLabelIndex++) {
+                // Setting the class label as the key for the first Map, in the case of weather.nominal = {yes,no}
+                String classLabel = this.data.classAttribute().value(classLabelIndex);
+                // creating the 2nd Map with attribute names as keys and labels as value's
+                AttributeMap attributes = setAttributes();
+
+                this.groups.put(classLabel, attributes);
+            }
+        }else {
+            onlyTwoAttributes = true;
+            AttributeStats stats = this.data.attributeStats(this.data.classIndex());
+            if (this.data.classAttribute().isDate() && stats.totalCount == stats.uniqueCount){
+                for (int classLabelIndex=0;classLabelIndex< stats.totalCount;classLabelIndex++) {
+                    // Setting the class label as the key for the first Map, in the case of weather.nominal = {yes,no}
+                    double classValue = this.data.instance(classLabelIndex).value(this.data.classIndex());
+                    String dateFormat = this.data.classAttribute().getDateFormat();
+                    String classLabel = parseDate(classValue, dateFormat);
+                    // creating the 2nd Map with attribute names as keys and labels as value's
+                    try{
+                        this.twoAttributeGroups.put(classLabel,
+                                Double.parseDouble(this.data.instance(classLabelIndex).toString().split(",")[this.data.classIndex()-1]));
+                    }catch (NumberFormatException e){
+                        System.out.println("ERROR:\tValue for Attribute " + this.data.attribute(this.data.classIndex()-1) + "is not numeric.");
+                    }
+                }
+            }
         }
     }
 
@@ -141,22 +174,25 @@ public class LabelCounter {
      * For each label in the instance, increase it's occurrence count by 1, depending on which class label it has.
      */
     public void countLabels(){
-        for (int instanceIndex = 0; instanceIndex < data.numInstances(); instanceIndex++){
+        if (!onlyTwoAttributes){
+            for (int instanceIndex = 0; instanceIndex < data.numInstances(); instanceIndex++){
 
-            Instance instance = data.instance(instanceIndex);
-            String[] values = instance.toString().split(",");
+                Instance instance = data.instance(instanceIndex);
+                String[] values = instance.toString().split(",");
+//            System.out.println("VALUES = " + Arrays.toString(values));
+                for (int valueIndex = 0; valueIndex < instance.numValues(); valueIndex++){
+                    AttributeMap attributeMap = groups.get(values[instance.classIndex()]);
+//                System.out.println("ATTRIBUTE MAP = " + attributeMap);
+                    if(valueIndex != instance.classIndex()){
+                        String attribute = attributeArray.get(valueIndex);
+                        LabelMap labelMap = attributeMap.getLabelMap(attribute);
 
-            for (int valueIndex = 0; valueIndex < instance.numValues(); valueIndex++){
-                AttributeMap attributeMap = groups.get(values[instance.classIndex()]);
-                if(valueIndex != instance.classIndex()){
-                    String attribute = attributeArray.get(valueIndex);
-                    LabelMap labelMap = attributeMap.getLabelMap(attribute);
-
-                    try{//If value is numeric
-                        double value = Double.parseDouble(values[valueIndex]);
-                        countNumeric(value, labelMap);
-                    }catch (NumberFormatException e){//Not numeric
-                        countNominal(values[valueIndex], labelMap);
+                        try{//If value is numeric
+                            double value = Double.parseDouble(values[valueIndex]);
+                            countNumeric(value, labelMap);
+                        }catch (NumberFormatException e){//Not numeric
+                            countNominal(values[valueIndex], labelMap);
+                        }
                     }
                 }
             }
@@ -226,12 +262,21 @@ public class LabelCounter {
         return text.length() - integerPlaces - 1;
     }
 
+    private String parseDate(double date, String dateformat){
+        long lDate = (long) date;
+        return new SimpleDateFormat(dateformat).format(lDate);
+    }
+
     public List<String> getAttributeArray() {
         return attributeArray;
     }
 
     public String getClassLabel(){
         return data.classAttribute().toString().split(" ")[1];
+    }
+
+    public boolean isOnlyTwoAttributes() {
+        return onlyTwoAttributes;
     }
 
     /**
@@ -241,10 +286,16 @@ public class LabelCounter {
      */
     public String mapToJSON() throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
-        Map<String, Map<String, Map<String, Integer>>> countMap = new HashMap<>();
-        groups.forEach((classLabel, attributeMap) ->
-                countMap.put(classLabel, attributeMap.getJsonMap()));
-        return objectMapper.writeValueAsString(countMap);
+
+        if (onlyTwoAttributes){
+            return objectMapper.writeValueAsString(twoAttributeGroups);
+        }else {
+            Map<String, Map<String, Map<String, Integer>>> countMap = new HashMap<>();
+            groups.forEach((classLabel, attributeMap) ->
+                    countMap.put(classLabel, attributeMap.getJsonMap()));
+            return objectMapper.writeValueAsString(countMap);
+        }
+
     }
 
     /**
@@ -252,12 +303,14 @@ public class LabelCounter {
      * @param args no args
      * @throws IOException if file doesn't exist
      */
-    public static void main(String[] args) throws IOException {
-        String file = "C:/Program Files/Weka-3-8-4/data/iris-missing.arff";
+    public static void main(String[] args) throws IOException, ParseException {
+//        String file = "C:\\Users\\jelle\\Desktop\\School\\Thema12\\Practicum\\gymTest.csv";
+        String file = "C:\\Program Files\\Weka-3-8-4\\data\\weather.numeric.arff";
         LabelCounter labelCounter = new LabelCounter();
         labelCounter.readData(new File(file));
         labelCounter.setGroups();
         labelCounter.countLabels();
+
         System.out.println(labelCounter.mapToJSON());
     }
 }
