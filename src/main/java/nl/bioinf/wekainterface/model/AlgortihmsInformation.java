@@ -14,16 +14,14 @@ public class AlgortihmsInformation implements Serializable {
     private final String algorithmsName;
     private final String uploadFileDemoFileUsedAlgorithme;
     private final SimpleDateFormat simpleDateFormat;
-    private final Evaluation evaluationAlgorithm;
 
 
 
-    public AlgortihmsInformation(String algortihmsInformation, String algorithmsParameters, SimpleDateFormat simpleDateFormat, Evaluation evaluationAlgorithm) {
+
+    public AlgortihmsInformation(String algortihmsInformation, String algorithmsParameters, SimpleDateFormat simpleDateFormat) {
         this.algorithmsName = algortihmsInformation;
         this.uploadFileDemoFileUsedAlgorithme = algorithmsParameters;
         this.simpleDateFormat = simpleDateFormat;
-        this.evaluationAlgorithm = evaluationAlgorithm;
-
     }
 
     public String getAlgorithmsName() {
@@ -40,7 +38,5 @@ public class AlgortihmsInformation implements Serializable {
         return strDate;
     }
 
-    public Evaluation getEvaluationAlgorithm() {
-        return evaluationAlgorithm;
-    }
+
 }

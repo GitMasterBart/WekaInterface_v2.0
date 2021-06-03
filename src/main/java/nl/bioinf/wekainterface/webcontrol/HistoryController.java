@@ -45,7 +45,7 @@ public class HistoryController {
                                    HttpSession httpSession) throws Exception {
         ArrayList<AlgortihmsInformation> evaluation =  serializationService.deserialization((File) httpSession.getAttribute("uniqueId"));
         for (int i = 0; i < evaluation.size(); i++) {
-            System.out.println();
+            System.out.println(evaluation.get(i));
             redirect.addFlashAttribute("evaluation", evaluation.get(i).getEvaluationAlgorithm());
         }
         return "redirect:/history/results";

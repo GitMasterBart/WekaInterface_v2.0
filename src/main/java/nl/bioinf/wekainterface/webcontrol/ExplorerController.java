@@ -50,27 +50,28 @@ public class ExplorerController {
     @Autowired
     private SerializationService serializationService;
 
-    @GetMapping(value = "/upload")
-    public String getFileUpload(Model model){
+    @GetMapping(value = "/workbench")
+    public String getWorkbench(Model model){
         List<String> filenames = dataReader.getDataSetNames();
         model.addAttribute("filenames", filenames);
-        return "fileUpload";
+        return "workbench";
     }
 
-    @PostMapping(value = "/upload")
-    public String postFileUpload(@RequestParam(name = "filename") String fileName,
-                                 Model model, RedirectAttributes redirect) throws Exception {
-        String arffFilePath = exampleFilesFolder + '/' + fileName;
-
-        labelCounter.readData(new File(arffFilePath));
-        labelCounter.setGroups();
-        labelCounter.countLabels();
-        //redirect.addFlashAttribute("filename", fileName);
-        redirect.addFlashAttribute("data", labelCounter.mapToJSON());
-        redirect.addFlashAttribute("attributes", labelCounter.getAttributeArray());
-        redirect.addFlashAttribute("classLabel", labelCounter.getClassLabel());
-        return "redirect:/explorer";
-    }
+//
+//    @PostMapping(value = "/upload")
+//    public String postFileUpload(@RequestParam(name = "filename") String fileName,
+//                                 Model model, RedirectAttributes redirect) throws Exception {
+//        String arffFilePath = exampleFilesFolder + '/' + fileName;
+//
+//        labelCounter.readData(new File(arffFilePath));
+//        labelCounter.setGroups();
+//        labelCounter.countLabels();
+//        //redirect.addFlashAttribute("filename", fileName);
+//        redirect.addFlashAttribute("data", labelCounter.mapToJSON());
+//        redirect.addFlashAttribute("attributes", labelCounter.getAttributeArray());
+//        redirect.addFlashAttribute("classLabel", labelCounter.getClassLabel());
+//        return "redirect:/explorer";
+//    }
 
     @GetMapping(value = "/explorer")
     public String getExplorerPage(Model model){
@@ -113,8 +114,9 @@ public class ExplorerController {
         }
 
         Evaluation evaluation = classificationService.classify(arffFile, classifierName);
+
         ArrayList<AlgortihmsInformation> history = (ArrayList<AlgortihmsInformation>)httpSession.getAttribute("history");
-        history.add(new AlgortihmsInformation(demoFile, classifierName, new SimpleDateFormat("HH:mm:ss"), evaluation));
+        history.add(new AlgortihmsInformation(demoFile, classifierName, new SimpleDateFormat("HH:mm:ss")));
         serializationService.serialization(history, (File) httpSession.getAttribute("uniqueId"));
 
         redirect.addFlashAttribute("evaluation", evaluation);
@@ -128,8 +130,9 @@ public class ExplorerController {
     }
 
     @GetMapping(value = "/test")
-    public String plotWeatherData(Model model) throws IOException {
-        String file = exampleFilesFolder + '/' + "weather.nominal.arff";
+    public String plotWeatherData(Model model, HttpSession httpSession) throws IOException {
+        serializationService.deserialization((File) httpSession.getAttribute("uniqueId"));
+        String file = exampleFilesFolder +);
         labelCounter.readData(new File(file));
         labelCounter.setGroups();
         labelCounter.countLabels();
