@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -48,6 +49,8 @@ public class ExplorerController {
     private ClassificationService classificationService;
     @Autowired
     private SerializationService serializationService;
+    @Autowired
+    private FileService fileService;
 
     @GetMapping(value = "/workbench")
     public String getWorkbench(Model model){
@@ -59,23 +62,66 @@ public class ExplorerController {
     }
 
     @PostMapping(value = "/workbench")
-    public String postWorkbench(@RequestParam(name = "filename", required = false) String demoFileName,
+    public String postWorkbench(//@RequestParam(name = "inputFile", required = false) MultipartFile multipart,
+                                @RequestParam(name = "filename", required = false) String demoFileName,
                                 Model model, RedirectAttributes redirect) throws Exception {
-        String arffFilePath = exampleFilesFolder + '/' + demoFileName;
 
+
+        Instances instances = fileService.getInstancesFromDemoFile(demoFileName);
+//
+//        // Read the given file and return instances
+//        Instances instances;
+//        if (!multipart.isEmpty()){
+//            System.out.println(multipart.getOriginalFilename());
+//            instances = fileService.getInstancesFromMultipart(multipart);
+//        } else {
+//            System.out.println(demoFileName);
+//            instances = fileService.getInstancesFromDemoFile(demoFileName);
+//        }
+
+        // from demo data plot the demo data
+        String arffFilePath = exampleFilesFolder + '/' + demoFileName;
+        labelCounter.readData(new File(arffFilePath));
+        labelCounter.setGroups();
+        labelCounter.countLabels();
+
+        // return all attributes to the html
+        redirect.addFlashAttribute("data", labelCounter.mapToJSON());
+        redirect.addFlashAttribute("attributes", labelCounter.getAttributeArray());
+        redirect.addFlashAttribute("classLabel", labelCounter.getClassLabel());
+        redirect.addFlashAttribute("instances", instances);
+        return "redirect:/explore";
+    }
+
+    @GetMapping(value = "/explore")
+    public String getExplorePage(@ModelAttribute("instances") Instances instances,
+                                 Model model){
+        System.out.println(instances.numInstances());
+        // get demo dataset names and classifier names
         List<String> filenames = dataReader.getDataSetNames();
         List<String> classifierNames = wekaClassifier.getClassifierNames();
         model.addAttribute("filenames", filenames);
         model.addAttribute("classifierNames", classifierNames);
-
-        labelCounter.readData(new File(arffFilePath));
-        labelCounter.setGroups();
-        labelCounter.countLabels();
-        model.addAttribute("data", labelCounter.mapToJSON());
-        model.addAttribute("attributes", labelCounter.getAttributeArray());
-        model.addAttribute("classLabel", labelCounter.getClassLabel());
         return "workbench";
     }
+
+    @PostMapping(value = "/explore")
+    public String postExplorePage(@RequestParam(name = "classifier") String classifierName,
+                                  Model model, RedirectAttributes redirect) throws Exception {
+//        Evaluation evaluation = wekaClassifier.test(instances, classifierName);
+//        redirect.addFlashAttribute("evaluation", evaluation);
+        return "redirect:/results";
+    }
+
+    @GetMapping(value = "/results")
+    public String getResultPage(Model model){
+        List<String> filenames = dataReader.getDataSetNames();
+        List<String> classifierNames = wekaClassifier.getClassifierNames();
+        model.addAttribute("filenames", filenames);
+        model.addAttribute("classifierNames", classifierNames);
+        return "workbench";
+    }
+
 
 //
 //    @PostMapping(value = "/upload")
@@ -106,22 +152,20 @@ public class ExplorerController {
     }
 
     @PostMapping(value = "/explorer")
-
     public String postExplorerPage(@RequestParam(name = "inputFile", required = false) MultipartFile multipart,
                                    @RequestParam(name = "filename", required = false) String demoFile,
                                    @RequestParam(name = "classifier") String classifierName,
+                                   @RequestParam(name = "delimiter") String delimiter,
                                    Model model, RedirectAttributes redirect,
                                    HttpSession httpSession) throws Exception {
-        File arffFile;
+        Instances instances;
 
         if (!multipart.isEmpty()){
-            arffFile = File.createTempFile("temp-", ".arff", new File(tempFolder));
-            InputStream inputStream = multipart.getInputStream();
-            FileUtils.copyInputStreamToFile(inputStream, arffFile);
+            instances = fileService.getInstancesFromMultipart(multipart);
         } else {
-            String arffFilePath = exampleFilesFolder + '/' + demoFile;
-            arffFile = new File(arffFilePath);
+            instances = fileService.getInstancesFromDemoFile(demoFile);
         }
+
         if (httpSession.getAttribute("history") == null){
             ArrayList<AlgortihmsInformation> algorithmsInformation = new ArrayList<>();
             httpSession.setAttribute("history", algorithmsInformation);
@@ -129,8 +173,7 @@ public class ExplorerController {
         ArrayList<AlgortihmsInformation> history = (ArrayList<AlgortihmsInformation>)httpSession.getAttribute("history");
         history.add(new AlgortihmsInformation(demoFile, classifierName, new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")));
         serializationService.serialization(history);
-        Evaluation evaluation = classificationService.classify(arffFile, classifierName);
-
+        Evaluation evaluation = wekaClassifier.test(instances, classifierName);
         redirect.addFlashAttribute("evaluation", evaluation);
         return "redirect:/explorer/results";
     }

@@ -45,10 +45,10 @@ public class DataReader implements Reader{
      */
     @Override
 
-    public Instances readCsv(File file, String delimiter) throws IOException {
+    public Instances readCsv(File file) throws IOException {
         CSVLoader loader = new CSVLoader();
         loader.setSource(file);
-        loader.setFieldSeparator(delimiter);
+        //loader.setFieldSeparator(delimiter);
         Instances data = loader.getDataSet();
         data.setClassIndex(data.numAttributes() - 1);
         return data;
