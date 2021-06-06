@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
-import java.util.Arrays;
+import java.util.ArrayList;
 
 /**
  * This class is a setup for the SerializationAlgorithmInformation
@@ -14,37 +14,34 @@ import java.util.Arrays;
 
 @Service
 public class SerializationService {
-    @Value("${serialization.path}")
-    private String serializationPath;
 
-    public void serialization(Object e) {
+    public void serialization(ArrayList<AlgortihmsInformation> algortihmsInformations, File uniqueID) {
         try {
             FileOutputStream fileOut =
-                    new FileOutputStream(serializationPath);
+                    new FileOutputStream(uniqueID);
             ObjectOutputStream out = new ObjectOutputStream(fileOut);
-            out.writeObject(e);
+            out.writeObject(algortihmsInformations);
             out.close();
             fileOut.close();
-            System.out.print("Serialized data is saved in /tmp/algorithmeData.ser");
+            //System.out.print("Serialized data is saved in /tmp/{random.string}.ser");
         } catch (IOException i) {
             i.printStackTrace();
         }
     }
 
-    public AlgortihmsInformation deserialization(){
-    AlgortihmsInformation e;
+    public ArrayList<AlgortihmsInformation> deserialization(File uniqueID){
         try {
-        FileInputStream fileIn = new FileInputStream("/tmp/algorithmeData.ser");
+        FileInputStream fileIn = new FileInputStream(uniqueID);
         ObjectInputStream in = new ObjectInputStream(fileIn);
-        e = (AlgortihmsInformation) in.readObject();
+        AlgortihmsInformation algortihmsInformation;
+        AlgortihmsInformation[] algortihmsInformations = new AlgortihmsInformation[5];
+        ArrayList<AlgortihmsInformation> algortihmsInformationArrayList = new ArrayList<>();
+        algortihmsInformationArrayList = (ArrayList<AlgortihmsInformation>)in.readObject();
         in.close();
         fileIn.close();
-        return e;
+        return algortihmsInformationArrayList;
     } catch (IOException | ClassNotFoundException i) {
         i.printStackTrace();
        throw new RuntimeException("oops");
     }}
 }
-
-
-
