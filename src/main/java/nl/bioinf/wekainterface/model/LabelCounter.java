@@ -17,7 +17,7 @@ import java.text.*;
 import java.util.*;
 
 /**
- @author jelle 387615
+@author jelle 387615
  Given Instances, counts the occurrence of each label for each attribute and seperates it by classlabel.
  */
 @Component

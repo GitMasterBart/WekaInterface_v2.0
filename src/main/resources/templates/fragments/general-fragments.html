@@ -40,7 +40,7 @@
 <div class="jumbotron text-left" th:fragment="jumbotron(page)">
     <div class="container">
         <h1 class="jumbotron-heading text-center" th:text="#{'' + ${page} + '.title'}">Welcome</h1>
-        <p class="lead text-center" th:text="#{'' + ${page} + '.subtitle'}">Explore the features of Weka and discover machine learning.</p>
+        <p class="lead text-center" th:utext="#{'' + ${page} + '.subtitle'}">Explore the features of Weka and discover machine learning.</p>
     </div>
 </div>
 
@@ -62,17 +62,22 @@
                 <thead>
                 <h1 th:text="${HistoryList}"></h1>
                 <tr>
-                    <th>Used File</th>
-                    <th>Used Algorithme</th>
                     <th>Time/Date</th>
+                    <th>Used File</th>
+                    <th>Plot</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="i:${info}" th:object="${info}">
-                    <td th:text="${i.algorithmsName}">_offline_</td>
-                    <td th:text="${i.uploadFileDemoFileUsedAlgorithme}">_offline_</td>
-                    <td th:text="${i.getSimpleDateFormat}">_offline_</td>
-                </tr>
+                <td th:text="${msg}">_offline_</td>
+                <td th:text="${msg}">_offline_</td>
+                <td th:text="${msg}">_offline_</td>
+                    <tr th:each="i:${info}" th:object="${info}" >
+                        <td th:text="${i.getSimpleDateFormat}">_offline_</td>
+                        <td><a th:href="@{'/history/' + ${i.algorithmsName}}"
+                               th:text="${i.algorithmsName}" class="text-body"></a></td>
+                        <td><a th:href="@{'/history/' + ${i.algorithmsName}}"
+                           text="Plot" class="text-body"> plot </a></td>
+                    </tr>
                 </tbody>
             </table>
         </div>

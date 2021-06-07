@@ -35,7 +35,7 @@ public class WekaClassifier {
             case "OneR":
                 rule = new OneR();
                 break;
-            case "NaivesBayes":
+            case "NaiveBayes":
                 rule = new NaiveBayes();
                 break;
             case "J48":
@@ -53,7 +53,7 @@ public class WekaClassifier {
     }
 
     public List<String> getClassifierNames(){
-        String[] names = {"ZeroR", "OneR", "NaivesBayes", "J48", "IBK"};
+        String[] names = {"ZeroR", "OneR", "NaiveBayes", "J48", "IBK"};
         return Arrays.asList(names);
     }
 }

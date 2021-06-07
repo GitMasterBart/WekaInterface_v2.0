@@ -30,7 +30,7 @@ public class FileService {
         if (multipart.getOriginalFilename().endsWith(".csv")){
             File csvFile = File.createTempFile("temp-", ".csv", new File(tempFolder));
             FileUtils.copyInputStreamToFile(inputStream, csvFile);
-            instances = dataReader.readCsv(csvFile);
+            instances = dataReader.readCsv(csvFile, ";");
         } else if (multipart.getOriginalFilename().endsWith(".arff")){
             File arffFile = File.createTempFile("temp-", ".arff", new File(tempFolder));
             FileUtils.copyInputStreamToFile(inputStream, arffFile);
