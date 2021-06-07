@@ -49,7 +49,7 @@ public class LabelCounter {
      * the labels for each attribute as its key and the occurrence of those labels as its value. The occurrence is set
      * at 0.
      */
-    public void setGroups() throws ParseException {
+    public void setGroups() {
         if (this.data.numAttributes() > 2){
 
             int numberOfValues = this.data.classAttribute().numValues();
@@ -92,16 +92,19 @@ public class LabelCounter {
      * @return Map<Attribute name, Map<Attribute label, Label occurrence>>
      */
     private AttributeMap setAttributes(){
-        AttributeMap attributes = new AttributeMap();
+        AttributeMap attributes;
+        attributes = new AttributeMap();
         int numAttributes = this.data.numAttributes();
         for (int attributeIndex = 0; attributeIndex < numAttributes; attributeIndex++){
 
             String attributeName = this.data.attribute(attributeIndex).name();
+            //System.out.println(attributeName);
 
             // attributeName array to later count the occurrence of each label for each attributeName
             if (!attributeArray.contains(attributeName)){
+                //System.out.println(attributeArray);
                 attributeArray.add(attributeName);
-            }
+            } else attributeArray.clear();
 
             boolean isNominal = this.data.attribute(attributeIndex).isNominal();
             boolean isNumeric = this.data.attribute(attributeIndex).isNumeric();
@@ -143,6 +146,7 @@ public class LabelCounter {
      * @param attribute attribute name
      * @param attributeMap Map<Attribute name, Map< [X - Y] Interval, Label occurrence>>
      */
+
     private void setLabelsNumeric(int attributeIndex, String attribute, AttributeMap attributeMap){
         LabelMap labelMap = new LabelMap();
         Stats stats = this.data.attributeStats(attributeIndex).numericStats;
@@ -182,6 +186,7 @@ public class LabelCounter {
 //            System.out.println("VALUES = " + Arrays.toString(values));
                 for (int valueIndex = 0; valueIndex < instance.numValues(); valueIndex++){
                     AttributeMap attributeMap = groups.get(values[instance.classIndex()]);
+                    //System.out.println(groups);
 //                System.out.println("ATTRIBUTE MAP = " + attributeMap);
                     if(valueIndex != instance.classIndex()){
                         String attribute = attributeArray.get(valueIndex);
@@ -305,7 +310,7 @@ public class LabelCounter {
      */
     public static void main(String[] args) throws IOException, ParseException {
 //        String file = "C:\\Users\\jelle\\Desktop\\School\\Thema12\\Practicum\\gymTest.csv";
-        String file = "C:\\Program Files\\Weka-3-8-4\\data\\weather.numeric.arff";
+        String file = "/Users/bengels/weka-3-9-4/data/weather.nominal.arff";
         LabelCounter labelCounter = new LabelCounter();
         labelCounter.readData(new File(file));
         labelCounter.setGroups();
