@@ -1,24 +1,24 @@
 package nl.bioinf.wekainterface.model;
 
-import weka.classifiers.evaluation.Evaluation;
-
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
-import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
 
 public class AlgortihmsInformation implements Serializable {
     private static final long serialVersionUID = 1L;
-    private final String algorithmsName;
-    private final String uploadFileDemoFileUsedAlgorithme;
-    private final SimpleDateFormat simpleDateFormat;
+    private String algorithmsName;
+    private String uploadFileDemoFileUsedAlgorithme;
+    private SimpleDateFormat simpleDateFormat;
 
+    public AlgortihmsInformation(String algortihmsInformation, SimpleDateFormat simpleDateFormat) {
+        this.algorithmsName = algortihmsInformation;
+        //this.uploadFileDemoFileUsedAlgorithme = algorithmsParameters;
+        this.simpleDateFormat = simpleDateFormat;
+    }
 
-
-
-    public AlgortihmsInformation(String algortihmsInformation, String algorithmsParameters, SimpleDateFormat simpleDateFormat) {
+    public void Algorithm(String algortihmsInformation, String algorithmsParameters, SimpleDateFormat simpleDateFormat) {
         this.algorithmsName = algortihmsInformation;
         this.uploadFileDemoFileUsedAlgorithme = algorithmsParameters;
         this.simpleDateFormat = simpleDateFormat;
