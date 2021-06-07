@@ -2,7 +2,7 @@ package nl.bioinf.wekainterface.model;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-//import nl.bioinf.wekainterface.errorhandling.InvalidDataSetProcessException;
+import nl.bioinf.wekainterface.errorhandling.InvalidDataSetProcessException;
 import org.springframework.stereotype.Component;
 
 import weka.core.AttributeStats;
@@ -17,7 +17,7 @@ import java.text.*;
 import java.util.*;
 
 /**
- @author jelle 387615
+@author jelle 387615
  Given Instances, counts the occurrence of each label for each attribute and seperates it by classlabel.
  */
 @Component
@@ -46,9 +46,12 @@ public class LabelCounter {
      */
     public void setGroups(){
 
-//        if (this.instances.numAttributes() == 1){
-//            throw new InvalidDataSetProcessException("Dataset only contains 1 Attribute");
-//        }
+
+
+        if (this.instances.numAttributes() == 1){
+            throw new InvalidDataSetProcessException("Dataset only contains 1 Attribute");
+        }
+
 
         if (this.instances.numAttributes() > 2){
 
