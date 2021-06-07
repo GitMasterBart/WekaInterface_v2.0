@@ -1,41 +1,29 @@
 <!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <!--@author Marijke Eggink-->
+    <!--@author Marijke Eggink 370419-->
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <title>Klessify</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script></head>
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-    <script th:src="@{'/js/plotDataSet.js'}"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<!--Deze kan misschien weg-->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script th:src="@{'/js/plotDataSet.js'}"></script>
 </head>
 <body>
+
+<div th:insert="~{fragments/general-fragments :: navbar}"></div>
+
 <div class="container pt-3">
+    <h2>Weka Workbench</h2>
     <div class="border shadow rounded">
         <div class="row">
             <div class="col-3 ml-1">
-                <form th:action="@{'/workbench'}" method="post">
-                    <div>
-                        <label for="file-name" th:text="#{form.select}"></label><br>
-                        <select class="form-select custom-select" id="file-name" name="filename">
-                            <option th:text="#{form.file.select}"></option>
-                            <option th:each="file: ${filenames}" th:value="${file}" th:text="${file}"></option>
-                        </select>
-                    </div>
-                    <div class="pt-2">
-                        <p th:text="#{form.upload}"></p>
-                    </div>
-                    <div class="custom-file">
-                        <input type="file" class="custom-file-input" id="inputFile">
-                        <label class="custom-file-label" for="inputFile" th:text="#{form.choose}"></label>
-                    </div>
-                    <input type="submit" value="submit" class="btn btn-outline-secondary">
-                    <input type="reset" value="reset" class="btn btn-outline-secondary">
-                </form>
+                <div th:insert="~{fragments/workbench-fragments :: file-upload-form}"></div>
             </div>
             <div class="col-8">
                 <ul id="myTab" class="nav nav-tabs">
@@ -43,6 +31,7 @@
                         <a href="#explorer" class="nav-link active">Explorer</a>
                     </li>
                     <li class="nav-item">
+                        <!--                        Deze moet active als resultaten aanwezig zijn???-->
                         <a href="#classify" class="nav-link">Classify</a>
                     </li>
                     <li class="nav-item">
@@ -51,56 +40,11 @@
                 </ul>
                 <div class="tab-content">
                     <div class="tab-pane fade show active" id="explorer">
-                        <h4 class="mt-2">Explorer</h4>
-                        <div th:if="${data}">
-                            <label for="attribute">Attributes</label><br>
-                            <select id="attribute" th:data-map="${data}" th:data-cl="${classLabel}"
-                                    onchange="plotData(this.getAttribute('data-map'), this.value, this.getAttribute('data-cl'))"
-                                    onload="plotData(this.getAttribute('data-map'), this.value, this.getAttribute('data-cl'))">
-                                <option>Select attribute</option>
-                                <option th:each="attribute:${attributes}" th:text="${attribute}" th:value="${attribute}"></option>
-                            </select>
-                        </div>
-                        <div style="height: 400px; width: 800px">
-                            <div id="plot"></div>
-                        </div>
+                        <div th:insert="~{fragments/workbench-fragments :: explorer-tab}"></div>
                     </div>
                     <div class="tab-pane fade" id="classify">
-                        <h4 class="mt-2">Classify</h4>
-                        <form th:action="@{'explore'}" method="POST">
-                            <label th:text="#{form.classifier.select}"></label>
-                            <select class="form-select custom-select" id="classifier" name="classifier"  onchange="getAlgorithmParams(this.value)">
-                                <option th:each="name:${classifierNames}" th:value="${name}" th:text="${name}"></option>
-                            </select>
-<!--                            <div id="algParams">-->
-<!--                                <div class="row">-->
-<!--                                    <div>-->
-<!--                                        <p class="mt-2">Algorithm parameters</p>-->
-<!--                                        <div id="ZeroR" hidden th:insert="~{/fragments/parameter-fragments :: ZeroR}"></div>-->
-<!--                                        <div id="OneR" hidden th:insert="~{/fragments/parameter-fragments :: OneR}"></div>-->
-<!--                                        <div id="NaiveBayes" hidden th:insert="~{/fragments/parameter-fragments :: NaiveBayes}"></div>-->
-<!--                                        <div id="IBK" hidden th:insert="~{/fragments/parameter-fragments :: IBK}"></div>-->
-<!--                                        <div id="J48" hidden th:insert="~{/fragments/parameter-fragments :: J48}" class="container"></div>-->
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                            </div>-->
-                            <input type="submit" value="Submit" class="btn btn-outline-secondary">
-                            <input type="reset" value="Reset" class="btn btn-outline-secondary">
-                        </form>
-                        <div th:if="${evaluation}">
-                            <div th:object="${evaluation}">
-                                <pre th:text="#{results.correct} + *{correct()}"></pre>
-                                <pre th:text="#{results.perc.correct} + *{pctCorrect()} + '%'"></pre>
-                                <pre th:text="#{results.incorrect} + *{incorrect()}"></pre>
-                                <pre th:text="#{results.perc.incorrect} + *{pctIncorrect()} + '%'"></pre>
-                                <pre th:text="#{results.kappa} + *{kappa()}"></pre>
-                                <pre th:text="#{results.mean.abs} + *{meanAbsoluteError()}"></pre>
-                                <pre th:text="#{results.mean.squared} + *{rootMeanSquaredError()}"></pre>
-                                <pre th:text="#{results.relative.abs} + *{relativeAbsoluteError()} + '%'"></pre>
-                                <pre th:text="#{results.relative.squared} + *{rootRelativeSquaredError()} + '%'"></pre>
-                                <pre th:text="#{results.instances.num} + *{numInstances()}"></pre>
-                            </div>
-                        </div>
+                        <div th:insert="~{fragments/workbench-fragments :: classify-tab}"></div>
+                        <div th:insert="~{fragments/workbench-fragments :: results}"></div>
                     </div>
                     <div class="tab-pane fade" id="history">
                         <h4 class="mt-2">History</h4>
@@ -111,6 +55,8 @@
         </div>
     </div>
 </div>
+
+<div th:insert="~{fragments/general-fragments :: footer}"></div>
 
 <script>
     $(document).ready(function(){
