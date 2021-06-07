@@ -7,15 +7,15 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script></head>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
 
 
 <!--All algorithm parameters written by Author: Jelle 387615-->
 <svg  th:fragment="param-explaination(par)" xmlns="http://www.w3.org/2000/svg"
-     width="16" height="16" fill="currentColor" class="bi bi-question-circle"
-     viewBox="0 0 16 16">
+      width="16" height="16" fill="currentColor" class="bi bi-question-circle"
+      viewBox="0 0 16 16">
     <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
     <path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286zm1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z"/>
 </svg>
@@ -25,9 +25,9 @@
 <div th:fragment="batchSizeParameter(algorithmName)">
     <div class="form-group">
         <label th:for="batchsize + ${algorithmName}" class="control-label" th:text="#{max.batchsize}"
-        style="display: inline-block">BatchSize</label>
+               style="display: inline-block">BatchSize</label>
         <a th:insert="~{fragments/parameter-fragments :: param-explaination(batchsize)}"
-              style="display: inline-block" th:title="#{batchsize.explaination}" data-toggle="tooltip"></a>
+           style="display: inline-block" th:title="#{batchsize.explaination}" data-toggle="tooltip"></a>
         <br>
         <input class="form-control" th:name="batchsize + ${algorithmName}" th:id="batchsize + ${algorithmName}" type="number" value="100" width="100px"><br>
     </div>
@@ -73,7 +73,7 @@
     <div class="form-group">
         <label class="control-label" th:text="#{minBucketSize.par}" th:for="minBucketSize + ${algorithmName}" style="display: inline-block">minBucketSize</label>
         <span th:insert="~{fragments/parameter-fragments :: param-explaination(minbucket)}"
-             style="display: inline-block" th:title="#{minbucket.explaination}" data-toggle="tooltip"></span>
+              style="display: inline-block" th:title="#{minbucket.explaination}" data-toggle="tooltip"></span>
         <br>
         <input class="form-control" th:id="minBucketSize + ${algorithmName}" th:name="minBucketSize + ${algorithmName}" type="number" value="6">
     </div>
@@ -175,62 +175,52 @@
 </div>
 
 <div th:fragment="ZeroR">
-    <form class="form">
-        <div th:insert="~{/fragments/parameter-fragments :: batchSizeParameter('ZeroR')}"></div>
-        <div th:insert="~{/fragments/parameter-fragments :: debugParameter('ZeroR')}"></div>
-        <div th:insert="~{/fragments/parameter-fragments :: doNotCheckCapParameter('ZeroR')}"></div>
-        <div th:insert="~{/fragments/parameter-fragments :: numDecimalsParameter('ZeroR')}"></div>
-    </form>
+    <div th:insert="~{/fragments/parameter-fragments :: batchSizeParameter('ZeroR')}"></div>
+    <div th:insert="~{/fragments/parameter-fragments :: debugParameter('ZeroR')}"></div>
+    <div th:insert="~{/fragments/parameter-fragments :: doNotCheckCapParameter('ZeroR')}"></div>
+    <div th:insert="~{/fragments/parameter-fragments :: numDecimalsParameter('ZeroR')}"></div>
 </div>
 
 <div th:fragment="OneR">
-    <form class="form">
-        <div th:insert="~{/fragments/parameter-fragments :: batchSizeParameter('OneR')}"></div>
-        <div th:insert="~{/fragments/parameter-fragments :: debugParameter('OneR')}"></div>
-        <div th:insert="~{/fragments/parameter-fragments :: doNotCheckCapParameter('OneR')}"></div>
-        <div th:insert="~{/fragments/parameter-fragments :: minBucketSizeParameter('OneR')}"></div>
-        <div th:insert="~{/fragments/parameter-fragments :: numDecimalsParameter('OneR')}"></div>
-    </form>
+    <div th:insert="~{/fragments/parameter-fragments :: batchSizeParameter('OneR')}"></div>
+    <div th:insert="~{/fragments/parameter-fragments :: debugParameter('OneR')}"></div>
+    <div th:insert="~{/fragments/parameter-fragments :: doNotCheckCapParameter('OneR')}"></div>
+    <div th:insert="~{/fragments/parameter-fragments :: minBucketSizeParameter('OneR')}"></div>
+    <div th:insert="~{/fragments/parameter-fragments :: numDecimalsParameter('OneR')}"></div>
 </div>
 
 <div th:fragment="IBK">
-    <form class="form">
-        <div th:insert="~{/fragments/parameter-fragments :: KnnParameter('IBK')}"></div>
-        <div th:insert="~{/fragments/parameter-fragments :: batchSizeParameter('IBK')}"></div>
-        <div th:insert="~{/fragments/parameter-fragments :: crossValidateParameter('IBK')}"></div>
-        <div th:insert="~{/fragments/parameter-fragments :: debugParameter('IBK')}"></div>
-        <div th:insert="~{/fragments/parameter-fragments :: doNotCheckCapParameter('IBK')}"></div>
-        <div th:insert="~{/fragments/parameter-fragments :: nnSearchAlgorithmParameter('IBK')}"></div>
-        <div th:insert="~{/fragments/parameter-fragments :: numDecimalsParameter('IBK')}"></div>
-    </form>
+    <div th:insert="~{/fragments/parameter-fragments :: KnnParameter('IBK')}"></div>
+    <div th:insert="~{/fragments/parameter-fragments :: batchSizeParameter('IBK')}"></div>
+    <div th:insert="~{/fragments/parameter-fragments :: crossValidateParameter('IBK')}"></div>
+    <div th:insert="~{/fragments/parameter-fragments :: debugParameter('IBK')}"></div>
+    <div th:insert="~{/fragments/parameter-fragments :: doNotCheckCapParameter('IBK')}"></div>
+    <div th:insert="~{/fragments/parameter-fragments :: nnSearchAlgorithmParameter('IBK')}"></div>
+    <div th:insert="~{/fragments/parameter-fragments :: numDecimalsParameter('IBK')}"></div>
 </div>
 
 <div th:fragment="NaiveBayes">
-    <form class="form">
-        <div th:insert="~{/fragments/parameter-fragments :: batchSizeParameter('NaiveBayes')}"></div>
-        <div th:insert="~{/fragments/parameter-fragments :: debugParameter('NaiveBayes')}"></div>
-        <div th:insert="~{/fragments/parameter-fragments :: doNotCheckCapParameter('NaiveBayes')}"></div>
-        <div th:insert="~{/fragments/parameter-fragments :: numDecimalsParameter('NaiveBayes')}"></div>
-    </form>
+    <div th:insert="~{/fragments/parameter-fragments :: batchSizeParameter('NaiveBayes')}"></div>
+    <div th:insert="~{/fragments/parameter-fragments :: debugParameter('NaiveBayes')}"></div>
+    <div th:insert="~{/fragments/parameter-fragments :: doNotCheckCapParameter('NaiveBayes')}"></div>
+    <div th:insert="~{/fragments/parameter-fragments :: numDecimalsParameter('NaiveBayes')}"></div>
 </div>
 
 <div th:fragment="J48">
-    <form class="form">
-        <div class="row">
-            <div class="col-6">
-                <div th:insert="~{/fragments/parameter-fragments :: batchSizeParameter('J48')}"></div>
-                <div th:insert="~{/fragments/parameter-fragments :: confidenceFactorParameter('J48')}"></div>
-                <div th:insert="~{/fragments/parameter-fragments :: debugParameter('J48')}"></div>
-                <div th:insert="~{/fragments/parameter-fragments :: doNotCheckCapParameter('J48')}"></div>
-            </div>
-            <div class="col-6">
-                <div th:insert="~{/fragments/parameter-fragments :: minNumObjectParameter('J48')}"></div>
-                <div th:insert="~{/fragments/parameter-fragments :: numDecimalsParameter('J48')}"></div>
-                <div th:insert="~{/fragments/parameter-fragments :: numFoldsParameter('J48')}"></div>
-                <div th:insert="~{/fragments/parameter-fragments :: prunedParameter('J48')}"></div>
-            </div>
+    <div class="row">
+        <div class="col-6">
+            <div th:insert="~{/fragments/parameter-fragments :: batchSizeParameter('J48')}"></div>
+            <div th:insert="~{/fragments/parameter-fragments :: confidenceFactorParameter('J48')}"></div>
+            <div th:insert="~{/fragments/parameter-fragments :: debugParameter('J48')}"></div>
+            <div th:insert="~{/fragments/parameter-fragments :: doNotCheckCapParameter('J48')}"></div>
         </div>
-    </form>
+        <div class="col-6">
+            <div th:insert="~{/fragments/parameter-fragments :: minNumObjectParameter('J48')}"></div>
+            <div th:insert="~{/fragments/parameter-fragments :: numDecimalsParameter('J48')}"></div>
+            <div th:insert="~{/fragments/parameter-fragments :: numFoldsParameter('J48')}"></div>
+            <div th:insert="~{/fragments/parameter-fragments :: prunedParameter('J48')}"></div>
+        </div>
+    </div>
 </div>
 
 </body>
