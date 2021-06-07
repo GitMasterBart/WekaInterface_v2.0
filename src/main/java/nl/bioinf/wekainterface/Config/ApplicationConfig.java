@@ -1,4 +1,4 @@
-package nl.bioinf.wekainterface.Config;
+package nl.bioinf.wekainterface.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
