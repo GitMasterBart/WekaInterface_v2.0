@@ -40,7 +40,7 @@
 <div class="jumbotron text-left" th:fragment="jumbotron(page)">
     <div class="container">
         <h1 class="jumbotron-heading text-center" th:text="#{'' + ${page} + '.title'}">Welcome</h1>
-        <p class="lead text-center" th:text="#{'' + ${page} + '.subtitle'}">Explore the features of Weka and discover machine learning.</p>
+        <p class="lead text-center" th:utext="#{'' + ${page} + '.subtitle'}">Explore the features of Weka and discover machine learning.</p>
     </div>
 </div>
 
@@ -54,7 +54,7 @@
     <!-- Copyright -->
 </footer>
 
-<div id="list_fragment" th:fragment="HistoryList">
+<div id="list_fragmentHistory" th:fragment="HistoryList">
     <!--   Author: Bart Engels 382612-->
 
         <div class="list-group">
@@ -81,9 +81,27 @@
                 </tbody>
             </table>
         </div>
-
-
 </div>
+
+<div id="list_fragmentFileUploads" th:fragment="HistoryList">
+    <!--   Author: Bart Engels 382612-->
+    <div class="list-group">
+        <table>
+            <thead>
+            <tr>
+                <th>Uploaded File</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="i:${uploadedFile}" th:object="${uploadedFile}" >
+                <td><a th:href="@{'/history/' + ${i}}"
+                                     th:text="${i}" class="text-body"></a></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
 
 </body>
 </html>

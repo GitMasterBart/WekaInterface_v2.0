@@ -7,6 +7,7 @@ import nl.bioinf.wekainterface.model.LabelCounter;
 import nl.bioinf.wekainterface.model.WekaClassifier;
 import nl.bioinf.wekainterface.service.FileService;
 import nl.bioinf.wekainterface.service.SerializationService;
+import nl.bioinf.wekainterface.service.SerializationServiceUploadedFiles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -47,6 +48,8 @@ public class ExplorerController {
     private SerializationService serializationService;
     @Autowired
     private FileService fileService;
+    @Autowired
+    private SerializationServiceUploadedFiles serializationServiceUploadedFiles;
 
     @GetMapping(value = "/workbench")
     public String getWorkbench(Model model, HttpSession httpSession, RedirectAttributes redirectAttributes) throws JsonProcessingException {
@@ -55,12 +58,17 @@ public class ExplorerController {
         model.addAttribute("filenames", filenames);
         model.addAttribute("classifierNames", classifierNames);
         try {
-            ArrayList<AlgortihmsInformation> deserializationObject = serializationService.deserialization((File) httpSession.getAttribute("uniqueIdHistory"));
-            model.addAttribute("info", deserializationObject);
-            redirectAttributes.addFlashAttribute("info", deserializationObject);
+            ArrayList<AlgortihmsInformation> deserializationObjectHistory = serializationService.deserialization((File) httpSession.getAttribute("uniqueIdHistory"));
+            ArrayList<String> deserializationObjectUploadedFile = serializationServiceUploadedFiles.deserialization((File) httpSession.getAttribute("uniqueIdUpload"));
+            model.addAttribute("info", deserializationObjectHistory);
+            model.addAttribute("uploadedFile", deserializationObjectUploadedFile);
+            redirectAttributes.addFlashAttribute("info", deserializationObjectHistory);
+            redirectAttributes.addFlashAttribute("uploadedFile", deserializationObjectUploadedFile);
         } catch (NullPointerException e) {
             model.addAttribute("msg", "No History");
+            model.addAttribute("uploadedFile", "No uploaded files");
             redirectAttributes.addFlashAttribute("msg", "No History");
+            redirectAttributes.addFlashAttribute("uploadedFile", "No uploaded files");
         }
 
         return "workbench";
@@ -81,6 +89,18 @@ public class ExplorerController {
             File serFile = File.createTempFile(uniqueId, ".ser", new File("/tmp/"));
             httpSession.setAttribute("uniqueIdHistory", serFile);
         }
+        if (httpSession.getAttribute("uniqueIdUpload") == null) {
+            String uniqueId = UUID.randomUUID().toString();
+            File serFile = File.createTempFile(uniqueId, ".ser", new File("/tmp/"));
+            httpSession.setAttribute("uniqueIdUpload", serFile);
+        }
+
+        if (httpSession.getAttribute("UloadedFiles")  == null){
+            ArrayList<String> uploadedFiles = new ArrayList<>();
+            httpSession.setAttribute("UloadedFiles", uploadedFiles);
+        }
+
+
 
         if (httpSession.getAttribute("demofile") == null) {
             String arffFilePath = exampleFilesFolder + '/' + demoFileName;
@@ -88,16 +108,14 @@ public class ExplorerController {
             httpSession.setAttribute("demofile", arffFile);
         }
 
-        if (httpSession.getAttribute("UloadedFiles")  == null){
-            ArrayList<String> uploadedFiles = new ArrayList<>();
-            uploadedFiles.add(multipart.getOriginalFilename());
-            httpSession.setAttribute("UloadedFiles", uploadedFiles);
-        }
-
         ArrayList<AlgortihmsInformation> history = (ArrayList<AlgortihmsInformation>) httpSession.getAttribute("history");
         if (demoFileName.equals("Select...")) demoFileName = multipart.getOriginalFilename();
-        history.add(new AlgortihmsInformation(demoFileName, new SimpleDateFormat("HH:mm:ss")));
+        if (!demoFileName.equals("")) history.add(new AlgortihmsInformation(demoFileName, new SimpleDateFormat("HH:mm:ss")));
         serializationService.serialization(history, (File) httpSession.getAttribute("uniqueIdHistory"));
+
+        ArrayList<String> uloadedFiles = (ArrayList<String>) httpSession.getAttribute("UloadedFiles");
+        uloadedFiles.add(multipart.getOriginalFilename());
+        serializationServiceUploadedFiles.serialization(uloadedFiles, (File) httpSession.getAttribute("uniqueIdUpload"));
 
         // Read the given file and return instances
         Instances instances;
@@ -106,8 +124,6 @@ public class ExplorerController {
         } else {
             instances = fileService.getInstancesFromDemoFile(demoFileName);
         }
-
-        System.out.println(instances);
 
         if (httpSession.getAttribute("instances") == null) {
             httpSession.setAttribute("instances", instances);
@@ -134,12 +150,17 @@ public class ExplorerController {
         model.addAttribute("filenames", filenames);
         model.addAttribute("classifierNames", classifierNames);
         try {
-            ArrayList<AlgortihmsInformation> deserializationObject = serializationService.deserialization((File) httpSession.getAttribute("uniqueIdHistory"));
-            model.addAttribute("info", deserializationObject);
+            ArrayList<AlgortihmsInformation> deserializationObjectHistory = serializationService.deserialization((File) httpSession.getAttribute("uniqueIdHistory"));
+            ArrayList<String> deserializationObjectUploadedFile = serializationServiceUploadedFiles.deserialization((File) httpSession.getAttribute("uniqueIdUpload"));
+            model.addAttribute("info", deserializationObjectHistory);
+            model.addAttribute("uploadedFile", deserializationObjectUploadedFile);
         } catch (NullPointerException e) {
             model.addAttribute("msg", "No History");
+            model.addAttribute("uploadedFile", "No uploaded files");
 
         }
+        model.addAttribute("uploadedFile", httpSession.getAttribute("UloadedFiles"));
+
         return "workbench";
     }
 
