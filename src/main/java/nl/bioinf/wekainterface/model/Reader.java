@@ -27,11 +27,5 @@ public interface Reader {
      * @return List of names
      */
     List<String> getDataSetNames();
-
-    /**
-     * Saves given file to a directory
-     * @param file Arff file
-     */
-    String saveArff(File file) throws IOException;
 }
 

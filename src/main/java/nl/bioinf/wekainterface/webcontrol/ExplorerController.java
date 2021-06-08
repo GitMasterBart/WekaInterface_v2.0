@@ -175,5 +175,6 @@ public class ExplorerController {
 
         model.addAttribute("filenames", filenames);
         model.addAttribute("classifierNames", classifierNames);
-        return "workbench";}
+        return "workbench";
+    }
 }

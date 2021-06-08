@@ -53,18 +53,16 @@
     <select class="form-select custom-select" id="classifier" name="classifier"  onchange="getAlgorithmParams(this.value)">
       <option th:each="name:${classifierNames}" th:value="${name}" th:text="${name}"></option>
     </select>
-    <div id="algParams">
-      <div class="row">
-        <div>
-          <p class="mt-2">Algorithm parameters</p>
-          <div id="ZeroR" hidden th:insert="~{/fragments/parameter-fragments :: ZeroR}"></div>
-          <div id="OneR" hidden th:insert="~{/fragments/parameter-fragments :: OneR}"></div>
-          <div id="NaiveBayes" hidden th:insert="~{/fragments/parameter-fragments :: NaiveBayes}"></div>
-          <div id="IBK" hidden th:insert="~{/fragments/parameter-fragments :: IBK}"></div>
-          <div id="J48" hidden th:insert="~{/fragments/parameter-fragments :: J48}" class="container"></div>
-        </div>
-      </div>
-    </div>
+<!--    <div class="row">-->
+<!--      <div>-->
+<!--        <p class="mt-2">Algorithm parameters</p>-->
+<!--        <div id="ZeroR" hidden th:insert="~{/fragments/parameter-fragments :: ZeroR}"></div>-->
+<!--        <div id="OneR" hidden th:insert="~{/fragments/parameter-fragments :: OneR}"></div>-->
+<!--        <div id="NaiveBayes" hidden th:insert="~{/fragments/parameter-fragments :: NaiveBayes}"></div>-->
+<!--        <div id="IBK" hidden th:insert="~{/fragments/parameter-fragments :: IBK}"></div>-->
+<!--        <div id="J48" hidden th:insert="~{/fragments/parameter-fragments :: J48}" class="container"></div>-->
+<!--      </div>-->
+<!--    </div>-->
     <input type="submit" value="Submit" class="btn btn-outline-secondary">
     <input type="reset" value="Reset" class="btn btn-outline-secondary">
   </form>
@@ -75,16 +73,16 @@
     <hr>
     <h4>Results</h4>
     <div th:object="${evaluation}">
-      <pre th:text="#{results.correct} + *{correct()}"></pre>
-      <pre th:text="#{results.perc.correct} + *{pctCorrect()} + '%'"></pre>
-      <pre th:text="#{results.incorrect} + *{incorrect()}"></pre>
-      <pre th:text="#{results.perc.incorrect} + *{pctIncorrect()} + '%'"></pre>
-      <pre th:text="#{results.kappa} + *{kappa()}"></pre>
-      <pre th:text="#{results.mean.abs} + *{meanAbsoluteError()}"></pre>
-      <pre th:text="#{results.mean.squared} + *{rootMeanSquaredError()}"></pre>
-      <pre th:text="#{results.relative.abs} + *{relativeAbsoluteError()} + '%'"></pre>
-      <pre th:text="#{results.relative.squared} + *{rootRelativeSquaredError()} + '%'"></pre>
       <pre th:text="#{results.instances.num} + *{numInstances()}"></pre>
+      <pre th:text="#{results.correct} + *{correct()}"></pre>
+      <pre th:text="#{results.incorrect} + *{incorrect()}"></pre>
+      <pre th:text="#{results.perc.correct} + *{pctCorrect()} + ' %'"></pre>
+      <pre th:text="#{results.perc.incorrect} + *{pctIncorrect()} + ' %'"></pre>
+<!--      <pre th:text="#{results.kappa} + *{kappa()}"></pre>-->
+<!--      <pre th:text="#{results.mean.abs} + *{meanAbsoluteError()}"></pre>-->
+<!--      <pre th:text="#{results.mean.squared} + *{rootMeanSquaredError()}"></pre>-->
+<!--      <pre th:text="#{results.relative.abs} + *{relativeAbsoluteError()} + '%'"></pre>-->
+<!--      <pre th:text="#{results.relative.squared} + *{rootRelativeSquaredError()} + '%'"></pre>-->
     </div>
   </div>
 </div>
