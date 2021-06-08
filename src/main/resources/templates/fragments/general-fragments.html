@@ -59,15 +59,14 @@
     <!-- Copyright -->
 </footer>
 
-<div id="list_fragment" th:fragment="HistoryList">
+<div id="list_fragmentHistory" th:fragment="HistoryList">
     <!--   Author: Bart Engels 382612-->
-    <section class="py-6 text-center container" >
-        <div class="row py-lg-5">
+
+        <div class="list-group">
                 <table>
                 <thead>
                 <h1 th:text="${HistoryList}"></h1>
                 <tr>
-                    <th>Used Algorithme</th>
                     <th>Time/Date</th>
                     <th>Used File</th>
                     <th>Plot</th>
@@ -77,11 +76,9 @@
                 <td th:text="${msg}">_offline_</td>
                 <td th:text="${msg}">_offline_</td>
                 <td th:text="${msg}">_offline_</td>
-                <td th:text="${msg}">_offline_</td>
                     <tr th:each="i:${info}" th:object="${info}" >
                         <td th:text="${i.getSimpleDateFormat}">_offline_</td>
-                        <td th:text="${i.uploadFileDemoFileUsedAlgorithme}">_offline_</td>
-                        <td><a th:href="@{'/history/' + ${i.algorithmsName}  + '/' + ${i.uploadFileDemoFileUsedAlgorithme}}"
+                        <td><a th:href="@{'/history/' + ${i.algorithmsName}}"
                                th:text="${i.algorithmsName}" class="text-body"></a></td>
                         <td><a th:href="@{'/history/' + ${i.algorithmsName}}"
                            text="Plot" class="text-body"> plot </a></td>
@@ -89,26 +86,26 @@
                 </tbody>
             </table>
         </div>
-    </section>
-
-
 </div>
 
-
-<div id="list_fragment2" th:fragment="HistoryList2">
+<div id="list_fragmentFileUploads" th:fragment="HistoryList">
     <!--   Author: Bart Engels 382612-->
     <div class="list-group">
-        <a href="#" class="list-group-item list-group-item-action flex-column align-items-start active">
-            <div class="d-flex w-100 justify-content-between">
-                <h5 class="mb-1" th:each="i:${info}" th:object="${info}"></h5>
-                <small>3 days ago</small>
-            </div>
-            <p class="mb-1">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>
-            <small>Donec id elit non mi porta.</small>
-        </a>
+        <table>
+            <thead>
+            <tr>
+                <th>Uploaded File</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="i:${uploadedFile}" th:object="${uploadedFile}" >
+                <td><a th:href="@{'/history/' + ${i}}"
+                                     th:text="${i}" class="text-body"></a></td>
+            </tr>
+            </tbody>
+        </table>
     </div>
 </div>
-
 
 
 </body>

@@ -46,9 +46,12 @@ public class LabelCounter {
      */
     public void setGroups(){
 
+
+
         if (this.instances.numAttributes() == 1){
             throw new InvalidDataSetProcessException("Dataset only contains 1 Attribute");
         }
+
 
         if (this.instances.numAttributes() > 2){
             System.out.println("MORE THAN 2 ATTRIBUTES");

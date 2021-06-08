@@ -1,0 +1,91 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <!--    Author: Marijke Eggink 370419-->
+  <meta charset="UTF-8">
+  <title>Klessify</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
+</head>
+<body>
+
+<div th:fragment="file-upload-form" id="file-upload-form">
+  <form th:action="@{'/workbench'}" method="post" enctype="multipart/form-data">
+    <div>
+      <label for="file-name" th:text="#{form.select}"></label><br>
+      <select class="form-select custom-select" id="file-name" name="filename">
+        <option th:text="#{form.file.select}"></option>
+        <option th:each="file: ${filenames}" th:value="${file}" th:text="${file}"></option>
+      </select>
+    </div>
+    <div class="pt-2">
+      <p th:text="#{form.upload}"></p>
+    </div>
+    <div class="custom-file">
+      <input type="file" class="custom-file-input" id="inputFile" name="inputFile">
+      <label class="custom-file-label" for="inputFile" th:text="#{form.choose}"></label>
+    </div>
+    <input type="submit" value="submit" class="btn btn-outline-secondary">
+    <input type="reset" value="reset" class="btn btn-outline-secondary">
+  </form>
+</div>
+
+<div th:fragment="explorer-tab" id="explorer-tab">
+  <h4 class="mt-2">Explorer</h4>
+  <div th:if="${data}">
+    <label for="attribute">Attributes</label><br>
+    <select id="attribute" th:data-map="${data}" th:data-cl="${classLabel}"
+            onchange="plotData(this.getAttribute('data-map'), this.value, this.getAttribute('data-cl'))"
+            onload="plotData(this.getAttribute('data-map'), this.value, this.getAttribute('data-cl'))">
+      <option>Select attribute</option>
+      <option th:each="attribute:${attributes}" th:text="${attribute}" th:value="${attribute}"></option>
+    </select>
+  </div>
+  <div style="height: 400px; width: 800px">
+    <div id="plot"></div>
+  </div>
+</div>
+
+<div th:fragment="classify-tab" id="classify-tab">
+  <h4 class="mt-2">Classify</h4>
+  <form th:action="@{'/workbench/explore'}" method="POST">
+    <label th:text="#{form.classifier.select}"></label>
+    <select class="form-select custom-select" id="classifier" name="classifier"  onchange="getAlgorithmParams(this.value)">
+      <option th:each="name:${classifierNames}" th:value="${name}" th:text="${name}"></option>
+    </select>
+<!--    <div class="row">-->
+<!--      <div>-->
+<!--        <p class="mt-2">Algorithm parameters</p>-->
+<!--        <div id="ZeroR" hidden th:insert="~{/fragments/parameter-fragments :: ZeroR}"></div>-->
+<!--        <div id="OneR" hidden th:insert="~{/fragments/parameter-fragments :: OneR}"></div>-->
+<!--        <div id="NaiveBayes" hidden th:insert="~{/fragments/parameter-fragments :: NaiveBayes}"></div>-->
+<!--        <div id="IBK" hidden th:insert="~{/fragments/parameter-fragments :: IBK}"></div>-->
+<!--        <div id="J48" hidden th:insert="~{/fragments/parameter-fragments :: J48}" class="container"></div>-->
+<!--      </div>-->
+<!--    </div>-->
+    <input type="submit" value="Submit" class="btn btn-outline-secondary">
+    <input type="reset" value="Reset" class="btn btn-outline-secondary">
+  </form>
+</div>
+
+<div th:fragment="results" id="results">
+  <div th:if="${evaluation}">
+    <hr>
+    <h4>Results</h4>
+    <div th:object="${evaluation}">
+      <pre th:text="#{results.instances.num} + *{numInstances()}"></pre>
+      <pre th:text="#{results.correct} + *{correct()}"></pre>
+      <pre th:text="#{results.incorrect} + *{incorrect()}"></pre>
+      <pre th:text="#{results.perc.correct} + *{pctCorrect()} + ' %'"></pre>
+      <pre th:text="#{results.perc.incorrect} + *{pctIncorrect()} + ' %'"></pre>
+<!--      <pre th:text="#{results.kappa} + *{kappa()}"></pre>-->
+<!--      <pre th:text="#{results.mean.abs} + *{meanAbsoluteError()}"></pre>-->
+<!--      <pre th:text="#{results.mean.squared} + *{rootMeanSquaredError()}"></pre>-->
+<!--      <pre th:text="#{results.relative.abs} + *{relativeAbsoluteError()} + '%'"></pre>-->
+<!--      <pre th:text="#{results.relative.squared} + *{rootRelativeSquaredError()} + '%'"></pre>-->
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

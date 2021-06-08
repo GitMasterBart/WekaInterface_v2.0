@@ -19,7 +19,7 @@ public interface Reader {
     /**
      * Given a CSV, convert the CSV file to an Arff file and save it to a directory.
      */
-    Instances readCsv(File file) throws IOException;
+    Instances readCsv(File file, String delimiter) throws IOException;
 
 
     /**
@@ -27,11 +27,5 @@ public interface Reader {
      * @return List of names
      */
     List<String> getDataSetNames();
-
-    /**
-     * Saves given file to a directory
-     * @param file Arff file
-     */
-    String saveArff(File file) throws IOException;
 }
 

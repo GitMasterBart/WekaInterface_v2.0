@@ -44,11 +44,10 @@ public class DataReader implements Reader{
      * @throws IOException if file doesn't exist
      */
     @Override
-
-    public Instances readCsv(File file) throws IOException {
+    public Instances readCsv(File file, String delimiter) throws IOException {
         CSVLoader loader = new CSVLoader();
         loader.setSource(file);
-        //loader.setFieldSeparator(delimiter);
+        loader.setFieldSeparator(delimiter);
         Instances data = loader.getDataSet();
         data.setClassIndex(data.numAttributes() - 1);
         return data;
@@ -67,34 +66,5 @@ public class DataReader implements Reader{
             fileNames.add(file.getName());
         }
         return fileNames;
-    }
-
-    /**
-     * This method saves an arff file to a temporarily folder.
-     * @param file Arff file
-     * @throws IOException if the file doesn't exist
-     * @return Absolute path of the temp file
-     */
-    @Override
-    public String saveArff(File file) throws IOException {
-        File tempFile = File.createTempFile("temp-", ".arff", new File(tempFolder));
-        Instances instances = readArff(file);
-        ArffSaver saver = new ArffSaver();
-        saver.setInstances(instances);
-        System.out.println(instances);
-        saver.setFile(tempFile);
-        saver.writeBatch();
-        return tempFile.toString();
-    }
-
-    /**
-     * main function for testing the class.
-     * @param args
-     * @throws IOException
-     */
-    public static void main(String[] args) throws IOException {
-        DataReader dataReader = new DataReader();
-        //Instead of using a hardcoded path use the application.properties variable tempFolder
-        System.out.println(dataReader.saveArff(new File("C:/Program Files/Weka-3-8-4/data/weather.nominal.arff")));
     }
 }
