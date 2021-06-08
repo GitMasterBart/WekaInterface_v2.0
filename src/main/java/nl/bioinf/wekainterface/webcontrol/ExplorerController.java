@@ -1,7 +1,7 @@
 package nl.bioinf.wekainterface.webcontrol;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import nl.bioinf.wekainterface.model.AlgortihmsInformation;
+import nl.bioinf.wekainterface.model.AlgorithmsInformation;
 import nl.bioinf.wekainterface.model.DataReader;
 import nl.bioinf.wekainterface.model.LabelCounter;
 import nl.bioinf.wekainterface.model.WekaClassifier;
@@ -58,7 +58,7 @@ public class ExplorerController {
         model.addAttribute("filenames", filenames);
         model.addAttribute("classifierNames", classifierNames);
         try {
-            ArrayList<AlgortihmsInformation> deserializationObjectHistory = serializationService.deserialization((File) httpSession.getAttribute("uniqueIdHistory"));
+            ArrayList<AlgorithmsInformation> deserializationObjectHistory = serializationService.deserialization((File) httpSession.getAttribute("uniqueIdHistory"));
             ArrayList<String> deserializationObjectUploadedFile = serializationServiceUploadedFiles.deserialization((File) httpSession.getAttribute("uniqueIdUpload"));
             model.addAttribute("info", deserializationObjectHistory);
             model.addAttribute("uploadedFile", deserializationObjectUploadedFile);
@@ -80,7 +80,7 @@ public class ExplorerController {
                                 Model model, RedirectAttributes redirect, HttpSession httpSession) throws Exception {
 
         if (httpSession.getAttribute("history") == null) {
-            ArrayList<AlgortihmsInformation> algorithmsInformation = new ArrayList<>();
+            ArrayList<AlgorithmsInformation> algorithmsInformation = new ArrayList<>();
             httpSession.setAttribute("history", algorithmsInformation);
         }
 
@@ -108,9 +108,9 @@ public class ExplorerController {
             httpSession.setAttribute("demofile", arffFile);
         }
 
-        ArrayList<AlgortihmsInformation> history = (ArrayList<AlgortihmsInformation>) httpSession.getAttribute("history");
+        ArrayList<AlgorithmsInformation> history = (ArrayList<AlgorithmsInformation>) httpSession.getAttribute("history");
         if (demoFileName.equals("Select...")) demoFileName = multipart.getOriginalFilename();
-        if (!demoFileName.equals("")) history.add(new AlgortihmsInformation(demoFileName, new SimpleDateFormat("HH:mm:ss")));
+        if (!demoFileName.equals("")) history.add(new AlgorithmsInformation(demoFileName, new SimpleDateFormat("HH:mm:ss")));
         serializationService.serialization(history, (File) httpSession.getAttribute("uniqueIdHistory"));
 
         ArrayList<String> uloadedFiles = (ArrayList<String>) httpSession.getAttribute("UloadedFiles");
@@ -150,7 +150,7 @@ public class ExplorerController {
         model.addAttribute("filenames", filenames);
         model.addAttribute("classifierNames", classifierNames);
         try {
-            ArrayList<AlgortihmsInformation> deserializationObjectHistory = serializationService.deserialization((File) httpSession.getAttribute("uniqueIdHistory"));
+            ArrayList<AlgorithmsInformation> deserializationObjectHistory = serializationService.deserialization((File) httpSession.getAttribute("uniqueIdHistory"));
             ArrayList<String> deserializationObjectUploadedFile = serializationServiceUploadedFiles.deserialization((File) httpSession.getAttribute("uniqueIdUpload"));
             model.addAttribute("info", deserializationObjectHistory);
             model.addAttribute("uploadedFile", deserializationObjectUploadedFile);
