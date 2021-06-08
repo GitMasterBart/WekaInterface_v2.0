@@ -73,16 +73,20 @@
     <hr>
     <h4>Results</h4>
     <div th:object="${evaluation}">
-      <pre th:text="#{results.instances.num} + *{numInstances()}"></pre>
-      <pre th:text="#{results.correct} + *{correct()}"></pre>
-      <pre th:text="#{results.incorrect} + *{incorrect()}"></pre>
-      <pre th:text="#{results.perc.correct} + *{pctCorrect()} + ' %'"></pre>
-      <pre th:text="#{results.perc.incorrect} + *{pctIncorrect()} + ' %'"></pre>
-<!--      <pre th:text="#{results.kappa} + *{kappa()}"></pre>-->
-<!--      <pre th:text="#{results.mean.abs} + *{meanAbsoluteError()}"></pre>-->
-<!--      <pre th:text="#{results.mean.squared} + *{rootMeanSquaredError()}"></pre>-->
-<!--      <pre th:text="#{results.relative.abs} + *{relativeAbsoluteError()} + '%'"></pre>-->
-<!--      <pre th:text="#{results.relative.squared} + *{rootRelativeSquaredError()} + '%'"></pre>-->
+      <div id="basic-stats">
+        <pre th:text="#{results.instances.num} + *{#numbers.formatInteger(numInstances(), 0)}"></pre>
+        <pre th:text="#{results.correct} + *{#numbers.formatInteger(correct(), 0)}"></pre>
+        <pre th:text="#{results.incorrect} + *{#numbers.formatInteger(incorrect(), 0)}"></pre>
+        <pre th:text="#{results.perc.correct} + *{#numbers.formatDecimal(pctCorrect(), 0, 2)} + ' %'"></pre>
+        <pre th:text="#{results.perc.incorrect} + *{#numbers.formatDecimal(pctIncorrect(), 0, 2)} + ' %'"></pre>
+      </div>
+<!--      <div id="advanced-stats">-->
+<!--        <pre th:text="#{results.kappa} + *{kappa()}"></pre>-->
+<!--        <pre th:text="#{results.mean.abs} + *{meanAbsoluteError()}"></pre>-->
+<!--        <pre th:text="#{results.mean.squared} + *{rootMeanSquaredError()}"></pre>-->
+<!--        <pre th:text="#{results.relative.abs} + *{relativeAbsoluteError()} + '%'"></pre>-->
+<!--        <pre th:text="#{results.relative.squared} + *{rootRelativeSquaredError()} + '%'"></pre>-->
+<!--      </div>-->
     </div>
   </div>
 </div>
