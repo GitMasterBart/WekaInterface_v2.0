@@ -42,6 +42,7 @@ public class HistoryController {
     @Autowired
     private FileService fileService;
 
+
     @GetMapping(value = "/history/{dataSet}/{algorithms}")
     public String postHistoryPage(@PathVariable("dataSet") String dataSet,
                                   @PathVariable("algorithms") String algorithms,
