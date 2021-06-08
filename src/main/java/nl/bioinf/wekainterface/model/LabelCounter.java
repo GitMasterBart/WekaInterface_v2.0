@@ -51,19 +51,29 @@ public class LabelCounter {
         }
 
         if (this.instances.numAttributes() > 2){
-
-            int numberOfValues = this.instances.classAttribute().numValues();
-            if (this.instances.classAttribute().isDate()){
+            System.out.println("MORE THAN 2 ATTRIBUTES");
+            if (this.instances.classAttribute().isDate() || this.instances.classAttribute().isNumeric()){
+                System.out.println("Class attribute is Date or Numeric");
                 AttributeStats stats = this.instances.attributeStats(this.instances.classIndex());
-                numberOfValues = stats.totalCount;
+                int numberOfValues = stats.totalCount;
+                for (int instanceIndex = 0; instanceIndex < numberOfValues; instanceIndex++){
+                    AttributeMap attributes = setAttributes();
+                    String classLabel = Double.toString(this.instances.instance(instanceIndex).value(this.instances.classIndex()));
+                    if (!groups.containsKey(classLabel)){
+                        this.groups.put(classLabel, attributes);
+                    }
+                }
             }
-            for (int classLabelIndex=0;classLabelIndex< numberOfValues;classLabelIndex++) {
-                // Setting the class label as the key for the first Map, in the case of weather.nominal = {yes,no}
-                String classLabel = this.instances.classAttribute().value(classLabelIndex);
-                // creating the 2nd Map with attribute names as keys and labels as value's
-                AttributeMap attributes = setAttributes();
-
-                this.groups.put(classLabel, attributes);
+            else {
+                System.out.println("Class Attribute is Nominal");
+                int numberOfValues = this.instances.classAttribute().numValues();
+                for (int classLabelIndex = 0; classLabelIndex < numberOfValues; classLabelIndex++) {
+                    // Setting the class label as the key for the first Map, in the case of weather.nominal = {yes,no}
+                    String classLabel = this.instances.classAttribute().value(classLabelIndex);
+                    // creating the 2nd Map with attribute names as keys and labels as value's
+                    AttributeMap attributes = setAttributes();
+                    this.groups.put(classLabel, attributes);
+                }
             }
         }else {
             onlyTwoAttributes = true;
@@ -179,10 +189,14 @@ public class LabelCounter {
 
                 Instance instance = instances.instance(instanceIndex);
                 String[] values = instance.toString().split(",");
-//            System.out.println("VALUES = " + Arrays.toString(values));
                 for (int valueIndex = 0; valueIndex < instance.numValues(); valueIndex++){
-                    AttributeMap attributeMap = groups.get(values[instance.classIndex()]);
-//                System.out.println("ATTRIBUTE MAP = " + attributeMap);
+                    AttributeMap attributeMap = new AttributeMap();
+                    if (instances.classAttribute().isNumeric()){
+                        attributeMap = groups.get(Double.toString(Double.parseDouble(values[instance.classIndex()])));
+                    }else if (instances.classAttribute().isNominal()){
+                        attributeMap = groups.get(values[instance.classIndex()]);
+                    }
+
                     if(valueIndex != instance.classIndex()){
                         String attribute = attributeArray.get(valueIndex);
                         LabelMap labelMap = attributeMap.getLabelMap(attribute);
@@ -315,9 +329,9 @@ public class LabelCounter {
      * @param args no args
      * @throws IOException if file doesn't exist
      */
-    public static void main(String[] args) throws IOException, ParseException {
+    public static void main(String[] args) throws IOException{
 
-        String file = "C:\\Program Files\\Weka-3-8-4\\data\\weather.numeric.arff";
+        String file = "C:\\Program Files\\Weka-3-8-4\\data\\credit-g.arff";
         DataReader dataReader = new DataReader();
         LabelCounter labelCounter = new LabelCounter();
         labelCounter.setInstances(dataReader.readArff(new File(file)));
