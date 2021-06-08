@@ -86,7 +86,7 @@ public class LabelCounter {
                     // Setting the class label as the key for the first Map, in the case of weather.nominal = {yes,no}
                     double classValue = this.instances.instance(classLabelIndex).value(this.instances.classIndex());
                     String dateFormat = this.instances.classAttribute().getDateFormat();
-                    String classLabel = parseDate(classValue, dateFormat);
+                    String classLabel = Util.parseDate(classValue, dateFormat);
                     // creating the 2nd Map with attribute names as keys and labels as value's
                     try{
                         this.twoAttributeGroups.put(classLabel,
@@ -164,21 +164,21 @@ public class LabelCounter {
         double numGroups = Math.round((stats.max - stats.min) / stats.stdDev);
 
         // Number of decimals used in the dataset
-        int numDecimals = numDecimals(stats.min);
-        double groupInterval = roundTo((stats.max - stats.min) / numGroups, numDecimals);
+        int numDecimals = Util.numDecimals(stats.min);
+        double groupInterval = Util.roundTo((stats.max - stats.min) / numGroups, numDecimals);
         double intervalStart = stats.min;
 
         for (int groupIndex = 0; groupIndex < numGroups; groupIndex++){
 
             String labelGroup;
-            double intervalEnd = roundTo((intervalStart + groupInterval), numDecimals);
+            double intervalEnd = Util.roundTo((intervalStart + groupInterval), numDecimals);
             if (groupIndex == numGroups-1){
-                labelGroup = intervalStart + "-" + roundTo((stats.max + roundTo((groupInterval/10), numDecimals)), numDecimals);
+                labelGroup = intervalStart + "-" + Util.roundTo((stats.max + Util.roundTo((groupInterval/10), numDecimals)), numDecimals);
             }else {
                 labelGroup = intervalStart + "-" + intervalEnd;
             }
             labelMap.addLabel(labelGroup);
-            intervalStart = roundTo(groupInterval + intervalStart, numDecimals);
+            intervalStart = Util.roundTo(groupInterval + intervalStart, numDecimals);
         }
         attributeMap.addAttribute(attribute, labelMap);
     }
@@ -242,48 +242,6 @@ public class LabelCounter {
         labelMap.incrementLabel(label);
     }
 
-    /**
-     * Given a value round the value to 'numDecimals' decimals
-     * @param value double
-     * @param numDecimals int number of decimals the value should be rounded to
-     * @return double, rounded value
-     */
-    private double roundTo(double value, int numDecimals){
-        DecimalFormatSymbols dfSymbols = new DecimalFormatSymbols();
-        dfSymbols.setDecimalSeparator('.');
-        DecimalFormat df = new DecimalFormat("#." + "#".repeat(Math.max(0, numDecimals)), dfSymbols);
-        String decimals = Double.toString(value).split("\\.")[1];
-
-        if(numDecimals < decimals.length()){
-
-            int lastDigit = Character.getNumericValue(decimals.toCharArray()[numDecimals]);
-            if (lastDigit >= 5){
-                df.setRoundingMode(RoundingMode.UP);
-            }else {
-                df.setRoundingMode(RoundingMode.DOWN);
-            }
-            return Double.parseDouble(df.format(value));
-        }
-        // If the value is already rounded to the right amount of decimals return the given value
-        return value;
-    }
-
-    /**
-     * given a value, determine the amount of decimals
-     * @param d double
-     * @return int, the amount of decimals
-     */
-    private int numDecimals(double d){
-        String text = Double.toString(Math.abs(d));
-        int integerPlaces = text.indexOf('.');
-        return text.length() - integerPlaces - 1;
-    }
-
-    private String parseDate(double date, String dateformat){
-        long lDate = (long) date;
-        return new SimpleDateFormat(dateformat).format(lDate);
-    }
-
     public List<String> getAttributeArray() {
         return attributeArray;
     }
@@ -334,7 +292,7 @@ public class LabelCounter {
      */
     public static void main(String[] args) throws IOException{
 
-        String file = "C:\\Program Files\\Weka-3-8-4\\data\\credit-g.arff";
+        String file = "C:\\Program Files\\Weka-3-8-4\\data\\diabetes.arff";
         DataReader dataReader = new DataReader();
         LabelCounter labelCounter = new LabelCounter();
         labelCounter.setInstances(dataReader.readArff(new File(file)));
