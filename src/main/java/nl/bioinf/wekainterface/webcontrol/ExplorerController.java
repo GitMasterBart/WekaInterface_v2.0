@@ -167,14 +167,13 @@ public class ExplorerController {
 
     @PostMapping(value = "/workbench/explore")
     public String postExplorePage(@RequestParam(name = "classifier") String classifierName,
-                                  HttpRequest httpRequest,
                                   Model model, RedirectAttributes redirect, HttpSession httpSession) throws Exception {
 
         if (httpSession.getAttribute("algorithm") == null) {
             httpSession.setAttribute("algorithm", classifierName);
         }
-        System.out.println(classifierName);
-        classifierFactory.createClassifier(classifierName, httpRequest);
+//        System.out.println(classifierName);
+//        classifierFactory.createClassifier(classifierName, httpRequest);
 
         Instances instances =  (Instances)httpSession.getAttribute("instances");
 
@@ -191,7 +190,6 @@ public class ExplorerController {
         redirect.addFlashAttribute("evaluation", evaluation);
         return "redirect:/workbench";
     }
-
 
     @GetMapping(value = "/results")
     public String getResultPage(Model model, HttpSession httpSession) throws JsonProcessingException {
