@@ -10,10 +10,10 @@
 
 <div th:insert="~{fragments/general-fragments :: jumbotron(about)}"></div>
 
-<section class="py-5 text-center container">
-    <div class="row py-lg-5">
+<section class="py-5 container">
+    <div class="row">
         <div class="col-lg-6 col-md-8 mx-auto">
-            <h5 class="fw-light" th:text=" #{WekaAlgorithms.information}"> _offline_</h5>
+            <p th:utext=" #{about.text}"> _offline_</p>
         </div>
     </div>
 </section>
