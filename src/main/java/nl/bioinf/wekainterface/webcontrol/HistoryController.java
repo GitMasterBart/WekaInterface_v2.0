@@ -1,7 +1,7 @@
 package nl.bioinf.wekainterface.webcontrol;
 
 
-import nl.bioinf.wekainterface.model.AlgortihmsInformation;
+import nl.bioinf.wekainterface.model.AlgorithmsInformation;
 import nl.bioinf.wekainterface.model.LabelCounter;
 import nl.bioinf.wekainterface.service.ClassificationService;
 import nl.bioinf.wekainterface.service.FileService;
@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import weka.classifiers.evaluation.Evaluation;
 import weka.core.Instances;
-import weka.core.stopwords.Null;
 
 import javax.servlet.http.HttpSession;
 import java.io.File;
@@ -43,21 +42,11 @@ public class HistoryController {
     @Autowired
     private FileService fileService;
 
-    @GetMapping(value = "/history")
-    public String getHistoryPage(Model model, HttpSession httpSession){
-        try {
-            ArrayList<AlgortihmsInformation> deserializationObject = serializationService.deserialization((File) httpSession.getAttribute("uniqueId"));
-            model.addAttribute("info", deserializationObject);
-        }  catch (NullPointerException e){
-            model.addAttribute("msg", "No History");
-        }
-        return "historydummypage";
-    }
-
     @GetMapping(value = "/history/{dataSet}/{algorithms}")
-
-    public String postHistoryPage(@PathVariable("dataSet") String dataSet, @PathVariable("algorithms") String algorithms, Model model, RedirectAttributes redirect,
-                                  HttpSession httpSession) throws Exception {
+    public String postHistoryPage(@PathVariable("dataSet") String dataSet,
+                                  @PathVariable("algorithms") String algorithms,
+                                  Model model, RedirectAttributes redirect, HttpSession httpSession) throws Exception {
+        // DEZE WORDT NIET GEBRUIKT NOG, EN MOET NOG AANGEPAST WORDEN AAN DE NIEUWE MANIER VAN DATA INLEZEN
         File arffFile;
         String arffFilePath = exampleFilesFolder + '/' + dataSet;
         arffFile = new File(arffFilePath);
@@ -66,18 +55,6 @@ public class HistoryController {
 
         return "redirect:/workbench";
     }
-
-//    @GetMapping(value = "/history/results")
-//    public String getHistoryResultsPage(Model model, HttpSession httpSession) throws Exception {
-//        try {
-//            ArrayList<AlgortihmsInformation> deserializationObject = serializationService.deserialization((File) httpSession.getAttribute("uniqueId"));
-//            model.addAttribute("info", deserializationObject);
-//        }  catch (NullPointerException e){
-//            model.addAttribute("msg", "No History");
-//
-//        }
-//        return "workbench";
-//    }
 
     @GetMapping(value = "/history/{dataSet}")
     public String plotHisotryPlots(@PathVariable("dataSet") String dataset, Model model, RedirectAttributes redirect) throws Exception{
@@ -97,8 +74,4 @@ public class HistoryController {
         return "redirect:/workbench/explore";
 
     }
-
-
-
-
-    }
+}

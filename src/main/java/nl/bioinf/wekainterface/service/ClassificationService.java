@@ -8,6 +8,9 @@ import weka.core.Instances;
 
 import java.io.File;
 
+/**
+ * Deze class staat er nog in, maar wordt niet meer gebruikt.
+ */
 @Service
 public class ClassificationService {
     public Evaluation classify(File arffFile, String classifierName){

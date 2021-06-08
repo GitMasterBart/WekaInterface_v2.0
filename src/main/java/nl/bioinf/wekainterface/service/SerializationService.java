@@ -1,7 +1,6 @@
 package nl.bioinf.wekainterface.service;
 
-import nl.bioinf.wekainterface.model.AlgortihmsInformation;
-import org.springframework.beans.factory.annotation.Value;
+import nl.bioinf.wekainterface.model.AlgorithmsInformation;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
@@ -15,12 +14,12 @@ import java.util.ArrayList;
 @Service
 public class SerializationService {
 
-    public void serialization(ArrayList<AlgortihmsInformation> algortihmsInformations, File uniqueID) {
+    public void serialization(ArrayList<AlgorithmsInformation> algorithmsInformation, File uniqueID) {
         try {
             FileOutputStream fileOut =
                     new FileOutputStream(uniqueID);
             ObjectOutputStream out = new ObjectOutputStream(fileOut);
-            out.writeObject(algortihmsInformations);
+            out.writeObject(algorithmsInformation);
             out.close();
             fileOut.close();
             //System.out.print("Serialized data is saved in /tmp/{random.string}.ser");
@@ -29,17 +28,17 @@ public class SerializationService {
         }
     }
 
-    public ArrayList<AlgortihmsInformation> deserialization(File uniqueID){
+    public ArrayList<AlgorithmsInformation> deserialization(File uniqueID){
         try {
         FileInputStream fileIn = new FileInputStream(uniqueID);
         ObjectInputStream in = new ObjectInputStream(fileIn);
-        AlgortihmsInformation algortihmsInformation;
-        AlgortihmsInformation[] algortihmsInformations = new AlgortihmsInformation[5];
-        ArrayList<AlgortihmsInformation> algortihmsInformationArrayList = new ArrayList<>();
-        algortihmsInformationArrayList = (ArrayList<AlgortihmsInformation>)in.readObject();
+        AlgorithmsInformation algorithmsInformation;
+        AlgorithmsInformation[] algorithmsInformations = new AlgorithmsInformation[5];
+        ArrayList<AlgorithmsInformation> algorithmsInformationArrayList = new ArrayList<>();
+        algorithmsInformationArrayList = (ArrayList<AlgorithmsInformation>)in.readObject();
         in.close();
         fileIn.close();
-        return algortihmsInformationArrayList;
+        return algorithmsInformationArrayList;
     } catch (IOException | ClassNotFoundException i) {
         i.printStackTrace();
        throw new RuntimeException("oops");

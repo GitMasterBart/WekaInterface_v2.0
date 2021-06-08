@@ -190,13 +190,21 @@
 </div>
 
 <div th:fragment="IBK">
-    <div th:insert="~{/fragments/parameter-fragments :: KnnParameter('IBK')}"></div>
-    <div th:insert="~{/fragments/parameter-fragments :: batchSizeParameter('IBK')}"></div>
-    <div th:insert="~{/fragments/parameter-fragments :: crossValidateParameter('IBK')}"></div>
-    <div th:insert="~{/fragments/parameter-fragments :: debugParameter('IBK')}"></div>
-    <div th:insert="~{/fragments/parameter-fragments :: doNotCheckCapParameter('IBK')}"></div>
-    <div th:insert="~{/fragments/parameter-fragments :: nnSearchAlgorithmParameter('IBK')}"></div>
-    <div th:insert="~{/fragments/parameter-fragments :: numDecimalsParameter('IBK')}"></div>
+    <div class="row">
+        <div class="col-6">
+            <div th:insert="~{/fragments/parameter-fragments :: KnnParameter('IBK')}"></div>
+            <div th:insert="~{/fragments/parameter-fragments :: batchSizeParameter('IBK')}"></div>
+            <div th:insert="~{/fragments/parameter-fragments :: crossValidateParameter('IBK')}"></div>
+            <div th:insert="~{/fragments/parameter-fragments :: debugParameter('IBK')}"></div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-6">
+            <div th:insert="~{/fragments/parameter-fragments :: doNotCheckCapParameter('IBK')}"></div>
+            <div th:insert="~{/fragments/parameter-fragments :: nnSearchAlgorithmParameter('IBK')}"></div>
+            <div th:insert="~{/fragments/parameter-fragments :: numDecimalsParameter('IBK')}"></div>
+        </div>
+    </div>
 </div>
 
 <div th:fragment="NaiveBayes">
