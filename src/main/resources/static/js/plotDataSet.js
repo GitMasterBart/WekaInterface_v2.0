@@ -99,8 +99,10 @@ traceNonClassAttributeDate = function (dateObject, classLabel, sortedDateObject)
 
     for (let key in sortedDateObject[classLabel]){
         if (sortedDateObject[classLabel].hasOwnProperty(key)){
-            trace.x.push(key.split(" ").splice(1, 3).join(" "));
-            trace.y.push(dateObject[classLabel][key]);
+            if (dateObject[classLabel][key] !== 0){
+                trace.x.push(key.split(" ").splice(1, 3).join(" "));
+                trace.y.push(dateObject[classLabel][key]);
+            }
         }
     }
     return trace;
@@ -140,8 +142,10 @@ traceNonClassAttributeNominal = function (attributeObject, classLabel){
 
         for (let entry in sortedAttributeObject){
             if (sortedAttributeObject.hasOwnProperty(entry)){
-                trace.x.push(entry);
-                trace.y.push(sortedAttributeObject[entry]);
+                if (sortedAttributeObject[entry] !== 0){
+                    trace.x.push(entry);
+                    trace.y.push(sortedAttributeObject[entry]);
+                }
             }
         }
     }catch (err){
