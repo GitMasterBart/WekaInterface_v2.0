@@ -1,7 +1,12 @@
 package nl.bioinf.wekainterface.webcontrol;
 
 
+<<<<<<< HEAD
+import nl.bioinf.wekainterface.model.AlgortihmsInformation;
+import nl.bioinf.wekainterface.model.DataReader;
+=======
 import nl.bioinf.wekainterface.model.AlgorithmsInformation;
+>>>>>>> 4836e74e8f37ccd34481a55605283490063c6794
 import nl.bioinf.wekainterface.model.LabelCounter;
 import nl.bioinf.wekainterface.service.ClassificationService;
 import nl.bioinf.wekainterface.service.FileService;
@@ -37,6 +42,9 @@ public class HistoryController {
     private ClassificationService classificationService;
 
     @Autowired
+    private DataReader dataReader;
+
+    @Autowired
     private LabelCounter labelCounter;
 
     @Autowired
@@ -58,10 +66,17 @@ public class HistoryController {
     }
 
     @GetMapping(value = "/history/{dataSet}")
+<<<<<<< HEAD
+    public String plotHisotryPlots(@PathVariable("dataSet") String dataset, Model model) throws Exception{
+        String file = exampleFilesFolder + '/' + dataset;
+        System.out.println(file);
+        labelCounter.setInstances(dataReader.readArff(new File(file)));
+=======
     public String plotHisotryPlots(@PathVariable("dataSet") String dataset, Model model, RedirectAttributes redirect) throws Exception{
         Instances instances = fileService.getInstancesFromDemoFile(dataset);
         String arffFilePath = exampleFilesFolder + '/' + dataset;
         labelCounter.setInstances(instances);
+>>>>>>> 4836e74e8f37ccd34481a55605283490063c6794
         labelCounter.setGroups();
         labelCounter.countLabels();
 

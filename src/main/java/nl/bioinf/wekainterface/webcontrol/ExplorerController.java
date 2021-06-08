@@ -77,6 +77,25 @@ public class ExplorerController {
     @PostMapping(value = "/workbench")
     public String postWorkbench(@RequestParam(name = "inputFile", required = false) MultipartFile multipart,
                                 @RequestParam(name = "filename", required = false) String demoFileName,
+<<<<<<< HEAD
+                                Model model, RedirectAttributes redirect) throws Exception {
+
+
+        Instances instances = fileService.getInstancesFromDemoFile(demoFileName);
+//
+//        // Read the given file and return instances
+//        Instances instances;
+//        if (!multipart.isEmpty()){
+//            System.out.println(multipart.getOriginalFilename());
+//            instances = fileService.getInstancesFromMultipart(multipart);
+//        } else {
+//            System.out.println(demoFileName);
+//            instances = fileService.getInstancesFromDemoFile(demoFileName);
+//        }
+
+        // from demo data plot the demo data
+        String arffFilePath = exampleFilesFolder + '/' + demoFileName;
+=======
                                 Model model, RedirectAttributes redirect, HttpSession httpSession) throws Exception {
 
         if (httpSession.getAttribute("history") == null) {
@@ -128,6 +147,7 @@ public class ExplorerController {
         if (httpSession.getAttribute("instances") == null) {
             httpSession.setAttribute("instances", instances);
         }
+>>>>>>> 4836e74e8f37ccd34481a55605283490063c6794
 
         labelCounter.setInstances(instances);
         labelCounter.setGroups();
@@ -196,8 +216,22 @@ public class ExplorerController {
         List<String> filenames = dataReader.getDataSetNames();
         List<String> classifierNames = wekaClassifier.getClassifierNames();
 
+<<<<<<< HEAD
+    @GetMapping(value = "/test")
+    public String plotWeatherData(Model model, HttpSession httpSession) throws IOException{
+        String file = exampleFilesFolder + '/' + "soybean.arff";
+        labelCounter.setInstances(dataReader.readArff(new File(file)));
+        labelCounter.setGroups();
+        labelCounter.countLabels();
+        model.addAttribute("data", labelCounter.mapToJSON());
+        model.addAttribute("attributes", labelCounter.getAttributeArray());
+        model.addAttribute("classLabel", labelCounter.getClassLabel());
+        model.addAttribute("hasTwoAttributes", labelCounter.isOnlyTwoAttributes());
+        return "dataExplorer";
+=======
         model.addAttribute("filenames", filenames);
         model.addAttribute("classifierNames", classifierNames);
         return "workbench";
+>>>>>>> 4836e74e8f37ccd34481a55605283490063c6794
     }
 }

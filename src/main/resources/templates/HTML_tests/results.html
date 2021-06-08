@@ -15,16 +15,31 @@
   </div>
   <hr>
   <div th:object="${evaluation}">
-    <pre th:text="#{results.correct} + *{correct()}"></pre>
-    <pre th:text="#{results.perc.correct} + *{pctCorrect()} + '%'"></pre>
-    <pre th:text="#{results.incorrect} + *{incorrect()}"></pre>
-    <pre th:text="#{results.perc.incorrect} + *{pctIncorrect()} + '%'"></pre>
-    <pre th:text="#{results.kappa} + *{kappa()}"></pre>
-    <pre th:text="#{results.mean.abs} + *{meanAbsoluteError()}"></pre>
-    <pre th:text="#{results.mean.squared} + *{rootMeanSquaredError()}"></pre>
-    <pre th:text="#{results.relative.abs} + *{relativeAbsoluteError()} + '%'"></pre>
-    <pre th:text="#{results.relative.squared} + *{rootRelativeSquaredError()} + '%'"></pre>
-    <pre th:text="#{results.instances.num} + *{numInstances()}"></pre>
+    <div>
+      <pre th:text="#{results.instances.num} + *{numInstances()}"></pre>
+      <div th:insert="~{fragments/parameter-fragments :: param-explaination(numInstances)}"></div>
+      <pre th:text="#{results.correct} + *{correct()}"></pre>
+      <div th:insert="~{fragments/parameter-fragments :: param-explaination(correct)}"></div>
+      <pre th:text="#{results.perc.correct} + *{pctCorrect()} + '%'"></pre>
+      <div th:insert="~{fragments/parameter-fragments :: param-explaination(pctCorrect)}"></div>
+      <pre th:text="#{results.incorrect} + *{incorrect()}"></pre>
+      <div th:insert="~{fragments/parameter-fragments :: param-explaination(incorrect)}"></div>
+      <pre th:text="#{results.perc.incorrect} + *{pctIncorrect()} + '%'"></pre>
+      <div th:insert="~{fragments/parameter-fragments :: param-explaination(pctIncorrect)}"></div>
+    </div>
+    <div id="advancedStats">
+      <pre th:text="#{results.kappa} + *{kappa()}"></pre>
+      <div th:insert="~{fragments/parameter-fragments :: param-explaination(kappa)}"></div>
+      <pre th:text="#{results.mean.abs} + *{meanAbsoluteError()}"></pre>
+      <div th:insert="~{fragments/parameter-fragments :: param-explaination(meanAbsoulteError)}"></div>
+      <pre th:text="#{results.mean.squared} + *{rootMeanSquaredError()}"></pre>
+      <div th:insert="~{fragments/parameter-fragments :: param-explaination(rootMeanSquearedError)}"></div>
+      <pre th:text="#{results.relative.abs} + *{relativeAbsoluteError()} + '%'"></pre>
+      <div th:insert="~{fragments/parameter-fragments :: param-explaination(relativeAbsoluteError)}"></div>
+      <pre th:text="#{results.relative.squared} + *{rootRelativeSquaredError()} + '%'"></pre>
+      <div th:insert="~{fragments/parameter-fragments :: param-explaination(rootRelativeSquaredError)}"></div>
+    </div>
+
   </div>
 </div>
 
