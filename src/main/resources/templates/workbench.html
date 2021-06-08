@@ -18,7 +18,7 @@
 
 <div th:insert="~{fragments/general-fragments :: navbar}"></div>
 
-<div class="container pt-3">
+<div class="container py-3">
     <h2>Weka Workbench</h2>
     <div class="border shadow rounded">
         <div class="row">
@@ -39,8 +39,8 @@
                         <a href="#history" class="nav-link">History</a>
                     </li>
                 </ul>
-                <div class="tab-content">
-                    <div class="tab-pane fade show active" id="explorer">
+                <div class="tab-content" style="height: 550px">
+                    <div class="tab-pane fade show active" id="explorer" >
                         <div th:insert="~{fragments/workbench-fragments :: explorer-tab}"></div>
                     </div>
                     <div class="tab-pane fade" id="classify">
