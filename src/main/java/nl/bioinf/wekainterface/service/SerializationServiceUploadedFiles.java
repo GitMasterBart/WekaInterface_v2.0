@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import java.io.FileOutputStream;
 
 
-import nl.bioinf.wekainterface.model.AlgortihmsInformation;
+import nl.bioinf.wekainterface.model.AlgorithmsInformation;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -18,12 +18,12 @@ import java.util.ArrayList;
 @Service
 public class SerializationServiceUploadedFiles {
 
-    public void serialization(ArrayList<String> algortihmsInformations, File uniqueID) {
+    public void serialization(ArrayList<String> algorithmsInformations, File uniqueID) {
         try {
             FileOutputStream fileOut =
                     new FileOutputStream(uniqueID);
             ObjectOutputStream out = new ObjectOutputStream(fileOut);
-            out.writeObject(algortihmsInformations);
+            out.writeObject(algorithmsInformations);
             out.close();
             fileOut.close();
             //System.out.print("Serialized data is saved in /tmp/{random.string}.ser");
@@ -37,7 +37,7 @@ public class SerializationServiceUploadedFiles {
             FileInputStream fileIn = new FileInputStream(uniqueID);
             ObjectInputStream in = new ObjectInputStream(fileIn);
             String UloadedFile;
-            AlgortihmsInformation[] UloadedFiles = new AlgortihmsInformation[5];
+            AlgorithmsInformation[] UloadedFiles = new AlgorithmsInformation[5];
             ArrayList<String> stringArrayList = new ArrayList<>();
             stringArrayList = (ArrayList<String>)in.readObject();
             in.close();
