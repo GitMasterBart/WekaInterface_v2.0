@@ -82,7 +82,8 @@ public class ExplorerController {
 
         // from demo data plot the demo data
         String arffFilePath = exampleFilesFolder + '/' + demoFileName;
-        labelCounter.readData(new File(arffFilePath));
+
+        labelCounter.setInstances(instances);
         labelCounter.setGroups();
         labelCounter.countLabels();
 
@@ -196,15 +197,15 @@ public class ExplorerController {
     }
 
     @GetMapping(value = "/test")
-    public String plotWeatherData(Model model, HttpSession httpSession) throws IOException {
-        String file = exampleFilesFolder + '/' + "weak.nominal.arff";
-        System.out.println(file);
-        labelCounter.readData(new File(file));
+    public String plotWeatherData(Model model, HttpSession httpSession) throws IOException{
+        String file = exampleFilesFolder + '/' + "soybean.arff";
+        labelCounter.setInstances(dataReader.readArff(new File(file)));
         labelCounter.setGroups();
         labelCounter.countLabels();
         model.addAttribute("data", labelCounter.mapToJSON());
         model.addAttribute("attributes", labelCounter.getAttributeArray());
         model.addAttribute("classLabel", labelCounter.getClassLabel());
+        model.addAttribute("hasTwoAttributes", labelCounter.isOnlyTwoAttributes());
         return "dataExplorer";
     }
 }

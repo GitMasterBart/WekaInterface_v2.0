@@ -2,6 +2,7 @@ package nl.bioinf.wekainterface.webcontrol;
 
 
 import nl.bioinf.wekainterface.model.AlgortihmsInformation;
+import nl.bioinf.wekainterface.model.DataReader;
 import nl.bioinf.wekainterface.model.LabelCounter;
 import nl.bioinf.wekainterface.service.ClassificationService;
 import nl.bioinf.wekainterface.service.SerializationService;
@@ -33,6 +34,9 @@ public class HistoryController {
 
     @Autowired
     private ClassificationService classificationService;
+
+    @Autowired
+    private DataReader dataReader;
 
     @Autowired
     private LabelCounter labelCounter;
@@ -72,7 +76,7 @@ public class HistoryController {
     public String plotHisotryPlots(@PathVariable("dataSet") String dataset, Model model) throws Exception{
         String file = exampleFilesFolder + '/' + dataset;
         System.out.println(file);
-        labelCounter.readData(new File(file));
+        labelCounter.setInstances(dataReader.readArff(new File(file)));
         labelCounter.setGroups();
         labelCounter.countLabels();
         model.addAttribute("data", labelCounter.mapToJSON());
