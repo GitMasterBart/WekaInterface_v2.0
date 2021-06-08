@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import java.io.FileOutputStream;
 
 
-import nl.bioinf.wekainterface.model.AlgortihmsInformation;
+import nl.bioinf.wekainterface.model.AlgorithmsInformation;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -37,7 +37,7 @@ public class SerializationServiceUploadedFiles {
             FileInputStream fileIn = new FileInputStream(uniqueID);
             ObjectInputStream in = new ObjectInputStream(fileIn);
             String UloadedFile;
-            AlgortihmsInformation[] UloadedFiles = new AlgortihmsInformation[5];
+            AlgorithmsInformation[] UloadedFiles = new AlgorithmsInformation[5];
             ArrayList<String> stringArrayList = new ArrayList<>();
             stringArrayList = (ArrayList<String>)in.readObject();
             in.close();
