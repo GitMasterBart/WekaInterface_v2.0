@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import weka.classifiers.evaluation.Evaluation;
 import weka.core.Instances;
-import weka.core.stopwords.Null;
 
 import javax.servlet.http.HttpSession;
 import java.io.File;
@@ -46,7 +45,7 @@ public class HistoryController {
     @GetMapping(value = "/history")
     public String getHistoryPage(Model model, HttpSession httpSession){
         try {
-            ArrayList<AlgortihmsInformation> deserializationObject = serializationService.deserialization((File) httpSession.getAttribute("uniqueId"));
+            ArrayList<AlgortihmsInformation> deserializationObject = serializationService.deserialization((File) httpSession.getAttribute("uniqueIdHistory"));
             model.addAttribute("info", deserializationObject);
         }  catch (NullPointerException e){
             model.addAttribute("msg", "No History");

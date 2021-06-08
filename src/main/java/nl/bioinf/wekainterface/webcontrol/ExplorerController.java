@@ -1,15 +1,12 @@
 package nl.bioinf.wekainterface.webcontrol;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import nl.bioinf.wekainterface.model.AlgortihmsInformation;
 import nl.bioinf.wekainterface.model.DataReader;
 import nl.bioinf.wekainterface.model.LabelCounter;
 import nl.bioinf.wekainterface.model.WekaClassifier;
-import nl.bioinf.wekainterface.service.ClassificationService;
 import nl.bioinf.wekainterface.service.FileService;
 import nl.bioinf.wekainterface.service.SerializationService;
-import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -24,8 +21,6 @@ import java.net.http.HttpRequest;
 import java.text.SimpleDateFormat;
 import javax.servlet.http.HttpSession;
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -60,7 +55,7 @@ public class ExplorerController {
         model.addAttribute("filenames", filenames);
         model.addAttribute("classifierNames", classifierNames);
         try {
-            ArrayList<AlgortihmsInformation> deserializationObject = serializationService.deserialization((File) httpSession.getAttribute("uniqueId"));
+            ArrayList<AlgortihmsInformation> deserializationObject = serializationService.deserialization((File) httpSession.getAttribute("uniqueIdHistory"));
             model.addAttribute("info", deserializationObject);
             redirectAttributes.addFlashAttribute("info", deserializationObject);
         } catch (NullPointerException e) {
@@ -81,10 +76,10 @@ public class ExplorerController {
             httpSession.setAttribute("history", algorithmsInformation);
         }
 
-        if (httpSession.getAttribute("uniqueId") == null) {
+        if (httpSession.getAttribute("uniqueIdHistory") == null) {
             String uniqueId = UUID.randomUUID().toString();
             File serFile = File.createTempFile(uniqueId, ".ser", new File("/tmp/"));
-            httpSession.setAttribute("uniqueId", serFile);
+            httpSession.setAttribute("uniqueIdHistory", serFile);
         }
 
         if (httpSession.getAttribute("demofile") == null) {
@@ -93,9 +88,16 @@ public class ExplorerController {
             httpSession.setAttribute("demofile", arffFile);
         }
 
+        if (httpSession.getAttribute("UloadedFiles")  == null){
+            ArrayList<String> uploadedFiles = new ArrayList<>();
+            uploadedFiles.add(multipart.getOriginalFilename());
+            httpSession.setAttribute("UloadedFiles", uploadedFiles);
+        }
+
         ArrayList<AlgortihmsInformation> history = (ArrayList<AlgortihmsInformation>) httpSession.getAttribute("history");
+        if (demoFileName.equals("Select...")) demoFileName = multipart.getOriginalFilename();
         history.add(new AlgortihmsInformation(demoFileName, new SimpleDateFormat("HH:mm:ss")));
-        serializationService.serialization(history, (File) httpSession.getAttribute("uniqueId"));
+        serializationService.serialization(history, (File) httpSession.getAttribute("uniqueIdHistory"));
 
         // Read the given file and return instances
         Instances instances;
@@ -104,6 +106,8 @@ public class ExplorerController {
         } else {
             instances = fileService.getInstancesFromDemoFile(demoFileName);
         }
+
+        System.out.println(instances);
 
         if (httpSession.getAttribute("instances") == null) {
             httpSession.setAttribute("instances", instances);
@@ -130,7 +134,7 @@ public class ExplorerController {
         model.addAttribute("filenames", filenames);
         model.addAttribute("classifierNames", classifierNames);
         try {
-            ArrayList<AlgortihmsInformation> deserializationObject = serializationService.deserialization((File) httpSession.getAttribute("uniqueId"));
+            ArrayList<AlgortihmsInformation> deserializationObject = serializationService.deserialization((File) httpSession.getAttribute("uniqueIdHistory"));
             model.addAttribute("info", deserializationObject);
         } catch (NullPointerException e) {
             model.addAttribute("msg", "No History");
