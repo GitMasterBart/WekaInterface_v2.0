@@ -23,15 +23,8 @@ public class LabelCounter {
     private List<String> attributeArray = new ArrayList<>();
     private Map<String, AttributeMap> groups = new HashMap<>();
     private Map<String, Double> twoAttributeGroups = new HashMap<>();
-
-
-
     private boolean onlyTwoAttributes = false;
 
-    /**
-     * Reads arff file and stores Instances in the class
-     * @param instances instances
-     */
     public void setInstances(Instances instances){
         this.instances = instances;
     }
@@ -41,6 +34,7 @@ public class LabelCounter {
      * a second Map as value. This Map holds each attribute as key and a third Map as its value. This third Map holds
      * the labels for each attribute as its key and the occurrence of those labels as its value. The occurrence is set
      * at 0.
+     * TODO if the class attribute is numeric, discretize the group keys as an interval, just like in setLabelsNumeric()
      */
     public void setGroups(){
         if (this.instances.numAttributes() == 1){
@@ -110,12 +104,11 @@ public class LabelCounter {
                     this.twoAttributeGroups.put(classLabel,
                             Double.parseDouble(this.instances.instance(classLabelIndex).toString().split(",")[this.instances.classIndex()-1]));
                 }catch (NumberFormatException e){
-                    System.out.println("ERROR:\tValue for Attribute " + this.instances.attribute(this.instances.classIndex()-1) + "is not numeric.");
+                    System.out.println(e.getMessage());
                 }
             }
         }
     }
-
 
     /**
      * For every attribute in the dataset creates an entry in a Map with the attribute name as the key and a Map as the
@@ -186,7 +179,6 @@ public class LabelCounter {
         // Number of decimals used in the dataset
         int numDecimals = Util.numDecimals(stats.min);
 
-        System.out.println("Attribute = " + attribute + "\nValue to round = " + (stats.max - stats.min) / numGroups);
         double groupInterval = Util.roundTo((stats.max - stats.min) / numGroups, numDecimals);
         double intervalStart = stats.min;
 
@@ -211,9 +203,7 @@ public class LabelCounter {
     public void countLabels(){
         if (!onlyTwoAttributes){
             for (int instanceIndex = 0; instanceIndex < instances.numInstances(); instanceIndex++){
-
                 Instance instance = instances.instance(instanceIndex);
-                System.out.println("Instance = \n" + instance.toString());
                 String[] values = instance.toString().split(",");
                 for (int valueIndex = 0; valueIndex < instance.numValues(); valueIndex++){
                     AttributeMap attributeMap = new AttributeMap();
