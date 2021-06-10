@@ -10,10 +10,6 @@ import weka.core.Instance;
 import weka.core.Instances;
 import weka.experiment.Stats;
 
-import java.io.File;
-import java.io.IOException;
-import java.math.RoundingMode;
-import java.text.*;
 import java.util.*;
 
 /**
@@ -27,6 +23,8 @@ public class LabelCounter {
     private List<String> attributeArray = new ArrayList<>();
     private Map<String, AttributeMap> groups = new HashMap<>();
     private Map<String, Double> twoAttributeGroups = new HashMap<>();
+
+
 
     private boolean onlyTwoAttributes = false;
 
@@ -45,59 +43,79 @@ public class LabelCounter {
      * at 0.
      */
     public void setGroups(){
-
-
-
         if (this.instances.numAttributes() == 1){
             throw new InvalidDataSetProcessException("Dataset only contains 1 Attribute");
         }
 
+        if (this.instances.numAttributes() == 2){
+            setGroupsTwoAttributes();
+        }
 
         if (this.instances.numAttributes() > 2){
-            System.out.println("MORE THAN 2 ATTRIBUTES");
             if (this.instances.classAttribute().isDate() || this.instances.classAttribute().isNumeric()){
-                System.out.println("Class attribute is Date or Numeric");
-                AttributeStats stats = this.instances.attributeStats(this.instances.classIndex());
-                int numberOfValues = stats.totalCount;
-                for (int instanceIndex = 0; instanceIndex < numberOfValues; instanceIndex++){
-                    AttributeMap attributes = setAttributes();
-                    String classLabel = Double.toString(this.instances.instance(instanceIndex).value(this.instances.classIndex()));
-                    if (!groups.containsKey(classLabel)){
-                        this.groups.put(classLabel, attributes);
-                    }
-                }
+                setGroupsNotNominal();
             }
             else {
-                System.out.println("Class Attribute is Nominal");
-                int numberOfValues = this.instances.classAttribute().numValues();
-                for (int classLabelIndex = 0; classLabelIndex < numberOfValues; classLabelIndex++) {
-                    // Setting the class label as the key for the first Map, in the case of weather.nominal = {yes,no}
-                    String classLabel = this.instances.classAttribute().value(classLabelIndex);
-                    // creating the 2nd Map with attribute names as keys and labels as value's
-                    AttributeMap attributes = setAttributes();
-                    this.groups.put(classLabel, attributes);
-                }
+                setGroupsNominal();
             }
-        }else {
-            onlyTwoAttributes = true;
-            AttributeStats stats = this.instances.attributeStats(this.instances.classIndex());
-            if (this.instances.classAttribute().isDate() && stats.totalCount == stats.uniqueCount){
-                for (int classLabelIndex=0;classLabelIndex< stats.totalCount;classLabelIndex++) {
-                    // Setting the class label as the key for the first Map, in the case of weather.nominal = {yes,no}
-                    double classValue = this.instances.instance(classLabelIndex).value(this.instances.classIndex());
-                    String dateFormat = this.instances.classAttribute().getDateFormat();
-                    String classLabel = Util.parseDate(classValue, dateFormat);
-                    // creating the 2nd Map with attribute names as keys and labels as value's
-                    try{
-                        this.twoAttributeGroups.put(classLabel,
-                                Double.parseDouble(this.instances.instance(classLabelIndex).toString().split(",")[this.instances.classIndex()-1]));
-                    }catch (NumberFormatException e){
-                        System.out.println("ERROR:\tValue for Attribute " + this.instances.attribute(this.instances.classIndex()-1) + "is not numeric.");
-                    }
+        }
+    }
+
+    /**
+     * Sets the groups for a dataset where the class Attribute is nominal
+     */
+    private void setGroupsNominal() {
+        int numberOfValues = this.instances.classAttribute().numValues();
+        for (int classLabelIndex = 0; classLabelIndex < numberOfValues; classLabelIndex++) {
+            // Setting the class label as the key for the first Map, in the case of weather.nominal = {yes,no}
+            String classLabel = this.instances.classAttribute().value(classLabelIndex);
+            // creating the 2nd Map with attribute names as keys and labels as value's
+            AttributeMap attributes = setAttributes();
+            this.groups.put(classLabel, attributes);
+        }
+    }
+
+    /**
+     * Sets the groups for class attributes that are not nominal I.E. are numeric or dates. Only used when dataset has
+     * more than 2 attributes
+     */
+    private void setGroupsNotNominal() {
+        // use attribute stats instead of instances.numValues since that is not possible for non nominal attributes
+        AttributeStats stats = this.instances.attributeStats(this.instances.classIndex());
+        int numberOfValues = stats.totalCount;
+        for (int instanceIndex = 0; instanceIndex < numberOfValues; instanceIndex++){
+            AttributeMap attributes = setAttributes();
+            String classLabel = Double.toString(this.instances.instance(instanceIndex).value(this.instances.classIndex()));
+            if (!groups.containsKey(classLabel)){
+                this.groups.put(classLabel, attributes);
+            }
+        }
+    }
+
+    /**
+     * TODO This method was specifically designed for airline.arff which is a dataset with a Date class attribute. Other datasets with only 2 attributes can't be used with this method
+     * Set twoAttributesGroups for a dataset with only two attributes.
+     */
+    private void setGroupsTwoAttributes() {
+        onlyTwoAttributes = true;
+        AttributeStats stats = this.instances.attributeStats(this.instances.classIndex());
+        if (this.instances.classAttribute().isDate() && stats.totalCount == stats.uniqueCount){
+            for (int classLabelIndex=0;classLabelIndex< stats.totalCount;classLabelIndex++) {
+                // Setting the class label as the key for the first Map, in the case of weather.nominal = {yes,no}
+                double classValue = this.instances.instance(classLabelIndex).value(this.instances.classIndex());
+                String dateFormat = this.instances.classAttribute().getDateFormat();
+                String classLabel = Util.parseDate(classValue, dateFormat);
+                // creating the 2nd Map with attribute names as keys and labels as value's
+                try{
+                    this.twoAttributeGroups.put(classLabel,
+                            Double.parseDouble(this.instances.instance(classLabelIndex).toString().split(",")[this.instances.classIndex()-1]));
+                }catch (NumberFormatException e){
+                    System.out.println("ERROR:\tValue for Attribute " + this.instances.attribute(this.instances.classIndex()-1) + "is not numeric.");
                 }
             }
         }
     }
+
 
     /**
      * For every attribute in the dataset creates an entry in a Map with the attribute name as the key and a Map as the
@@ -162,9 +180,13 @@ public class LabelCounter {
         // Number of groups is based the amount of times the standard deviation fits into the interval between the
         // minimum and maximum value of the attribute
         double numGroups = Math.round((stats.max - stats.min) / stats.stdDev);
-
+        if (numGroups == 0){
+            numGroups = 1;
+        }
         // Number of decimals used in the dataset
         int numDecimals = Util.numDecimals(stats.min);
+
+        System.out.println("Attribute = " + attribute + "\nValue to round = " + (stats.max - stats.min) / numGroups);
         double groupInterval = Util.roundTo((stats.max - stats.min) / numGroups, numDecimals);
         double intervalStart = stats.min;
 
@@ -191,6 +213,7 @@ public class LabelCounter {
             for (int instanceIndex = 0; instanceIndex < instances.numInstances(); instanceIndex++){
 
                 Instance instance = instances.instance(instanceIndex);
+                System.out.println("Instance = \n" + instance.toString());
                 String[] values = instance.toString().split(",");
                 for (int valueIndex = 0; valueIndex < instance.numValues(); valueIndex++){
                     AttributeMap attributeMap = new AttributeMap();
@@ -242,6 +265,10 @@ public class LabelCounter {
         labelMap.incrementLabel(label);
     }
 
+    public Instances getInstances() {
+        return instances;
+    }
+
     public List<String> getAttributeArray() {
         return attributeArray;
     }
@@ -283,23 +310,5 @@ public class LabelCounter {
         groups = new HashMap<>();
         twoAttributeGroups = new HashMap<>();
         onlyTwoAttributes = false;
-    }
-
-    /**
-     * Main function for testing class
-     * @param args no args
-     * @throws IOException if file doesn't exist
-     */
-    public static void main(String[] args) throws IOException{
-
-        String file = "C:\\Program Files\\Weka-3-8-4\\data\\diabetes.arff";
-        DataReader dataReader = new DataReader();
-        LabelCounter labelCounter = new LabelCounter();
-        labelCounter.setInstances(dataReader.readArff(new File(file)));
-        labelCounter.setGroups();
-        labelCounter.countLabels();
-
-        System.out.println(labelCounter.mapToJSON());
-        labelCounter.resetLabelCounter();
     }
 }
