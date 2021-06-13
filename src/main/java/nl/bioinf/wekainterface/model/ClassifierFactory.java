@@ -1,4 +1,4 @@
-package nl.bioinf.wekainterface.webcontrol;
+package nl.bioinf.wekainterface.model;
 
 import nl.bioinf.wekainterface.model.WekaClassifier;
 import org.springframework.stereotype.Component;
