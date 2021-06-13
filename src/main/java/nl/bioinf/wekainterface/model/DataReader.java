@@ -40,6 +40,7 @@ public class DataReader implements Reader{
     /**
      * Convert a CSV file to arff Format
      * @param file file as File object
+     * @param delimiter what the lines are separated by
      * @return Instances data
      * @throws IOException if file doesn't exist
      */
