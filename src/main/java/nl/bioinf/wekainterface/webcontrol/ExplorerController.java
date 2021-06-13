@@ -40,8 +40,6 @@ public class ExplorerController {
     @Autowired
     private WekaClassifier wekaClassifier;
     @Autowired
-    private ClassifierFactory classifierFactory;
-    @Autowired
     private SerializationService serializationService;
     @Autowired
     private FileService fileService;
@@ -112,7 +110,6 @@ public class ExplorerController {
         uloadedFiles.add(multipart.getOriginalFilename());
         serializationServiceUploadedFiles.serialization(uloadedFiles, (File) httpSession.getAttribute("uniqueIdUpload"));
 
-        // Read the given file and return instances
         Instances instances;
         if (!multipart.isEmpty()){
             instances = fileService.getInstancesFromMultipart(multipart);
@@ -138,8 +135,7 @@ public class ExplorerController {
     }
 
     @GetMapping(value = "/workbench/explore")
-    public String getExplorePage(Model model, RedirectAttributes redirectAttributes, HttpSession httpSession) {
-        // get demo dataset names and classifier name
+    public String getExplorePage(Model model, HttpSession httpSession) {
         List<String> filenames = dataReader.getDataSetNames();
         List<String> classifierNames = wekaClassifier.getClassifierNames();
         model.addAttribute("filenames", filenames);

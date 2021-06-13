@@ -35,10 +35,8 @@ public class AlgorithmsInformation implements Serializable {
         return uploadFileDemoFileUsedAlgorithm;
     }
 
-    public String getSimpleDateFormat() {
-        Date date = Calendar.getInstance().getTime();
-        String strDate = simpleDateFormat.format(date);
-        return strDate;
+    public Date getSimpleDateFormat() {
+           return simpleDateFormat.get2DigitYearStart();
     }
 
 }
