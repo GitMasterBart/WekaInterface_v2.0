@@ -28,11 +28,11 @@ public class FileService {
         InputStream inputStream = multipart.getInputStream();
 
         if (multipart.getOriginalFilename().endsWith(".csv")){
-            File csvFile = File.createTempFile("temp-", ".csv", new File(tempFolder));
+            File csvFile = File.createTempFile(multipart.getOriginalFilename()+ "-", ".csv", new File(tempFolder));
             FileUtils.copyInputStreamToFile(inputStream, csvFile);
             instances = dataReader.readCsv(csvFile, ";");
         } else if (multipart.getOriginalFilename().endsWith(".arff")){
-            File arffFile = File.createTempFile("temp-", ".arff", new File(tempFolder));
+            File arffFile = File.createTempFile(multipart.getOriginalFilename()+ "-", ".arff", new File(tempFolder));
             FileUtils.copyInputStreamToFile(inputStream, arffFile);
             instances = dataReader.readArff(arffFile);
         } else {
@@ -43,6 +43,12 @@ public class FileService {
 
     public Instances getInstancesFromDemoFile(String demoFileName) throws IOException {
         String arffFilePath = exampleFilesFolder + '/' + demoFileName;
+        File arffFile = new File(arffFilePath);
+        return dataReader.readArff(arffFile);
+    }
+
+    public Instances getInstancesFromUloadedDemoFile(String demoFileName) throws IOException {
+        String arffFilePath = demoFileName;
         File arffFile = new File(arffFilePath);
         return dataReader.readArff(arffFile);
     }
