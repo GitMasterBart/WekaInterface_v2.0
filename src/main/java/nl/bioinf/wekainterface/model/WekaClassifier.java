@@ -8,20 +8,20 @@ import weka.classifiers.rules.OneR;
 import weka.classifiers.rules.ZeroR;
 import weka.classifiers.trees.J48;
 import weka.core.Instances;
-import weka.core.neighboursearch.*;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 /**
- * @author Marijke Eggink 30419
+ * @author Marijke Eggink 370419
  */
 
 @Component
 public class WekaClassifier {
     /**
-     * TODO ZONDER PARAMETERS DEZE KAN ER LATER UIT ALS DE PARAMETERS ZIJN TOEGEVOEGD.
+     * TODO: Zonder parameters, deze moet er nog uit gehaald worden wanneer hij nergens meer wordt gebruikt.
      * This method classifies instances with a 10-fold cross validation.
      * @param instances instances to be classified.
      * @param classifier name of the classifier.
@@ -57,28 +57,27 @@ public class WekaClassifier {
     /**
      * This method classifies instances with a 10-fold cross validation, and with the given parameters.
      * @param instances instances to be classified.
-     * @param classifier name of the classifier.
-     * @param parameters String array with the needed parameters.
+     * @param parameterMap Map with the needed parameters.
      * @return Evaluation object with results of 10-fold cross validation.
      * @throws Exception
      */
-    public Evaluation classify(Instances instances, String classifier, String[] parameters) throws Exception {
+    public Evaluation classify(Instances instances, Map<String, String> parameterMap) throws Exception {
         weka.classifiers.Classifier rule;
-        switch (classifier){
+        switch (parameterMap.get("classifier")){
             case "ZeroR":
-                rule = zeroR(parameters);
+                rule = zeroR(parameterMap);
                 break;
             case "OneR":
-                rule = oneR(parameters);
+                rule = oneR(parameterMap);
                 break;
             case "NaiveBayes":
-                rule = naiveBayes(parameters);
+                rule = naiveBayes(parameterMap);
                 break;
             case "J48":
-                rule = j48(parameters);
+                rule = j48(parameterMap);
                 break;
             case "IBK":
-                rule = iBk(parameters);
+                rule = iBk(parameterMap);
                 break;
             default:
                 throw new IllegalArgumentException();
@@ -90,108 +89,85 @@ public class WekaClassifier {
 
     /**
      * This method creates an ZeroR rule and sets the parameters
-     * @param parameters String array with the parameters
+     * @param parameterMap Map with the parameters
      * @return ZeroR rule
      */
-    public ZeroR zeroR(String[] parameters) {
+    public ZeroR zeroR(Map<String,String> parameterMap) {
         ZeroR rule = new ZeroR();
-        rule.setBatchSize(parameters[0]);
-        rule.setDebug(Boolean.parseBoolean(parameters[1]));
-        rule.setDoNotCheckCapabilities(Boolean.parseBoolean(parameters[2]));
-        rule.setNumDecimalPlaces(Integer.parseInt(parameters[3]));
+        Parameters parameters = new Parameters(parameterMap);
+        rule.setBatchSize(parameters.getBatchSize());
+        rule.setDebug(parameters.isDebug());
+        rule.setDoNotCheckCapabilities(parameters.isCapabilities());
+        rule.setNumDecimalPlaces(parameters.getDecimal());
         return rule;
     }
 
     /**
      * This method creates an OneR rule and sets the parameters
-     * @param parameters String array with the parameters
+     * @param parameterMap Map with the parameters
      * @return OneR rule
      */
-    public OneR oneR(String[] parameters) {
+    public OneR oneR(Map<String, String> parameterMap) {
         OneR rule = new OneR();
-        rule.setBatchSize(parameters[0]);
-        rule.setDebug(Boolean.parseBoolean(parameters[1]));
-        rule.setDoNotCheckCapabilities(Boolean.parseBoolean(parameters[2]));
-        rule.setMinBucketSize(Integer.parseInt(parameters[3]));
-        rule.setNumDecimalPlaces(Integer.parseInt(parameters[4]));
+        Parameters parameters = new Parameters(parameterMap);
+        rule.setBatchSize(parameters.getBatchSize());
+        rule.setDebug(parameters.isDebug());
+        rule.setDoNotCheckCapabilities(parameters.isCapabilities());
+        rule.setMinBucketSize(parameters.getMinBucketSize());
+        rule.setNumDecimalPlaces(parameters.getDecimal());
         return rule;
     }
 
     /**
      * This method creates an Naive Bayes rule and sets the parameters
-     * @param parameters String array with the parameters
+     * @param parameterMap Map with the parameters
      * @return NaiveBayes rule
      */
-    public NaiveBayes naiveBayes(String[] parameters) {
+    public NaiveBayes naiveBayes(Map<String, String> parameterMap) {
         NaiveBayes rule = new NaiveBayes();
-        rule.setBatchSize(parameters[0]);
-        rule.setDebug(Boolean.parseBoolean(parameters[1]));
-        rule.setDoNotCheckCapabilities(Boolean.parseBoolean(parameters[2]));
-        rule.setNumDecimalPlaces(Integer.parseInt(parameters[3]));
+        Parameters parameters = new Parameters(parameterMap);
+        rule.setBatchSize(parameters.getBatchSize());
+        rule.setDebug(parameters.isDebug());
+        rule.setDoNotCheckCapabilities(parameters.isCapabilities());
+        rule.setNumDecimalPlaces(parameters.getDecimal());
         return rule;
     }
 
     /**
      * This method creates an J48 rule and sets the parameters
-     * @param parameters String array with the parameters
+     * @param parameterMap Map with the parameters
      * @return J48 rule
      */
-    public J48 j48(String[] parameters) {
+    public J48 j48(Map<String, String> parameterMap) {
         J48 rule = new J48();
-        rule.setBatchSize(parameters[0]);
-        rule.setConfidenceFactor(Float.parseFloat(parameters[1]));
-        rule.setDebug(Boolean.parseBoolean(parameters[2]));
-        rule.setDoNotCheckCapabilities(Boolean.parseBoolean(parameters[3]));
-        rule.setMinNumObj(Integer.parseInt(parameters[4]));
-        rule.setNumDecimalPlaces(Integer.parseInt(parameters[5]));
-        rule.setNumFolds(Integer.parseInt(parameters[6]));
-        rule.setUnpruned(!Boolean.parseBoolean(parameters[7]));
+        Parameters parameters = new Parameters(parameterMap);
+        rule.setBatchSize(parameters.getBatchSize());
+        rule.setConfidenceFactor(parameters.getConfidenceFactor());
+        rule.setDebug(parameters.isDebug());
+        rule.setDoNotCheckCapabilities(parameters.isCapabilities());
+        rule.setMinNumObj(parameters.getNumObj());
+        rule.setNumDecimalPlaces(parameters.getDecimal());
+        rule.setNumFolds(parameters.getNumFolds());
+        rule.setUnpruned(parameters.getPruned());
         return rule;
     }
 
     /**
      * This method creates an IBK rule and sets the parameters
-     * @param parameters String array with the parameters
+     * @param parameterMap Map with the parameters
      * @return IBK rule
      */
-    public IBk iBk(String[] parameters) {
+    public IBk iBk(Map<String, String> parameterMap) {
         IBk rule = new IBk();
-        rule.setKNN(Integer.parseInt(parameters[0]));
-        rule.setBatchSize(parameters[1]);
-        rule.setCrossValidate(Boolean.parseBoolean(parameters[2]));
-        rule.setDebug(Boolean.parseBoolean(parameters[3]));
-        rule.setDoNotCheckCapabilities(Boolean.parseBoolean(parameters[4]));
-        NearestNeighbourSearch neighbourSearch = getSearchAlgorithm(parameters[5]);
-        rule.setNearestNeighbourSearchAlgorithm(neighbourSearch);
-        rule.setNumDecimalPlaces(Integer.parseInt(parameters[6]));
+        Parameters parameters = new Parameters(parameterMap);
+        rule.setKNN(parameters.getKNN());
+        rule.setBatchSize(parameters.getBatchSize());
+        rule.setCrossValidate(parameters.getCrossValidate());
+        rule.setDebug(parameters.isDebug());
+        rule.setDoNotCheckCapabilities(parameters.isCapabilities());
+        rule.setNearestNeighbourSearchAlgorithm(parameters.getSearchAlgorithm());
+        rule.setNumDecimalPlaces(parameters.getDecimal());
         return rule;
-    }
-
-    /**
-     * This method gets the search nearest neighbour search algorithm for IBK.
-     * @param algorithm name of the search algorithm
-     * @return NearestNeighbourSearch algorithm
-     */
-    public NearestNeighbourSearch getSearchAlgorithm(String algorithm){
-        NearestNeighbourSearch nearestNeighbourSearch;
-        switch (algorithm){
-            default:
-                nearestNeighbourSearch = new BallTree();
-                break;
-            case "CoverTree":
-                nearestNeighbourSearch = new CoverTree();
-                break;
-            case "FilteredNeighbourSearch":
-                nearestNeighbourSearch = new FilteredNeighbourSearch();
-                break;
-            case "KDTree":
-                nearestNeighbourSearch = new KDTree();
-                break;
-            case "LinearNNSearch":
-                nearestNeighbourSearch = new LinearNNSearch();
-                break;
-        }
-        return nearestNeighbourSearch;
     }
 
     /**

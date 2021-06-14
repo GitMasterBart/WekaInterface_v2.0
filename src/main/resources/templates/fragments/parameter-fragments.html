@@ -24,22 +24,22 @@
 
 <div th:fragment="batchSizeParameter(algorithmName)">
     <div class="form-group">
-        <label th:for="batchsize + ${algorithmName}" class="control-label" th:text="#{max.batchsize}"
+        <label th:for="batchsize- + ${algorithmName}" class="control-label" th:text="#{max.batchsize}"
                style="display: inline-block">BatchSize</label>
         <a th:insert="~{fragments/parameter-fragments :: param-explaination(batchsize)}"
            style="display: inline-block" th:title="#{batchsize.explaination}" data-toggle="tooltip"></a>
         <br>
-        <input class="form-control" th:name="batchsize + ${algorithmName}" th:id="batchsize + ${algorithmName}" type="number" value="100" width="100px"><br>
+        <input class="form-control" th:name="batchsize- + ${algorithmName}" th:id="batchsize- + ${algorithmName}" type="number" value="100" width="100px"><br>
     </div>
 </div>
 
 <div th:fragment="debugParameter(algorithmName)">
     <div class="form-group">
-        <label th:for="debug + ${algorithmName}" class="control-label" th:text="#{debug.par}" style="display: inline-block">debug</label>
+        <label th:for="debug- + ${algorithmName}" class="control-label" th:text="#{debug.par}" style="display: inline-block">debug</label>
         <span th:insert="~{fragments/parameter-fragments :: param-explaination(debug)}"
               style="display: inline-block" th:title="#{debug.explaination}" data-toggle="tooltip"></span>
         <br>
-        <select th:id="debug + ${algorithmName}" th:name="debug + ${algorithmName}" class="form-control">
+        <select th:id="debug- + ${algorithmName}" th:name="debug- + ${algorithmName}" class="form-control">
             <option th:text="#{true}" value="true">True</option>
             <option th:text="#{false}" value="false">False</option>
         </select>
@@ -48,11 +48,11 @@
 
 <div th:fragment="doNotCheckCapParameter(algorithmName)">
     <div class="form-group">
-        <label th:text = "#{doNotCheck.par}" class="control-label" th:for='doNotCheckCapabilities + ${algorithmName}' style="display: inline-block"></label>
+        <label th:text = "#{doNotCheck.par}" class="control-label" th:for='doNotCheckCapabilities- + ${algorithmName}' style="display: inline-block"></label>
         <span th:insert="~{fragments/parameter-fragments :: param-explaination(donotcheckcap)}"
               style="display: inline-block" th:title="#{donotcheckcap.explaination}" data-toggle="tooltip"></span>
         <br>
-        <select th:id="doNotCheckCapabilities + ${algorithmName}" th:name="doNotCheckCapabilities + ${algorithmName}" class="form-control">
+        <select th:id="doNotCheckCapabilities- + ${algorithmName}" th:name="doNotCheckCapabilities- + ${algorithmName}" class="form-control">
             <option th:text="#{true}" value="true">True</option>
             <option th:text="#{false}" value="false">False</option>
         </select>
@@ -61,11 +61,11 @@
 
 <div th:fragment="numDecimalsParameter(algorithmName)">
     <div class="form-group">
-        <label th:text="#{num.decimal.par}" class="control-label"  th:for="numDecimalPlaces + ${algorithmName}" style="display: inline-block">numDecimalPlaces</label>
+        <label th:text="#{num.decimal.par}" class="control-label"  th:for="numDecimalPlaces- + ${algorithmName}" style="display: inline-block">numDecimalPlaces</label>
         <span th:insert="~{fragments/parameter-fragments :: param-explaination(numdecimals)}"
               style="display: inline-block" th:title="#{numdecimals.explaination}" data-toggle="tooltip"></span>
         <br>
-        <input class="form-control" th:id="numDecimalPlaces + ${algorithmName}" th:name="numDecimalPlaces + ${algorithmName}" type="number" value="2">
+        <input class="form-control" th:id="numDecimalPlaces- + ${algorithmName}" th:name="numDecimalPlaces- + ${algorithmName}" type="number" value="2">
     </div>
 </div>
 
@@ -81,41 +81,41 @@
 
 <div th:fragment="confidenceFactorParameter(algorithmName)">
     <div class="form-group">
-        <label th:text="#{confidenceFactor.par}" class="control-label" th:for="confidenceFactor + ${algorithmName}" style="display: inline-block">confidence factor</label>
+        <label th:text="#{confidenceFactor.par}" class="control-label" th:for="confidenceFactor- + ${algorithmName}" style="display: inline-block">confidence factor</label>
         <span th:insert="~{fragments/parameter-fragments :: param-explaination(confactor)}"
               style="display: inline-block" th:title="#{confactor.explaination}" data-toggle="tooltip"></span>
         <br>
-        <input class="form-control" th:id="confidenceFactor + ${algorithmName}" th:name="confidenceFactor + ${algorithmName}" type="number" value="0.25">
+        <input class="form-control" th:id="confidenceFactor- + ${algorithmName}" th:name="confidenceFactor- + ${algorithmName}" type="number" value="0.25" step="any">
     </div>
 </div>
 
 <div th:fragment="minNumObjectParameter(algorithmName)">
     <div class="form-group">
-        <label th:text="#{minNumObj.par}" class="control-label" th:for="minNumObj + ${algorithmName}" style="display: inline-block">minNumObj</label>
+        <label th:text="#{minNumObj.par}" class="control-label" th:for="minNumObj- + ${algorithmName}" style="display: inline-block">minNumObj</label>
         <span th:insert="~{fragments/parameter-fragments :: param-explaination(minnumobj)}"
               style="display: inline-block" th:title="#{minnumobj.explaination}" data-toggle="tooltip"></span>
         <br>
-        <input class="form-control" th:id="minNumObj + ${algorithmName}" th:name="minNumObj + ${algorithmName}" type="number" value="2" min="2">
+        <input class="form-control" th:id="minNumObj- + ${algorithmName}" th:name="minNumObj- + ${algorithmName}" type="number" value="2" min="2">
     </div>
 </div>
 
 <div th:fragment="numFoldsParameter(algorithmName)">
     <div class="form-group">
-        <label th:text="#{numFold.par}" class="control-label" th:for="numFolds + ${algorithmName}" style="display: inline-block">numFolds</label>
+        <label th:text="#{numFold.par}" class="control-label" th:for="numFolds- + ${algorithmName}" style="display: inline-block">numFolds</label>
         <span th:insert="~{fragments/parameter-fragments :: param-explaination(numfolds)}"
               style="display: inline-block" th:title="#{numfolds.explaination}" data-toggle="tooltip"></span>
         <br>
-        <input class="form-control" th:id="numFolds + ${algorithmName}" th:name="numFolds + ${algorithmName}" type="number" value="3">
+        <input class="form-control" th:id="numFolds- + ${algorithmName}" th:name="numFolds- + ${algorithmName}" type="number" value="3">
     </div>
 </div>
 
 <div th:fragment="prunedParameter(algorithmName)">
     <div class="form-group">
-        <label th:text="#{pruned.par}" th:for="pruned + ${algorithmName}" class="control-label" style="display: inline-block">pruned</label>
+        <label th:text="#{pruned.par}" th:for="pruned- + ${algorithmName}" class="control-label" style="display: inline-block">pruned</label>
         <span th:insert="~{fragments/parameter-fragments :: param-explaination(pruned)}"
               style="display: inline-block" th:title="#{pruned.explaination}" data-toggle="tooltip"></span>
         <br>
-        <select class="form-control" th:id="pruned + ${algorithmName}" th:name="pruned + ${algorithmName}">
+        <select class="form-control" th:id="pruned- + ${algorithmName}" th:name="pruned- + ${algorithmName}">
             <option th:text="#{true}" value="true">True</option>
             <option th:text="#{false}" value="false">False</option>
         </select>
@@ -124,11 +124,11 @@
 
 <div th:fragment="laPlaceParameter(algorithmName)">
     <div class="form-group">
-        <label th:text="#{laPlace.par}" th:for="laPlace + ${algorithmName}" class="control-label" style="display: inline-block">pruned</label>
+        <label th:text="#{laPlace.par}" th:for="laPlace- + ${algorithmName}" class="control-label" style="display: inline-block">pruned</label>
         <span th:insert="~{fragments/parameter-fragments :: param-explaination(laplace)}"
               style="display: inline-block" th:title="#{laplace.explaination}" data-toggle="tooltip"></span>
         <br>
-        <select class="form-control" th:id="laPlace + ${algorithmName}" th:name="laPlace + ${algorithmName}">
+        <select class="form-control" th:id="laPlace- + ${algorithmName}" th:name="laPlace- + ${algorithmName}">
             <option th:text="#{true}" value="true">True</option>
             <option th:text="#{false}" value="false">False</option>
         </select>
@@ -137,21 +137,21 @@
 
 <div th:fragment="KnnParameter(algorithmName)">
     <div class="form-group">
-        <label class="control-label" th:text="#{knn.par}" th:for="KNN + ${algorithmName}" style="display: inline-block">KNN</label>
+        <label class="control-label" th:text="#{knn.par}" th:for="KNN- + ${algorithmName}" style="display: inline-block">KNN</label>
         <span th:insert="~{fragments/parameter-fragments :: param-explaination(knn)}"
               style="display: inline-block" th:title="#{knn.explaination}" data-toggle="tooltip"></span>
         <br>
-        <input class="form-control" th:id="KNN + ${algorithmName}" th:name="KNN + ${algorithmName}" type="number" value="1" min="1">
+        <input class="form-control" th:id="KNN- + ${algorithmName}" th:name="KNN- + ${algorithmName}" type="number" value="1" min="1">
     </div>
 </div>
 
 <div th:fragment="crossValidateParameter(algorithmName)">
     <div class="form-group">
-        <label th:text="#{crossValidate.par}" th:for="crossValidate + ${algorithmName}" class="control-label" style="display: inline-block">cross validate</label>
+        <label th:text="#{crossValidate.par}" th:for="crossValidate- + ${algorithmName}" class="control-label" style="display: inline-block">cross validate</label>
         <span th:insert="~{fragments/parameter-fragments :: param-explaination(crossval)}"
               style="display: inline-block" th:title="#{crossval.explaination}" data-toggle="tooltip"></span>
         <br>
-        <select class="form-control" th:id="crossValidate + ${algorithmName}" th:name="crossValidate + ${algorithmName}">
+        <select class="form-control" th:id="crossValidate- + ${algorithmName}" th:name="crossValidate- + ${algorithmName}">
             <option th:text="#{true}" value="true">True</option>
             <option th:text="#{false}" value="false">False</option>
         </select>
@@ -160,11 +160,11 @@
 
 <div th:fragment="nnSearchAlgorithmParameter(algorithmName)">
     <div class="form-group">
-        <label class="control-label" th:text="#{nnsearchAlgorithm.par}" th:for="nnSearchAlgorithm + ${algorithmName}" style="display: inline-block">nnSearchAlgorithm</label>
+        <label class="control-label" th:text="#{nnsearchAlgorithm.par}" th:for="nnSearchAlgorithm- + ${algorithmName}" style="display: inline-block">nnSearchAlgorithm</label>
         <span th:insert="~{fragments/parameter-fragments :: param-explaination(nnsearch)}"
               style="display: inline-block" th:title="#{nnsearch.explaination}" data-toggle="tooltip"></span>
         <br>
-        <select class="form-control" th:id="nnSearchAlgorithm + ${algorithmName}" th:name="nnSearchAlgorithm + ${algorithmName}">
+        <select class="form-control" th:id="nnSearchAlgorithm- + ${algorithmName}" th:name="nnSearchAlgorithm- + ${algorithmName}">
             <option value="BallTree">BallTree</option>
             <option value="CoverTree">CoverTree</option>
             <option value="FilteredNeighbourSearch">FilteredNeighbourSearch</option>
@@ -175,60 +175,80 @@
 </div>
 
 <div th:fragment="ZeroR">
-    <div th:insert="~{/fragments/parameter-fragments :: batchSizeParameter('ZeroR')}"></div>
-    <div th:insert="~{/fragments/parameter-fragments :: debugParameter('ZeroR')}"></div>
-    <div th:insert="~{/fragments/parameter-fragments :: doNotCheckCapParameter('ZeroR')}"></div>
-    <div th:insert="~{/fragments/parameter-fragments :: numDecimalsParameter('ZeroR')}"></div>
+    <form th:action="@{'/workbench/explore'}" method="post" name="ZeroR" id="ZeroR" style="display: block;">
+        <div th:insert="~{/fragments/parameter-fragments :: batchSizeParameter('ZeroR')}"></div>
+        <div th:insert="~{/fragments/parameter-fragments :: debugParameter('ZeroR')}"></div>
+        <div th:insert="~{/fragments/parameter-fragments :: doNotCheckCapParameter('ZeroR')}"></div>
+        <div th:insert="~{/fragments/parameter-fragments :: numDecimalsParameter('ZeroR')}"></div>
+        <input type="submit" value="Submit" class="btn btn-outline-secondary">
+        <input type="reset" value="Reset" class="btn btn-outline-secondary">
+    </form>
 </div>
 
 <div th:fragment="OneR">
-    <div th:insert="~{/fragments/parameter-fragments :: batchSizeParameter('OneR')}"></div>
-    <div th:insert="~{/fragments/parameter-fragments :: debugParameter('OneR')}"></div>
-    <div th:insert="~{/fragments/parameter-fragments :: doNotCheckCapParameter('OneR')}"></div>
-    <div th:insert="~{/fragments/parameter-fragments :: minBucketSizeParameter('OneR')}"></div>
-    <div th:insert="~{/fragments/parameter-fragments :: numDecimalsParameter('OneR')}"></div>
+    <form th:action="@{'/workbench/explore'}" method="post" name="OneR" id="OneR" style="display: none">
+        <div th:insert="~{/fragments/parameter-fragments :: batchSizeParameter('OneR')}"></div>
+        <div th:insert="~{/fragments/parameter-fragments :: debugParameter('OneR')}"></div>
+        <div th:insert="~{/fragments/parameter-fragments :: doNotCheckCapParameter('OneR')}"></div>
+        <div th:insert="~{/fragments/parameter-fragments :: minBucketSizeParameter('OneR')}"></div>
+        <div th:insert="~{/fragments/parameter-fragments :: numDecimalsParameter('OneR')}"></div>
+        <input type="submit" value="Submit" class="btn btn-outline-secondary">
+        <input type="reset" value="Reset" class="btn btn-outline-secondary">
+    </form>
 </div>
 
 <div th:fragment="IBK">
-    <div class="row">
-        <div class="col-6">
-            <div th:insert="~{/fragments/parameter-fragments :: KnnParameter('IBK')}"></div>
-            <div th:insert="~{/fragments/parameter-fragments :: batchSizeParameter('IBK')}"></div>
-            <div th:insert="~{/fragments/parameter-fragments :: crossValidateParameter('IBK')}"></div>
-            <div th:insert="~{/fragments/parameter-fragments :: debugParameter('IBK')}"></div>
+    <form th:action="@{'/workbench/explore'}" method="post" name="IBK" id="IBK" style="display: none">
+        <div class="row">
+            <div class="col-6">
+                <div th:insert="~{/fragments/parameter-fragments :: KnnParameter('IBK')}"></div>
+                <div th:insert="~{/fragments/parameter-fragments :: batchSizeParameter('IBK')}"></div>
+                <div th:insert="~{/fragments/parameter-fragments :: crossValidateParameter('IBK')}"></div>
+                <div th:insert="~{/fragments/parameter-fragments :: debugParameter('IBK')}"></div>
+            </div>
         </div>
-    </div>
-    <div class="row">
-        <div class="col-6">
-            <div th:insert="~{/fragments/parameter-fragments :: doNotCheckCapParameter('IBK')}"></div>
-            <div th:insert="~{/fragments/parameter-fragments :: nnSearchAlgorithmParameter('IBK')}"></div>
-            <div th:insert="~{/fragments/parameter-fragments :: numDecimalsParameter('IBK')}"></div>
+        <div class="row">
+            <div class="col-6">
+                <div th:insert="~{/fragments/parameter-fragments :: doNotCheckCapParameter('IBK')}"></div>
+                <div th:insert="~{/fragments/parameter-fragments :: nnSearchAlgorithmParameter('IBK')}"></div>
+                <div th:insert="~{/fragments/parameter-fragments :: numDecimalsParameter('IBK')}"></div>
+            </div>
         </div>
-    </div>
+        <input type="submit" value="Submit" class="btn btn-outline-secondary">
+        <input type="reset" value="Reset" class="btn btn-outline-secondary">
+    </form>
 </div>
 
 <div th:fragment="NaiveBayes">
-    <div th:insert="~{/fragments/parameter-fragments :: batchSizeParameter('NaiveBayes')}"></div>
-    <div th:insert="~{/fragments/parameter-fragments :: debugParameter('NaiveBayes')}"></div>
-    <div th:insert="~{/fragments/parameter-fragments :: doNotCheckCapParameter('NaiveBayes')}"></div>
-    <div th:insert="~{/fragments/parameter-fragments :: numDecimalsParameter('NaiveBayes')}"></div>
+    <form th:action="@{'/workbench/explore'}" method="post" name="NaiveBayes" id="NaiveBayes" style="display: none">
+        <div th:insert="~{/fragments/parameter-fragments :: batchSizeParameter('NaiveBayes')}"></div>
+        <div th:insert="~{/fragments/parameter-fragments :: debugParameter('NaiveBayes')}"></div>
+        <div th:insert="~{/fragments/parameter-fragments :: doNotCheckCapParameter('NaiveBayes')}"></div>
+        <div th:insert="~{/fragments/parameter-fragments :: numDecimalsParameter('NaiveBayes')}"></div>
+        <input type="submit" value="Submit" class="btn btn-outline-secondary">
+        <input type="reset" value="Reset" class="btn btn-outline-secondary">
+    </form>
 </div>
 
 <div th:fragment="J48">
-    <div class="row">
-        <div class="col-6">
-            <div th:insert="~{/fragments/parameter-fragments :: batchSizeParameter('J48')}"></div>
-            <div th:insert="~{/fragments/parameter-fragments :: confidenceFactorParameter('J48')}"></div>
-            <div th:insert="~{/fragments/parameter-fragments :: debugParameter('J48')}"></div>
-            <div th:insert="~{/fragments/parameter-fragments :: doNotCheckCapParameter('J48')}"></div>
+    <form th:action="@{'/workbench/explore'}" method="post" name="J48" id="J48" style="display: none">
+        <div class="row">
+            <div class="col-6">
+                <div th:insert="~{/fragments/parameter-fragments :: batchSizeParameter('J48')}"></div>
+                <div th:insert="~{/fragments/parameter-fragments :: confidenceFactorParameter('J48')}"></div>
+                <div th:insert="~{/fragments/parameter-fragments :: debugParameter('J48')}"></div>
+                <div th:insert="~{/fragments/parameter-fragments :: doNotCheckCapParameter('J48')}"></div>
+            </div>
+            <div class="col-6">
+                <div th:insert="~{/fragments/parameter-fragments :: minNumObjectParameter('J48')}"></div>
+                <div th:insert="~{/fragments/parameter-fragments :: numDecimalsParameter('J48')}"></div>
+                <div th:insert="~{/fragments/parameter-fragments :: numFoldsParameter('J48')}"></div>
+                <div th:insert="~{/fragments/parameter-fragments :: prunedParameter('J48')}"></div>
+            </div>
         </div>
-        <div class="col-6">
-            <div th:insert="~{/fragments/parameter-fragments :: minNumObjectParameter('J48')}"></div>
-            <div th:insert="~{/fragments/parameter-fragments :: numDecimalsParameter('J48')}"></div>
-            <div th:insert="~{/fragments/parameter-fragments :: numFoldsParameter('J48')}"></div>
-            <div th:insert="~{/fragments/parameter-fragments :: prunedParameter('J48')}"></div>
-        </div>
-    </div>
+        <input type="submit" value="Submit" class="btn btn-outline-secondary">
+        <input type="reset" value="Reset" class="btn btn-outline-secondary">
+    </form>
 </div>
 
 </body>

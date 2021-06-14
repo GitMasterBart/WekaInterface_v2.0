@@ -18,7 +18,7 @@
 
 <div th:insert="~{fragments/general-fragments :: navbar}"></div>
 
-<div class="container py-3">
+<div class="container pt-3">
     <h2>Weka Workbench</h2>
     <div class="border shadow rounded">
         <div class="row">
@@ -39,7 +39,7 @@
                         <a href="#history" class="nav-link">History</a>
                     </li>
                 </ul>
-                <div class="tab-content" style="height: 550px">
+                <div class="tab-content">
                     <div class="tab-pane fade show active" id="explorer" >
                         <div th:insert="~{fragments/workbench-fragments :: explorer-tab}"></div>
                     </div>
@@ -57,7 +57,7 @@
     </div>
 </div>
 
-<div th:insert="~{fragments/general-fragments :: footer}"></div>
+<!--<div th:insert="~{fragments/general-fragments :: footer}"></div>-->
 
 <script>
     $(document).ready(function(){
@@ -65,21 +65,18 @@
             e.preventDefault();
             $(this).tab('show');
         });
-        $('[data-toggle="tooltip"]').tooltip();
     });
 
-    getAlgorithmParams = function (elementID){
-        hideAllFragments();
-        if(elementID !== ""){
-            document.getElementById(elementID).hidden = false;
+    function changeForm(form) {
+        for (var i=0; i<form.length; i++){
+            var form_op = form.options[i].value;
+            if (form_op == form.value) {
+                document.getElementsByName(form_op)[0].style.display = "block";
+            }
+            else {
+                document.getElementsByName(form_op)[0].style.display = "none";
+            }
         }
-    }
-    hideAllFragments = function (){
-        document.getElementById("ZeroR").hidden = true;
-        document.getElementById("OneR").hidden = true;
-        document.getElementById("NaiveBayes").hidden = true;
-        document.getElementById("IBK").hidden = true;
-        document.getElementById("J48").hidden = true;
     }
 </script>
 
