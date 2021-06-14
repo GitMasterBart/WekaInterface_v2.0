@@ -1,10 +1,7 @@
 package nl.bioinf.wekainterface.webcontrol;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import nl.bioinf.wekainterface.model.AlgorithmsInformation;
-import nl.bioinf.wekainterface.model.DataReader;
-import nl.bioinf.wekainterface.model.LabelCounter;
-import nl.bioinf.wekainterface.model.WekaClassifier;
+import nl.bioinf.wekainterface.model.*;
 import nl.bioinf.wekainterface.service.FileService;
 import nl.bioinf.wekainterface.service.SerializationService;
 import nl.bioinf.wekainterface.service.SerializationServiceUploadedFiles;
@@ -24,6 +21,7 @@ import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -42,8 +40,6 @@ public class ExplorerController {
     private LabelCounter labelCounter;
     @Autowired
     private WekaClassifier wekaClassifier;
-    @Autowired
-    private ClassifierFactory classifierFactory;
     @Autowired
     private SerializationService serializationService;
     @Autowired
@@ -99,8 +95,6 @@ public class ExplorerController {
             ArrayList<String> uploadedFiles = new ArrayList<>();
             httpSession.setAttribute("UloadedFiles", uploadedFiles);
         }
-
-
 
         if (httpSession.getAttribute("demofile") == null) {
             String arffFilePath = exampleFilesFolder + '/' + demoFileName;
@@ -166,14 +160,17 @@ public class ExplorerController {
 
 
     @PostMapping(value = "/workbench/explore")
-    public String postExplorePage(@RequestParam(name = "classifier") String classifierName,
-                                  Model model, RedirectAttributes redirect, HttpSession httpSession) throws Exception {
+    public String postExplorePage(@RequestParam Map<String, String> parameters, Model model,
+                                  RedirectAttributes redirect, HttpSession httpSession) throws Exception {
+
+        List<String> keys = new ArrayList<>(parameters.keySet());
+        String classifierName = keys.get(0).split("-")[1];
+
+        parameters.put("classifier", classifierName);
 
         if (httpSession.getAttribute("algorithm") == null) {
             httpSession.setAttribute("algorithm", classifierName);
         }
-//        System.out.println(classifierName);
-//        classifierFactory.createClassifier(classifierName, httpRequest);
 
         Instances instances =  (Instances)httpSession.getAttribute("instances");
 
@@ -181,7 +178,7 @@ public class ExplorerController {
         labelCounter.setGroups();
         labelCounter.countLabels();
 
-        Evaluation evaluation = wekaClassifier.test(instances, classifierName);
+        Evaluation evaluation = wekaClassifier.classify(instances, parameters);
 
         redirect.addFlashAttribute("data", labelCounter.mapToJSON());
         redirect.addFlashAttribute("attributes", labelCounter.getAttributeArray());
