@@ -4,6 +4,10 @@ import weka.core.neighboursearch.*;
 
 import java.util.Map;
 
+/**
+ * Given a parameter Map this class gets the parameters for the classification.
+ * @Author Marijke Eggink 370419
+ */
 public class Parameters {
     private final String classifier;
     private final Map<String, String> parameters;

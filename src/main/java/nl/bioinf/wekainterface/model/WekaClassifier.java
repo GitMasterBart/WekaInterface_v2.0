@@ -21,7 +21,7 @@ import java.util.Random;
 @Component
 public class WekaClassifier {
     /**
-     * TODO: ZONDER PARAMETERS DEZE KAN ER LATER UIT ALS DE PARAMETERS ZIJN TOEGEVOEGD.
+     * TODO: Zonder parameters, deze moet er nog uit gehaald worden wanneer hij nergens meer wordt gebruikt.
      * This method classifies instances with a 10-fold cross validation.
      * @param instances instances to be classified.
      * @param classifier name of the classifier.
