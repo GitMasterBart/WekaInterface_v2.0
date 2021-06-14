@@ -76,11 +76,11 @@
                 <td th:text="${msg}">_offline_</td>
                 <td th:text="${msg}">_offline_</td>
                 <td th:text="${msg}">_offline_</td>
-                    <tr th:each="i:${info}" th:object="${info}" >
-                        <td th:text="${i.getSimpleDateFormat}">_offline_</td>
-                        <td><a th:href="@{'/history/' + ${i.algorithmsName}}"
-                               th:text="${i.algorithmsName}" class="text-body"></a></td>
-                        <td><a th:href="@{'/history/' + ${i.algorithmsName}}"
+                    <tr th:each="informationAlgorithms:${info}" th:object="${info}" >
+                        <td th:text="${informationAlgorithms.getSimpleDateFormat}">_offline_</td>
+                        <td><a th:href="@{'/history/' + ${informationAlgorithms.algorithmsName}}"
+                               th:text="${informationAlgorithms.algorithmsName}" class="text-body"></a></td>
+                        <td><a th:href="@{'/history/' + ${informationAlgorithms.algorithmsName}}"
                            text="Plot" class="text-body"> plot </a></td>
                     </tr>
                 </tbody>
@@ -98,9 +98,9 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="i:${uploadedFile}" th:object="${uploadedFile}" >
-                <td><a th:href="@{'/history/' + ${i}}"
-                                     th:text="${i}" class="text-body"></a></td>
+            <tr th:each="file:${uploadedFile}" th:object="${uploadedFile}" >
+                <td><a th:href="@{'/history/' + ${file}}"
+                                     th:text="${file}" class="text-body"></a></td>
             </tr>
             </tbody>
         </table>

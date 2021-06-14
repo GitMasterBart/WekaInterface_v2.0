@@ -5,6 +5,9 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+/**
+ * @author Bart Engels
+ */
 
 public class AlgorithmsInformation implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -37,6 +40,5 @@ public class AlgorithmsInformation implements Serializable {
         String strDate = simpleDateFormat.format(date);
         return strDate;
     }
-
 
 }
