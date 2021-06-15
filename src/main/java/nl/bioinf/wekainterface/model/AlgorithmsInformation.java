@@ -6,7 +6,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 /**
- * @author Bart Engels
+ * @author Bart Engels 382612
  */
 
 public class AlgorithmsInformation implements Serializable {

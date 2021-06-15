@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import java.util.List;
 
 /**
- * @author Bart Engels
+ * @author Bart Engels 382612
  */
 
 @Controller
