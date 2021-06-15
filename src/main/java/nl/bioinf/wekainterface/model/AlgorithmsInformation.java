@@ -6,7 +6,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 /**
- * @author Bart Engels
+ * @author Bart Engels 382612
  */
 
 public class AlgorithmsInformation implements Serializable {
@@ -35,10 +35,8 @@ public class AlgorithmsInformation implements Serializable {
         return uploadFileDemoFileUsedAlgorithm;
     }
 
-    public String getSimpleDateFormat() {
-        Date date = Calendar.getInstance().getTime();
-        String strDate = simpleDateFormat.format(date);
-        return strDate;
+    public Date getSimpleDateFormat() {
+           return simpleDateFormat.get2DigitYearStart();
     }
 
 }
