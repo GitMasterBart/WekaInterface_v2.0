@@ -71,11 +71,11 @@
 
 <div th:fragment="minBucketSizeParameter(algorithmName)">
     <div class="form-group">
-        <label class="control-label" th:text="#{minBucketSize.par}" th:for="minBucketSize + ${algorithmName}" style="display: inline-block">minBucketSize</label>
+        <label class="control-label" th:text="#{minBucketSize.par}" th:for="minBucketSize- + ${algorithmName}" style="display: inline-block">minBucketSize</label>
         <span th:insert="~{fragments/parameter-fragments :: param-explaination(minbucket)}"
               style="display: inline-block" th:title="#{minbucket.explaination}" data-toggle="tooltip"></span>
         <br>
-        <input class="form-control" th:id="minBucketSize + ${algorithmName}" th:name="minBucketSize + ${algorithmName}" type="number" value="6">
+        <input class="form-control" th:id="minBucketSize- + ${algorithmName}" th:name="minBucketSize- + ${algorithmName}" type="number" value="6">
     </div>
 </div>
 

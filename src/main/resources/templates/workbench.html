@@ -8,19 +8,22 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script></head>
-<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-<!--Deze kan misschien weg-->
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-<script th:src="@{'/js/plotDataSet.js'}"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <!--Deze kan misschien weg-->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script th:src="@{'/js/plotDataSet.js'}"></script>
 </head>
 <body>
 
 <div th:insert="~{fragments/general-fragments :: navbar}"></div>
 
-<div class="container pt-3">
+<div id="workbench" class="container pt-3">
     <h2>Weka Workbench</h2>
-    <div class="border shadow rounded">
+    <div class="border shadow rounded mb-6">
         <div class="row">
             <div class="col-3 ml-1">
                 <div th:insert="~{fragments/workbench-fragments :: file-upload-form}"></div>
@@ -29,24 +32,39 @@
             <div class="col-8">
                 <ul id="myTab" class="nav nav-tabs">
                     <li class="nav-item">
-                        <a href="#explorer" class="nav-link active">Explorer</a>
+                        <a th:unless="${evaluation}" href="#explorer-active" class="nav-link active">Explorer</a>
+                        <a th:if="${evaluation}" href="#explorer-inactive" class="nav-link">Explorer</a>
                     </li>
                     <li class="nav-item">
-                        <!--                        Deze moet active als resultaten aanwezig zijn???-->
                         <a href="#classify" class="nav-link">Classify</a>
+                    </li>
+                    <li class="nav-item">
+                        <a th:unless="${evaluation}" href="#results-inactive" class="nav-link">Results</a>
+                        <a th:if="${evaluation}" href="#results-active" class="nav-link active">Results</a>
                     </li>
                     <li class="nav-item">
                         <a href="#history" class="nav-link">History</a>
                     </li>
                 </ul>
                 <div class="tab-content">
-                    <div class="tab-pane fade show active" id="explorer" >
+                    <div th:unless="${evaluation}" class="tab-pane fade show active" id="explorer-active" >
                         <div th:insert="~{fragments/workbench-fragments :: explorer-tab}"></div>
                     </div>
+                    <div th:if="${evaluation}" class="tab-pane fade" id="explorer-inactive" >
+                        <div th:insert="~{fragments/workbench-fragments :: explorer-tab}"></div>
+                    </div>
+
                     <div class="tab-pane fade" id="classify">
                         <div th:insert="~{fragments/workbench-fragments :: classify-tab}"></div>
+                    </div>
+
+                    <div th:unless="${evaluation}" class="tab-pane fade" id="results-inactive">
                         <div th:insert="~{fragments/workbench-fragments :: results}"></div>
                     </div>
+                    <div th:if="${evaluation}" class="tab-pane fade show active" id="results-active">
+                        <div th:insert="~{fragments/workbench-fragments :: results}"></div>
+                    </div>
+
                     <div class="tab-pane fade" id="history">
                         <h4 class="mt-2">History</h4>
                         <div th:insert="~{fragments/general-fragments :: #list_fragmentHistory}"></div>
@@ -57,7 +75,7 @@
     </div>
 </div>
 
-<!--<div th:insert="~{fragments/general-fragments :: footer}"></div>-->
+<div th:insert="~{fragments/general-fragments :: footer}"></div>
 
 <script>
     $(document).ready(function(){
@@ -65,6 +83,7 @@
             e.preventDefault();
             $(this).tab('show');
         });
+        $('[data-toggle="tooltip"]').tooltip();
     });
 
     function changeForm(form) {
