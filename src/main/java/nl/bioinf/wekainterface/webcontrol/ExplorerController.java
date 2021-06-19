@@ -188,6 +188,7 @@ public class ExplorerController {
         return "redirect:/workbench";
     }
 
+
     @GetMapping(value = "/results")
     public String getResultPage(Model model, HttpSession httpSession) throws JsonProcessingException {
         List<String> filenames = dataReader.getDataSetNames();

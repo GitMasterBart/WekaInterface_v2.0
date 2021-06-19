@@ -21,10 +21,10 @@
 <!--  <hr>-->
   <div class="row">
     <div class="col-4-md">
-        <form th:action="@{'/explorer'}" method="POST" enctype="multipart/form-data">
+        <form th:action="@{'/explorer'}" method="POST" enctype="multipart/form-data" id="fileForm" name="fileForm">
             <div class="pt-2">
-                <label for="file-name" th:text="#{form.select}"></label><br>
-                <select class="form-select custom-select" id="file-name" name="filename">
+                <label for="filename" th:text="#{form.select}"></label><br>
+                <select class="form-select custom-select" id="filename" name="filename" required>
                     <option th:text="#{form.file.select}"></option>
                     <option th:each="file: ${filenames}" th:value="${file}" th:text="${file}"></option>
                 </select>
@@ -33,18 +33,18 @@
                 <p th:text="#{form.upload}"></p>
             </div>
             <div class="custom-file">
-                <input type="file" class="custom-file-input" id="inputFile" name="inputFile">
+                <input type="file" class="custom-file-input" id="inputFile" name="inputFile" required>
                 <label class="custom-file-label" for="inputFile" th:text="#{form.choose}"></label>
             </div>
             <div class="pt-3">
                 <p th:text="#{form.classifier.select}"></p>
             </div>
             <div th:each="name:${classifierNames}">
-                <input th:id="${name}" type="radio" name="classifier" th:value="${name}">
+                <input th:id="${name}" type="radio" name="classifier" th:value="${name}" required>
                 <label th:for="${name}" th:text="${name}"></label>
             </div>
             <input type="submit" value="Submit" class="btn btn-outline-secondary">
-            <input type="reset" value="Reset" class="btn btn-outline-secondary">
+            <input type="button" value="Reset" class="btn btn-outline-secondary" onclick="resetForm()">
         </form>
     </div>
 <!--    <div class="col-7-md offset-1">-->
@@ -65,6 +65,59 @@
 </div>
 
 <div th:include="~{fragments/general-fragments :: footer}"></div>
+
+<script>
+
+    function validateAndSend(){
+        let inputFile = document.querySelector("#inputFile").value;
+        let filename = document.querySelector("#filename").value;
+        let classifier = document.getElementsByName("classifier").value;
+
+        console.log("classifier = " + typeof classifier)
+        console.log("fileName = " + filename)
+        console.log("inputFile = " + inputFile)
+
+        if (classifier !== '' || classifier !== null || classifier !== "undefined"){
+            if (filename !== '' && filename !== "Select..." || inputFile !== ''){
+                document.getElementById("fileForm").submit();
+            }
+        }else {
+            return false;
+        }
+    }
+
+    function makeFileNameNotRequired(){
+        alert("Not required anymore")
+        // console.log(document.querySelector("#inputFile").required);
+        document.querySelector("#filename").required = false;
+        // console.log("Required for filename = " + document.querySelector("#inputFile").required);
+        // console.log("Required for filename = " + document.querySelector("#inputFile").required);
+
+    }
+
+    function makeInputFileNotRequired(){
+        alert("Not required anymore")
+        // console.log(document.querySelector("#filename").required);
+        document.querySelector("#inputFile").required = false;
+        // console.log("Required for InputFile = " + document.querySelector("#filename").required);
+        // console.log("Required for InputFile = " + document.querySelector("#filename").required);
+    }
+
+    document.querySelector("#filename").addEventListener('input', makeInputFileNotRequired);
+    document.querySelector("#inputFile").addEventListener('input', makeFileNameNotRequired);
+
+    function resetForm(){
+        let fileNameInput = document.querySelector("#filename");
+        let inputFileInput = document.querySelector("#inputFile");
+        let classifierInput = document.querySelector("#classifier");
+        fileNameInput.required = true;
+        fileNameInput.value = "Select...";
+        inputFileInput.required = true;
+        inputFileInput.value = "";
+        classifierInput.value = null;
+    }
+
+</script>
 
 </body>
 </html>

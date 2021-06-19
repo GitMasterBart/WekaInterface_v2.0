@@ -26,7 +26,6 @@ public class SerializationServiceUploadedFiles {
             out.writeObject(algorithmsInformations);
             out.close();
             fileOut.close();
-            //System.out.print("Serialized data is saved in /tmp/{random.string}.ser");
         } catch (IOException i) {
             i.printStackTrace();
         }

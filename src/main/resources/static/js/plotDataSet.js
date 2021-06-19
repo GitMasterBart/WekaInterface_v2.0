@@ -7,14 +7,11 @@
  */
 plotData = function (data, attribute, classLabel){
     let parsedData = JSON.parse(data);
-    // If requested attribute is not the class attribute split the data by class label
-    // this creates a stacked barchart
+
     if (attribute !== classLabel){
         plotNonClassAttribute(parsedData, attribute)
     }
 
-    // If the requested attribute is the same as the class attribute only plot the class label count
-    // This creates a regular barchart with no split
     else {
         plotClassLabel(parsedData)
     }
@@ -31,6 +28,7 @@ function isDate(dateStr) {
 
 /**
  * Plot attributes that are not the class attribute.
+ * TODO Internationalize the plot layout
  * @param data JSON object
  * @param attribute attribute name
  */
@@ -44,30 +42,36 @@ plotNonClassAttribute = function (data, attribute){
     let sortedDateObject = {};
 
     for (let classLabel in data){
-        if (data.hasOwnProperty(classLabel)){
-            let attributeObject = data[classLabel][attribute];
-                dateObject[classLabel] = {};
-                for(let key in attributeObject){
-                    if (attributeObject.hasOwnProperty(key)){
-                        if (isDate(new Date(key))){
-                            // make the object keys actual dates instead of strings
-                            dateObject[classLabel][new Date(key)] = attributeObject[key];
-                            attrIsDate = true;
-                        }
-                    }
+        let attributeObject = data[classLabel][attribute];
+            dateObject[classLabel] = {};
+            for(let key in attributeObject){
+                if (isDate(new Date(key))){
+                    // make the object keys actual dates instead of strings
+                    dateObject[classLabel][new Date(key)] = attributeObject[key];
+                    attrIsDate = true;
                 }
+            }
 
-                let trace;
-                if (attrIsDate){
-                    trace = traceNonClassAttributeDate(dateObject, classLabel, sortedDateObject);
-                }
-                else {
-                    trace = traceNonClassAttributeNominal(attributeObject, classLabel);
-                }
-                plotData.push(trace);
-        }
+            let trace;
+            if (attrIsDate){
+                trace = traceNonClassAttributeDate(dateObject, classLabel, sortedDateObject);
+            }
+            else {
+                trace = traceNonClassAttributeNominal(attributeObject, classLabel);
+            }
+            plotData.push(trace);
+
     }
-    let layout = {barmode: 'stack'}
+    let layout = {  barmode: 'stack',
+                    title: {
+                        text: "Occurrence of " + attribute + " in the dataset"
+                    },
+                    xaxis: {
+                        title: attribute
+                    },
+                    yaxis: {
+                        title: "Occurrence of " + attribute
+                    }}
     Plotly.newPlot('plot', plotData, layout);
 }
 
@@ -80,12 +84,8 @@ plotNonClassAttribute = function (data, attribute){
  */
 traceNonClassAttributeDate = function (dateObject, classLabel, sortedDateObject){
 
-    let trace = {
-        x: [],
-        y: [],
-        name: classLabel,
-        type: 'bar'
-    };
+    let trace = createEmptyBarTrace();
+    trace.name = classLabel;
 
     let sortedDateKeys = Object.keys(dateObject[classLabel]).sort(
         (a, b) => new Date(a) - new Date(b));
@@ -98,11 +98,9 @@ traceNonClassAttributeDate = function (dateObject, classLabel, sortedDateObject)
     }
 
     for (let key in sortedDateObject[classLabel]){
-        if (sortedDateObject[classLabel].hasOwnProperty(key)){
-            if (dateObject[classLabel][key] !== 0){
-                trace.x.push(key.split(" ").splice(1, 3).join(" "));
-                trace.y.push(dateObject[classLabel][key]);
-            }
+        if (dateObject[classLabel][key] !== 0){
+            trace.x.push(key.split(" ").splice(1, 3).join(" "));
+            trace.y.push(dateObject[classLabel][key]);
         }
     }
     return trace;
@@ -117,20 +115,15 @@ traceNonClassAttributeDate = function (dateObject, classLabel, sortedDateObject)
  */
 traceNonClassAttributeNominal = function (attributeObject, classLabel){
 
-    let trace = {
-        x: [],
-        y: [],
-        name: classLabel,
-        type: 'bar'
-    };
+    let trace = createEmptyBarTrace();
+    trace.name = classLabel;
+
     let sortedAttributeObject = {};
     let keysToSort = [];
 
     try { // if the label is an interval sort it from lowest to highest.
         for (let key in attributeObject){
-            if (attributeObject.hasOwnProperty(key)){
-                keysToSort.push(key);
-            }
+            keysToSort.push(key);
         }
 
         keysToSort.sort((a, b) => a.split("-")[0] - b.split("-")[0]);
@@ -141,23 +134,17 @@ traceNonClassAttributeNominal = function (attributeObject, classLabel){
         }
 
         for (let entry in sortedAttributeObject){
-            if (sortedAttributeObject.hasOwnProperty(entry)){
-                if (sortedAttributeObject[entry] !== 0){
-                    trace.x.push(entry);
-                    trace.y.push(sortedAttributeObject[entry]);
-                }
+            if (sortedAttributeObject[entry] !== 0){
+                trace.x.push(entry);
+                trace.y.push(sortedAttributeObject[entry]);
             }
         }
     }catch (err){
-
         for (let entry in attributeObject){
-            if (attributeObject.hasOwnProperty(entry)){
-                trace.x.push(entry);
-                trace.y.push(attributeObject[entry]);
-            }
+            trace.x.push(entry);
+            trace.y.push(attributeObject[entry]);
         }
     }
-
     return trace;
 }
 
@@ -166,12 +153,7 @@ traceNonClassAttributeNominal = function (attributeObject, classLabel){
  * @param data
  */
 plotClassLabel = function (data){
-    let trace = {
-        x: [],
-        y: [],
-        name: '',
-        type: 'bar'
-    }
+    let trace = createEmptyBarTrace();
     // for every class label, count its occurrence.
     for (let key in data){
         if (data.hasOwnProperty(key)){
@@ -190,6 +172,7 @@ plotClassLabel = function (data){
 
 /**
  * Plots a dataset with only two attributes
+ * TODO Add layout for the plot I.E. title and x/y labels etc.
  * @param data
  */
 plotTwoAttributes = function (data){
@@ -213,4 +196,16 @@ plotTwoAttributes = function (data){
         trace['y'].push(listToSort[index].value);
     }
     Plotly.newPlot("plotTwoAttributes", [trace])
+}
+
+/**
+ * Returns an empty plotly trace object
+ */
+createEmptyBarTrace = function (){
+    return {
+        x: [],
+        y: [],
+        name: '',
+        type: 'bar'
+    };
 }

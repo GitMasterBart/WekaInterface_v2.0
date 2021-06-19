@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 /**
  * @author Marijke Eggink, Jelle Becirspahic & Bart Engels
+ * Controller responsible for serving static pages
   */
 
 @Controller
