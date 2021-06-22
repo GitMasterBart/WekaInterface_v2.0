@@ -1,6 +1,6 @@
 package nl.bioinf.wekainterface.service;
 
-import nl.bioinf.wekainterface.model.DataReader;
+import nl.bioinf.wekainterface.model.InstanceReader;
 import nl.bioinf.wekainterface.model.WekaClassifier;
 import org.springframework.stereotype.Service;
 import weka.classifiers.evaluation.Evaluation;
@@ -15,7 +15,7 @@ import java.io.File;
 public class ClassificationService {
     public Evaluation classify(File arffFile, String classifierName){
         try {
-            DataReader reader = new DataReader();
+            InstanceReader reader = new InstanceReader();
             Instances instances = reader.readArff(arffFile);
             WekaClassifier wekaClassifier = new WekaClassifier();
             return wekaClassifier.test(instances, classifierName);

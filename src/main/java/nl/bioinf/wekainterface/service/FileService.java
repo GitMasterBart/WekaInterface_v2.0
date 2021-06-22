@@ -1,6 +1,6 @@
 package nl.bioinf.wekainterface.service;
 
-import nl.bioinf.wekainterface.model.DataReader;
+import nl.bioinf.wekainterface.model.InstanceReader;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,7 +21,7 @@ public class FileService {
 
 
     @Autowired
-    private DataReader dataReader;
+    private InstanceReader instanceReader;
 
     public Instances getInstancesFromMultipart(MultipartFile multipart) throws IOException {
         Instances instances;
@@ -30,11 +30,11 @@ public class FileService {
         if (multipart.getOriginalFilename().endsWith(".csv")){
             File csvFile = File.createTempFile(multipart.getOriginalFilename()+ "-", ".csv", new File(tempFolder));
             FileUtils.copyInputStreamToFile(inputStream, csvFile);
-            instances = dataReader.readCsv(csvFile, ";");
+            instances = instanceReader.readCsv(csvFile, ";");
         } else if (multipart.getOriginalFilename().endsWith(".arff")){
             File arffFile = File.createTempFile(multipart.getOriginalFilename()+ "-", ".arff", new File(tempFolder));
             FileUtils.copyInputStreamToFile(inputStream, arffFile);
-            instances = dataReader.readArff(arffFile);
+            instances = instanceReader.readArff(arffFile);
         } else {
             throw new IllegalArgumentException();
         }
@@ -44,12 +44,12 @@ public class FileService {
     public Instances getInstancesFromDemoFile(String demoFileName) throws IOException {
         String arffFilePath = exampleFilesFolder + '/' + demoFileName;
         File arffFile = new File(arffFilePath);
-        return dataReader.readArff(arffFile);
+        return instanceReader.readArff(arffFile);
     }
 
     public Instances getInstancesFromUloadedDemoFile(String demoFileName) throws IOException {
         String arffFilePath = demoFileName;
         File arffFile = new File(arffFilePath);
-        return dataReader.readArff(arffFile);
+        return instanceReader.readArff(arffFile);
     }
 }
