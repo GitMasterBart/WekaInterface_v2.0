@@ -54,7 +54,6 @@
       <option th:each="name:${classifierNames}" th:value="${name}" th:text="${name}"></option>
     </select>
   </form>
-
   <div id="ZeroR" th:insert="~{/fragments/parameter-fragments :: ZeroR}"></div>
   <div id="OneR" th:insert="~{/fragments/parameter-fragments :: OneR}"></div>
   <div id="NaiveBayes" th:insert="~{/fragments/parameter-fragments :: NaiveBayes}"></div>
@@ -62,25 +61,28 @@
   <div id="J48" th:insert="~{/fragments/parameter-fragments :: J48}"></div>
 </div>
 
-<div th:fragment="results" id="results">
+<div th:fragment="results" id="results-tab">
+  <h4>Results</h4>
+  <p th:unless="${evaluation}" th:text="#{results.message}"></p>
   <div th:if="${evaluation}">
-    <hr>
-    <h4>Results</h4>
+    <button type="button" class="btn btn-outline-secondary my-2" data-toggle="collapse" data-target="#advanced-stats">Advanced Stats</button>
+    <br>
     <div th:object="${evaluation}">
-      <div id="basic-stats">
-        <pre th:text="#{results.instances.num} + *{#numbers.formatInteger(numInstances(), 0)}"></pre>
-        <pre th:text="#{results.correct} + *{#numbers.formatInteger(correct(), 0)}"></pre>
-        <pre th:text="#{results.incorrect} + *{#numbers.formatInteger(incorrect(), 0)}"></pre>
-        <pre th:text="#{results.perc.correct} + *{#numbers.formatDecimal(pctCorrect(), 0, 2)} + ' %'"></pre>
-        <pre th:text="#{results.perc.incorrect} + *{#numbers.formatDecimal(pctIncorrect(), 0, 2)} + ' %'"></pre>
+      <pre th:text="#{results.instances.num} + *{#numbers.formatInteger(numInstances(), 0)}"></pre>
+      <pre th:text="#{results.correct} + *{#numbers.formatInteger(correct(), 0)}"></pre>
+      <pre th:text="#{results.incorrect} + *{#numbers.formatInteger(incorrect(), 0)}"></pre>
+      <pre th:text="#{results.perc.correct} + *{#numbers.formatDecimal(pctCorrect(), 0, 2)} + ' %'"></pre>
+      <pre th:text="#{results.perc.incorrect} + *{#numbers.formatDecimal(pctIncorrect(), 0, 2)} + ' %'"></pre>
+      <div id="advanced-stats" class="collapse">
+        <pre th:text="#{results.kappa} + *{#numbers.formatDecimal(kappa(), 0, 2)}"></pre>
+        <pre th:text="#{results.mean.abs} + *{#numbers.formatDecimal(meanAbsoluteError(), 0, 2)}"></pre>
+        <pre th:text="#{results.mean.squared} + *{#numbers.formatDecimal(rootMeanSquaredError(), 0, 2)}"></pre>
+        <pre th:text="#{results.relative.abs} + *{#numbers.formatDecimal(relativeAbsoluteError(), 0, 2)} + ' %'"></pre>
+        <pre th:text="#{results.relative.squared} + *{#numbers.formatDecimal(rootRelativeSquaredError(), 0, 2)} + ' %'"></pre>
       </div>
-<!--      <div id="advanced-stats">-->
-<!--        <pre th:text="#{results.kappa} + *{kappa()}"></pre>-->
-<!--        <pre th:text="#{results.mean.abs} + *{meanAbsoluteError()}"></pre>-->
-<!--        <pre th:text="#{results.mean.squared} + *{rootMeanSquaredError()}"></pre>-->
-<!--        <pre th:text="#{results.relative.abs} + *{relativeAbsoluteError()} + '%'"></pre>-->
-<!--        <pre th:text="#{results.relative.squared} + *{rootRelativeSquaredError()} + '%'"></pre>-->
-<!--      </div>-->
+      <br>
+      <pre>Confusion Matrix: </pre>
+      <pre th:text="*{toMatrixString('')}"></pre>
     </div>
   </div>
 </div>

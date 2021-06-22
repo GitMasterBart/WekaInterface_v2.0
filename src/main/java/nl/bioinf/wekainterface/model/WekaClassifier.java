@@ -1,7 +1,10 @@
 package nl.bioinf.wekainterface.model;
 
+import nl.bioinf.wekainterface.service.FileService;
 import org.springframework.stereotype.Component;
+import weka.classifiers.Classifier;
 import weka.classifiers.bayes.NaiveBayes;
+import weka.classifiers.evaluation.ConfusionMatrix;
 import weka.classifiers.evaluation.Evaluation;
 import weka.classifiers.lazy.IBk;
 import weka.classifiers.rules.OneR;
@@ -9,10 +12,10 @@ import weka.classifiers.rules.ZeroR;
 import weka.classifiers.trees.J48;
 import weka.core.Instances;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import javax.xml.crypto.Data;
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
 
 /**
  * @author Marijke Eggink 370419
@@ -29,7 +32,7 @@ public class WekaClassifier {
      * @throws Exception
      */
     public Evaluation test(Instances instances, String classifier) throws Exception {
-        weka.classifiers.Classifier rule;
+        Classifier rule;
         switch (classifier){
             case "ZeroR":
                 rule = new ZeroR();
@@ -47,7 +50,7 @@ public class WekaClassifier {
                 rule = new IBk();
                 break;
             default:
-                throw new IllegalArgumentException();
+                throw new IllegalArgumentException("Error: This classifier name is not supported");
         }
         Evaluation evaluation = new Evaluation(instances);
         evaluation.crossValidateModel(rule, instances, 10, new Random(1));
@@ -62,7 +65,7 @@ public class WekaClassifier {
      * @throws Exception
      */
     public Evaluation classify(Instances instances, Map<String, String> parameterMap) throws Exception {
-        weka.classifiers.Classifier rule;
+        Classifier rule;
         switch (parameterMap.get("classifier")){
             case "ZeroR":
                 rule = zeroR(parameterMap);
@@ -80,7 +83,7 @@ public class WekaClassifier {
                 rule = iBk(parameterMap);
                 break;
             default:
-                throw new IllegalArgumentException();
+                throw new IllegalArgumentException("Error: This classifier name is not supported");
         }
         Evaluation evaluation = new Evaluation(instances);
         evaluation.crossValidateModel(rule, instances, 10, new Random(1));
