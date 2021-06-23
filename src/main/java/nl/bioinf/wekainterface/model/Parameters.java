@@ -73,7 +73,7 @@ public class Parameters {
     public NearestNeighbourSearch getAlgorithm(String algorithm){
         NearestNeighbourSearch nearestNeighbourSearch;
         switch (algorithm){
-            default:
+            case "BallTree":
                 nearestNeighbourSearch = new BallTree();
                 break;
             case "CoverTree":
@@ -88,6 +88,8 @@ public class Parameters {
             case "LinearNNSearch":
                 nearestNeighbourSearch = new LinearNNSearch();
                 break;
+            default:
+                throw new IllegalArgumentException("Error: this algorithm name is not supported");
         }
         return nearestNeighbourSearch;
     }
