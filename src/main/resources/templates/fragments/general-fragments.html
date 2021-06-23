@@ -67,8 +67,8 @@
                 <thead>
                 <h1 th:text="${HistoryList}"></h1>
                 <tr>
-                    <th>Time/Date</th>
-                    <th>Used File</th>
+                    <th th:text="#{history.time}"></th>
+                    <th th:text="#{history.usedFile}"></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -90,7 +90,7 @@
         <table>
             <thead>
             <tr>
-                <th>Uploaded File</th>
+                <th th:text="#{history.uploaded}"></th>
             </tr>
             </thead>
             <tbody>
