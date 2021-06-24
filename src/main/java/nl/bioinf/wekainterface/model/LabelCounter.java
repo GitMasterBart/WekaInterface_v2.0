@@ -5,12 +5,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import nl.bioinf.wekainterface.errorhandling.InvalidDataSetProcessException;
 import org.springframework.stereotype.Component;
 
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import weka.core.AttributeStats;
 import weka.core.Instance;
 import weka.core.Instances;
 import weka.experiment.Stats;
 
+import java.awt.*;
 import java.util.*;
+import java.util.List;
 
 /**
 @author jelle 387615
@@ -35,23 +38,35 @@ public class LabelCounter {
      * the labels for each attribute as its key and the occurrence of those labels as its value. The occurrence is set
      * at 0.
      * TODO if the class attribute is numeric, discretize the group keys as an interval, just like in setLabelsNumeric()
+     * TODO This class can only handle datasets with numeric, nominal or Date class attributes. A String class attribute will cause an exception. This should be handled in a better way.
      */
     public void setGroups(){
-        if (this.instances.numAttributes() == 1){
-            throw new InvalidDataSetProcessException("Dataset only contains 1 Attribute");
-        }
-
         if (this.instances.numAttributes() == 2){
             setGroupsTwoAttributes();
         }
-
         if (this.instances.numAttributes() > 2){
-            if (this.instances.classAttribute().isDate() || this.instances.classAttribute().isNumeric()){
-                setGroupsNotNominal();
+            if (this.instances.classAttribute().isDate()){
+                setGroupsDate();
+            }
+            if (this.instances.classAttribute().isNumeric()){
+                setGroupsNumeric();
             }
             else {
                 setGroupsNominal();
             }
+        }
+    }
+
+    /**
+     * If the class attribute is numeric, discretizes the class labels into intervals.
+     */
+    private void setGroupsNumeric() {
+        Stats stats = instances.attributeStats(instances.classIndex()).numericStats;
+        IntervalStats intervalStats = setIntervalStats(stats);
+        for (int groupIndex = 0; groupIndex < intervalStats.getNumGroups(); groupIndex++){
+            String intervalLabel = getIntervalLabel(stats, intervalStats, groupIndex);
+            AttributeMap attributes = setAttributes();
+            groups.put(intervalLabel, attributes);
         }
     }
 
@@ -73,8 +88,7 @@ public class LabelCounter {
      * Sets the groups for class attributes that are not nominal I.E. are numeric or dates. Only used when dataset has
      * more than 2 attributes
      */
-    private void setGroupsNotNominal() {
-        // use attribute stats instead of instances.numValues since that is not possible for non nominal attributes
+    private void setGroupsDate() {
         AttributeStats stats = this.instances.attributeStats(this.instances.classIndex());
         int numberOfValues = stats.totalCount;
         for (int instanceIndex = 0; instanceIndex < numberOfValues; instanceIndex++){
@@ -87,7 +101,7 @@ public class LabelCounter {
     }
 
     /**
-     * TODO This method was specifically designed for airline.arff which is a dataset with a Date class attribute. Other datasets with only 2 attributes can't be used with this method
+     * TODO This method was specifically designed for airline.arff which is a dataset with a Date class attribute. Other datasets with only 2 attributes can't be used with this method. Adjust it so that it can.
      * Set twoAttributesGroups for a dataset with only two attributes.
      */
     private void setGroupsTwoAttributes() {
@@ -113,20 +127,18 @@ public class LabelCounter {
     /**
      * For every attribute in the dataset creates an entry in a Map with the attribute name as the key and a Map as the
      * value for this key. This Map holds each attribute label as its key and the occurrence of this label as its value.
+     * TODO values that are actually dates are parsed as numeric values, expand the method so that it parses dates correctly.
      * @return Map<Attribute name, Map<Attribute label, Label occurrence>>
      */
     private AttributeMap setAttributes(){
         AttributeMap attributes = new AttributeMap();
         int numAttributes = this.instances.numAttributes();
         for (int attributeIndex = 0; attributeIndex < numAttributes; attributeIndex++){
-
             String attributeName = this.instances.attribute(attributeIndex).name();
-
             // attributeName array to later count the occurrence of each label for each attributeName
             if (!attributeArray.contains(attributeName)){
                 attributeArray.add(attributeName);
             }
-
             boolean isNominal = this.instances.attribute(attributeIndex).isNominal();
             boolean isNumeric = this.instances.attribute(attributeIndex).isNumeric();
             // Setting labels when the attributeName isn't the class attributeName I.E. the attributeName that is being classified
@@ -170,31 +182,53 @@ public class LabelCounter {
     private void setLabelsNumeric(int attributeIndex, String attribute, AttributeMap attributeMap){
         LabelMap labelMap = new LabelMap();
         Stats stats = this.instances.attributeStats(attributeIndex).numericStats;
-        // Number of groups is based the amount of times the standard deviation fits into the interval between the
-        // minimum and maximum value of the attribute
+
+        IntervalStats intervalStats = setIntervalStats(stats);
+
+        for (int groupIndex = 0; groupIndex < intervalStats.getNumGroups(); groupIndex++){
+            String intervalLabel = getIntervalLabel(stats, intervalStats, groupIndex);
+            labelMap.addLabel(intervalLabel);
+        }
+        attributeMap.addAttribute(attribute, labelMap);
+    }
+
+    private String getIntervalLabel(Stats stats, IntervalStats intervalStats, int groupIndex) {
+        double intervalStart = intervalStats.getIntervalStart();
+        double groupInterval = intervalStats.getGroupInterval();
+        double numGroups = intervalStats.getNumGroups();
+        int numDecimals = intervalStats.getNumDecimals();
+
+        String labelGroup;
+        double intervalEnd = Util.roundTo((intervalStart + groupInterval), numDecimals);
+        if (groupIndex == numGroups-1){
+            labelGroup = intervalStart + "-" + Util.roundTo((stats.max + Util.roundTo((groupInterval/10), numDecimals)), numDecimals);
+        }else {
+            labelGroup = intervalStart + "-" + intervalEnd;
+        }
+        intervalStats.setIntervalStart(Util.roundTo(groupInterval + intervalStart, numDecimals));
+        return labelGroup;
+    }
+
+    private double getNumIntervals(Stats stats) {
         double numGroups = Math.round((stats.max - stats.min) / stats.stdDev);
-        if (numGroups == 0){
+        if (numGroups == 0) {
             numGroups = 1;
         }
+        return numGroups;
+    }
+
+
+    private IntervalStats setIntervalStats(Stats stats){
+        // Number of groups is based the amount of times the standard deviation fits into the interval between the
+        // minimum and maximum value of the attribute
+        double numGroups = getNumIntervals(stats);
         // Number of decimals used in the dataset
         int numDecimals = Util.numDecimals(stats.min);
 
         double groupInterval = Util.roundTo((stats.max - stats.min) / numGroups, numDecimals);
         double intervalStart = stats.min;
 
-        for (int groupIndex = 0; groupIndex < numGroups; groupIndex++){
-
-            String labelGroup;
-            double intervalEnd = Util.roundTo((intervalStart + groupInterval), numDecimals);
-            if (groupIndex == numGroups-1){
-                labelGroup = intervalStart + "-" + Util.roundTo((stats.max + Util.roundTo((groupInterval/10), numDecimals)), numDecimals);
-            }else {
-                labelGroup = intervalStart + "-" + intervalEnd;
-            }
-            labelMap.addLabel(labelGroup);
-            intervalStart = Util.roundTo(groupInterval + intervalStart, numDecimals);
-        }
-        attributeMap.addAttribute(attribute, labelMap);
+        return new IntervalStats(numGroups, numDecimals, groupInterval, intervalStart);
     }
 
     /**
@@ -204,25 +238,12 @@ public class LabelCounter {
         if (!onlyTwoAttributes){
             for (int instanceIndex = 0; instanceIndex < instances.numInstances(); instanceIndex++){
                 Instance instance = instances.instance(instanceIndex);
-                String[] values = instance.toString().split(",");
+                String key = instance.toString().split(",")[instances.classIndex()];
                 for (int valueIndex = 0; valueIndex < instance.numValues(); valueIndex++){
                     AttributeMap attributeMap = new AttributeMap();
-                    if (instances.classAttribute().isNumeric()){
-                        attributeMap = groups.get(Double.toString(Double.parseDouble(values[instance.classIndex()])));
-                    }else if (instances.classAttribute().isNominal()){
-                        attributeMap = groups.get(values[instance.classIndex()]);
-                    }
-
+                    attributeMap = getAttributeMap(key, attributeMap);
                     if(valueIndex != instance.classIndex()){
-                        String attribute = attributeArray.get(valueIndex);
-                        LabelMap labelMap = attributeMap.getLabelMap(attribute);
-
-                        try{//If value is numeric
-                            double value = Double.parseDouble(values[valueIndex]);
-                            countNumeric(value, labelMap);
-                        }catch (NumberFormatException e){//Not numeric
-                            countNominal(values[valueIndex], labelMap);
-                        }
+                        incrementLabel(key, valueIndex, attributeMap);
                     }
                 }
             }
@@ -230,16 +251,74 @@ public class LabelCounter {
     }
 
     /**
-     * Given a value determine in which [x-y] interval it sits and increment the occurrence of that [x-y] label
-     * @param value numeric value
-     * @param labelMap Map<[x-y], [Occurrence of value between x and y]>
+     * given a value
+     * @param key a split instance
+     * @param attributeMap empty attribute map that is to be set to the one corresponding with the given key
+     * @return the attributeMap corresponding with the given key
      */
-    private void countNumeric(double value, LabelMap labelMap){
+    private AttributeMap getAttributeMap(String key, AttributeMap attributeMap) {
+        if (instances.classAttribute().isNumeric()){
+            double numericValue = Double.parseDouble(key);
+            attributeMap = groups.get(getGroupInterval(numericValue));
+        }else if (instances.classAttribute().isNominal()){
+            attributeMap = groups.get(key);
+        }
+        return attributeMap;
+    }
+
+    /**
+     * given a stringValue, increment the occurrence of that
+     * TODO add a possibility also count the occurrence of a date. That is currently not possible
+     * @param stringValue instance value of index 'valueIndex'
+     * @param valueIndex index of the attribute of which the value must be incremented
+     * @param attributeMap the attributeMap that holds the labels
+     */
+    private void incrementLabel(String stringValue, int valueIndex, AttributeMap attributeMap) {
+        String attribute = attributeArray.get(valueIndex);
+        LabelMap labelMap = attributeMap.getLabelMap(attribute);
+        try{//If stringValue is numeric
+            double value = Double.parseDouble(stringValue);
+            countNumeric(value, labelMap);
+        }catch (NumberFormatException e){//Not numeric
+            countNominal(stringValue, labelMap);
+        }
+    }
+
+    /**
+     * Checks wether the given numericValue is fits in the given interval.
+     * @param interval String[]: an interval in [x, y] format
+     * @param numericValue a numeric value, possibly between x and y
+     * @return boolean
+     */
+    private boolean isBetweenInterval(String[] interval, double numericValue){
+        return numericValue >= Double.parseDouble(interval[0]) && numericValue < Double.parseDouble(interval[1]);
+    }
+
+    /**
+     * given a numeric class value, return the key interval it fits in from the groups map.
+     * @param numericValue
+     * @return
+     */
+    private String getGroupInterval(double numericValue){
+        for (Map.Entry<String, AttributeMap> entry : groups.entrySet()){
+            String[] interval = entry.getKey().split("-");
+            if (isBetweenInterval(interval, numericValue)){
+                return entry.getKey();
+            }
+        }
+        return null;
+    }
+    
+    /**
+     * Given a numericValue determine in which [x-y] interval it fits and increment the occurrence of that [x-y] label
+     * @param numericValue numeric numericValue
+     * @param labelMap Map<[x-y], [Occurrence of numericValue between x and y]>
+     */
+    private void countNumeric(double numericValue, LabelMap labelMap){
         for (Map.Entry<String, Integer> entry: labelMap.getLabelMap().entrySet()){
             String[] interval = entry.getKey().split("-");// Iterate over labels in labelMap
-            boolean betweenInterval = value >= Double.parseDouble(interval[0]) && value < Double.parseDouble(interval[1]);
 
-            if (betweenInterval){
+            if (isBetweenInterval(interval, numericValue)){
                 labelMap.incrementLabel(entry.getKey());
                 break;
             }
@@ -289,7 +368,6 @@ public class LabelCounter {
         }
 
     }
-
     /**
      * Resets the class variables. Use after setting the mapToJSON output to the webcontext to clear the class variables
      * for the next dataset.
@@ -300,5 +378,16 @@ public class LabelCounter {
         groups = new HashMap<>();
         twoAttributeGroups = new HashMap<>();
         onlyTwoAttributes = false;
+    }
+
+    public void setupLabelCounter(Instances instances, RedirectAttributes redirect) throws JsonProcessingException {
+        LabelCounter labelCounter = new LabelCounter();
+        labelCounter.setInstances(instances);
+        labelCounter.setGroups();
+        labelCounter.countLabels();
+        redirect.addFlashAttribute("data", labelCounter.mapToJSON());
+        redirect.addFlashAttribute("attributes", labelCounter.getAttributeArray());
+        redirect.addFlashAttribute("classLabel", labelCounter.getClassLabel());
+        labelCounter.resetLabelCounter();
     }
 }

@@ -15,7 +15,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import weka.classifiers.evaluation.Evaluation;
 import weka.core.Instances;
 
-import java.net.http.HttpRequest;
 import java.text.SimpleDateFormat;
 import javax.servlet.http.HttpSession;
 import java.io.File;
@@ -35,7 +34,7 @@ public class ExplorerController {
     @Value("${temp.data.path}")
     private String tempFolder;
     @Autowired
-    private DataReader dataReader;
+    private InstanceReader instanceReader;
     @Autowired
     private LabelCounter labelCounter;
     @Autowired
@@ -49,7 +48,7 @@ public class ExplorerController {
 
     @GetMapping(value = "/workbench")
     public String getWorkbench(Model model, HttpSession httpSession, RedirectAttributes redirectAttributes) throws JsonProcessingException {
-        List<String> filenames = dataReader.getDataSetNames();
+        List<String> filenames = instanceReader.getDataSetNames();
         List<String> classifierNames = wekaClassifier.getClassifierNames();
         model.addAttribute("filenames", filenames);
         model.addAttribute("classifierNames", classifierNames);
@@ -82,12 +81,12 @@ public class ExplorerController {
 
         if (httpSession.getAttribute("uniqueIdHistory") == null) {
             String uniqueId = UUID.randomUUID().toString();
-            File serFile = File.createTempFile(uniqueId, ".ser", new File("/tmp/"));
+            File serFile = File.createTempFile(uniqueId, ".ser", new File(exampleFilesFolder));
             httpSession.setAttribute("uniqueIdHistory", serFile);
         }
         if (httpSession.getAttribute("uniqueIdUpload") == null) {
             String uniqueId = UUID.randomUUID().toString();
-            File serFile = File.createTempFile(uniqueId, ".ser", new File("/tmp/"));
+            File serFile = File.createTempFile(uniqueId, ".ser", new File(exampleFilesFolder));
             httpSession.setAttribute("uniqueIdUpload", serFile);
         }
 
@@ -137,7 +136,7 @@ public class ExplorerController {
 
     @GetMapping(value = "/workbench/explore")
     public String getExplorePage(Model model, HttpSession httpSession) {
-        List<String> filenames = dataReader.getDataSetNames();
+        List<String> filenames = instanceReader.getDataSetNames();
         List<String> classifierNames = wekaClassifier.getClassifierNames();
         model.addAttribute("filenames", filenames);
         model.addAttribute("classifierNames", classifierNames);
@@ -190,7 +189,7 @@ public class ExplorerController {
 
     @GetMapping(value = "/results")
     public String getResultPage(Model model, HttpSession httpSession) throws JsonProcessingException {
-        List<String> filenames = dataReader.getDataSetNames();
+        List<String> filenames = instanceReader.getDataSetNames();
         List<String> classifierNames = wekaClassifier.getClassifierNames();
 
         model.addAttribute("filenames", filenames);

@@ -49,8 +49,20 @@
     </div>
 </div>
 
+<!--Fragment for contact cards-->
+<div class="col-lg-3" th:fragment="contact-cart(name)">
+    <div class="card m-3" style="width: 18rem;">
+        <img th:src="@{'images\\' + ${name} + '.jpeg'}" width="auto" height="auto" class="card-img-top"
+             th:alt="#{'' + ${name} + '.name'}">
+        <div class="card-body">
+            <h5 class="card-title" th:text="#{'' + ${name} + '.name'}"></h5>
+            <p class="card-text" th:text="#{'' + ${name} + '.info'}"></p>
+            <p>m.eggink@st.hanze.nl</p>
+        </div>
+    </div>
+</div>
 
-<footer th:fragment="footer" class="bg-light text-center text-lg-start fixed-bottom">
+<footer th:fragment="footer" class="bg-light text-center text-lg-start">
     <!-- Copyright -->
     <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
         © 2020 Copyright:
