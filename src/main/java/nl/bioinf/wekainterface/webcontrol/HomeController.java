@@ -2,6 +2,7 @@ package nl.bioinf.wekainterface.webcontrol;
 
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 /**
@@ -23,7 +24,8 @@ public class HomeController {
     }
 
     @GetMapping(value = "/contact")
-    public String getContactPage(){
+    public String getContactPage(Model model){
+        model.addAttribute("names", new String[]{"marijke", "bart", "jelle", "michiel"});
         return "static_pages/contact";
     }
 }
