@@ -33,7 +33,9 @@
             </h2>
             <div th:id="'flush-collapse' + ${Algoname}" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
                 <div class="accordion-body"><h5 class="fw-light" th:text=" #{${Algoname + '.information'}}"></h5>
-                    <iframe width="560" height="315" th:src="${youtubelink[istat.index]}">
+                    <br><h5 class="fw-light" th:text=" #{${Algoname + '.information.example'}}" ></h5>
+                    <br><h5 class="fw-light" th:text=" #{${Algoname + '.information.modelEvaluation'}}" ></h5><br>
+                    <br><hr><br><iframe width="560" height="315" th:src="${youtubelink[istat.index]}">
                     </iframe></div>
             </div>
         </div>
