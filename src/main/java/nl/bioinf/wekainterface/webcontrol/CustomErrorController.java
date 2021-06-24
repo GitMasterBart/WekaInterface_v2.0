@@ -1,5 +1,6 @@
 package nl.bioinf.wekainterface.webcontrol;
 
+import nl.bioinf.wekainterface.errorhandling.InvalidDataSetException;
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,6 +22,7 @@ public class CustomErrorController implements ErrorController {
     @RequestMapping(value = "/error")
     public String handleError(HttpServletRequest request){
         Object status = request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE);
+        Object exception = request.getAttribute(RequestDispatcher.ERROR_EXCEPTION);
         if (status != null){
             int statusCode = Integer.parseInt(status.toString());
 

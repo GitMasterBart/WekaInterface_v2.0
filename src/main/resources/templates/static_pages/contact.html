@@ -15,49 +15,10 @@
 
 <div class="container">
     <div class="row justify-content-center m-3">
-
-        <div class="card m-3" style="width: 18rem;">
-            <img th:src="@{'images\marijke.jpeg'}" width="auto" height="auto" class="card-img-top" alt="marijke picture">
-            <div class="card-body">
-                <h5 class="card-title">Marijke Eggink</h5>
-                <p class="card-text" th:text="#{marijke.info}"></p>
-                <p>m.eggink@st.hanze.nl</p>
-            </div>
+        <div th:each="name:${names}">
+            <div th:replace="~{fragments/general-fragments :: contact-cart(${name})}"></div>
         </div>
-
-        <div class="card m-3" style="width: 18rem;">
-            <img th:src="@{'images\bart.jpeg'}" class="card-img-top" alt="...">
-            <div class="card-body">
-                <h5 class="card-title">Bart Engels</h5>
-                <p class="card-text" th:text="#{bart.info}"></p>
-                <p>b.engels@st.hanze.nl</p>
-            </div>
-        </div>
-
     </div>
-
-    <div class="row justify-content-center m-3">
-
-        <div class="card m-3" style="width: 18rem;">
-            <img th:src="@{'images\jelle.jpg'}" width="auto" height="auto" class="card-img-top" alt="jelle picture">
-            <div class="card-body">
-                <h5 class="card-title">Jelle Becirspahic</h5>
-                <p class="card-text" th:text="#{jelle.info}"></p>
-                <p>j.d.becirspahic@st.hanze.nl</p>
-            </div>
-        </div>
-
-        <div class="card m-3" style="width: 18rem;">
-            <img th:src="@{'images\michiel.jpg'}" class="card-img-top" alt="...">
-            <div class="card-body">
-                <h5 class="card-title">Michiel Noback</h5>
-                <p class="card-text" th:text="#{michiel.info}"></p>
-                <p>m.noback@pl.hanze.nl</p>
-            </div>
-        </div>
-
-    </div>
-
 </div>
 
 <div th:insert="~{fragments/general-fragments :: footer}"></div>
