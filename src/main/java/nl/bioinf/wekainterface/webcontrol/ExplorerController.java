@@ -44,8 +44,10 @@ public class ExplorerController {
         model.addAttribute("filenames", filenames);
         model.addAttribute("classifierNames", classifierNames);
         try {
-            ArrayList<AlgorithmsInformation> deserializationObjectHistory = serializationService.deserialization((File) httpSession.getAttribute("uniqueIdHistory"));
-            ArrayList<String> deserializationObjectUploadedFile = serializationServiceUploadedFiles.deserialization((File) httpSession.getAttribute("uniqueIdUpload"));
+            ArrayList<AlgorithmsInformation> deserializationObjectHistory =
+                    serializationService.deserialization((File) httpSession.getAttribute("uniqueIdHistory"));
+            ArrayList<String> deserializationObjectUploadedFile =
+                    serializationServiceUploadedFiles.deserialization((File) httpSession.getAttribute("uniqueIdUpload"));
             model.addAttribute("info", deserializationObjectHistory);
             model.addAttribute("uploadedFile", deserializationObjectUploadedFile);
         } catch (NullPointerException e) {
