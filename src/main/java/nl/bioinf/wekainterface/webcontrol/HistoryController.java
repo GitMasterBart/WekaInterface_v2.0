@@ -66,32 +66,5 @@ public class HistoryController {
         labelCounter.resetLabelCounter();
 
         return "redirect:/workbench/explore";
-
-    }
-    @GetMapping(value = "/history/{}")
-    public String plotHisotryClassifier(@PathVariable("dataSet") String dataset, Model model, RedirectAttributes redirect , HttpSession httpSession) throws Exception{
-
-        Instances instances;
-        try {
-            instances = fileService.getInstancesFromDemoFile(dataset);
-        }catch (FileNotFoundException fileNotFoundException) {
-            FileFindService fileFindService = new FileFindService();
-            String uploadedFile = fileFindService.findFile(dataset,new File(tempUploadedFilesFolder));
-            instances = fileService.getInstancesFromUloadedDemoFile(uploadedFile);
-
-        }
-        labelCounter.setInstances(instances);
-        labelCounter.setGroups();
-        labelCounter.countLabels();
-
-
-        redirect.addFlashAttribute("data", labelCounter.mapToJSON());
-        redirect.addFlashAttribute("attributes", labelCounter.getAttributeArray());
-        redirect.addFlashAttribute("classLabel", labelCounter.getClassLabel());
-        redirect.addFlashAttribute("instances", instances);
-        labelCounter.resetLabelCounter();
-
-        return "redirect:/workbench/explore";
-
     }
 }
