@@ -31,13 +31,13 @@
 </div>
 
 <div th:fragment="explorer-tab" id="explorer-tab">
-  <h4 class="mt-2">Explorer</h4>
+  <h4 class="mt-2" th:text="#{explorer}"></h4>
   <div th:if="${data}">
-    <label for="attribute">Attributes</label><br>
+    <label for="attribute" th:text="#{explorer.attributes}"></label><br>
     <select id="attribute" th:data-map="${data}" th:data-cl="${classLabel}"
             onchange="plotData(this.getAttribute('data-map'), this.value, this.getAttribute('data-cl'))"
             onload="plotData(this.getAttribute('data-map'), this.value, this.getAttribute('data-cl'))">
-      <option>Select attribute</option>
+      <option th:text="#{explorer.select}"></option>
       <option th:each="attribute:${attributes}" th:text="${attribute}" th:value="${attribute}"></option>
     </select>
   </div>
@@ -47,7 +47,7 @@
 </div>
 
 <div th:fragment="classify-tab" id="classify-tab" class="ml-1">
-  <h4 class="mt-2">Classify</h4>
+  <h4 class="mt-2" th:text="#{classify}"></h4>
   <form id="form-shower">
     <label th:text="#{form.classifier.select}"></label> <br>
     <select class="form-select custom-select" id="classifier" name="classifier" onChange="changeForm(this)">
@@ -61,26 +61,54 @@
   <div id="J48" th:insert="~{/fragments/parameter-fragments :: J48}"></div>
 </div>
 
+<svg  th:fragment="results-explaination(par)" xmlns="http://www.w3.org/2000/svg"
+      width="16" height="16" fill="currentColor" class="bi bi-question-circle"
+      viewBox="0 0 16 16">
+  <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+  <path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286zm1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z"/>
+</svg>
+
 <div th:fragment="results" id="results-tab">
-  <h4>Results</h4>
+  <h4 th:text="#{results}"></h4>
   <p th:unless="${evaluation}" th:text="#{results.message}"></p>
   <div th:if="${evaluation}">
     <button type="button" class="btn btn-outline-secondary my-2" data-toggle="collapse" data-target="#advanced-stats">Advanced Stats</button>
     <br>
     <div th:object="${evaluation}">
+      <a th:insert="~{fragments/workbench-fragments :: results-explaination(batchsize)}"
+         style="display: inline-block" th:title="#{numInstances.explaination}" data-toggle="tooltip"></a>
       <pre th:text="#{results.instances.num} + *{#numbers.formatInteger(numInstances(), 0)}"></pre>
+      <a th:insert="~{fragments/workbench-fragments :: results-explaination(batchsize)}"
+         style="display: inline-block" th:title="#{correct.explaination}" data-toggle="tooltip"></a>
       <pre th:text="#{results.correct} + *{#numbers.formatInteger(correct(), 0)}"></pre>
+      <a th:insert="~{fragments/workbench-fragments :: results-explaination(batchsize)}"
+         style="display: inline-block" th:title="#{incorrect.explaination}" data-toggle="tooltip"></a>
       <pre th:text="#{results.incorrect} + *{#numbers.formatInteger(incorrect(), 0)}"></pre>
+      <a th:insert="~{fragments/workbench-fragments :: results-explaination(batchsize)}"
+         style="display: inline-block" th:title="#{results.perc.correct}" data-toggle="tooltip"></a>
       <pre th:text="#{results.perc.correct} + *{#numbers.formatDecimal(pctCorrect(), 0, 2)} + ' %'"></pre>
+      <a th:insert="~{fragments/workbench-fragments :: results-explaination(batchsize)}"
+         style="display: inline-block" th:title="#{results.perc.incorrect}" data-toggle="tooltip"></a>
       <pre th:text="#{results.perc.incorrect} + *{#numbers.formatDecimal(pctIncorrect(), 0, 2)} + ' %'"></pre>
       <div id="advanced-stats" class="collapse">
+        <a th:insert="~{fragments/workbench-fragments :: results-explaination(batchsize)}"
+           style="display: inline-block" th:title="#{kappa.explaination}" data-toggle="tooltip"></a>
         <pre th:text="#{results.kappa} + *{#numbers.formatDecimal(kappa(), 0, 2)}"></pre>
+        <a th:insert="~{fragments/workbench-fragments :: results-explaination(batchsize)}"
+           style="display: inline-block" th:title="#{meanAbsoluteError}" data-toggle="tooltip"></a>
         <pre th:text="#{results.mean.abs} + *{#numbers.formatDecimal(meanAbsoluteError(), 0, 2)}"></pre>
+        <a th:insert="~{fragments/workbench-fragments :: results-explaination(batchsize)}"
+           style="display: inline-block" th:title="#{rootMeanSquaredError}" data-toggle="tooltip"></a>
         <pre th:text="#{results.mean.squared} + *{#numbers.formatDecimal(rootMeanSquaredError(), 0, 2)}"></pre>
+        <a th:insert="~{fragments/workbench-fragments :: results-explaination(batchsize)}"
+           style="display: inline-block" th:title="#{relativeAbsoluteError}" data-toggle="tooltip"></a>
         <pre th:text="#{results.relative.abs} + *{#numbers.formatDecimal(relativeAbsoluteError(), 0, 2)} + ' %'"></pre>
+        <a th:insert="~{fragments/workbench-fragments :: results-explaination(batchsize)}"
+           style="display: inline-block" th:title="#{rootRelativeSquaredError}" data-toggle="tooltip"></a>
         <pre th:text="#{results.relative.squared} + *{#numbers.formatDecimal(rootRelativeSquaredError(), 0, 2)} + ' %'"></pre>
       </div>
       <br>
+      <!--TODO: nog uitleg bij geven-->
       <pre>Confusion Matrix: </pre>
       <pre th:text="*{toMatrixString('')}"></pre>
     </div>

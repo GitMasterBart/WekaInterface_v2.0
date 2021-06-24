@@ -32,18 +32,18 @@
             <div class="col-8">
                 <ul id="myTab" class="nav nav-tabs">
                     <li class="nav-item">
-                        <a th:unless="${evaluation}" href="#explorer-active" class="nav-link active">Explorer</a>
-                        <a th:if="${evaluation}" href="#explorer-inactive" class="nav-link">Explorer</a>
+                        <a th:unless="${evaluation}" href="#explorer-active" class="nav-link active" th:text="#{explorer}"></a>
+                        <a th:if="${evaluation}" href="#explorer-inactive" class="nav-link" th:text="#{explorer}"></a>
                     </li>
                     <li class="nav-item">
-                        <a href="#classify" class="nav-link">Classify</a>
+                        <a href="#classify" class="nav-link" th:text="#{classify}"></a>
                     </li>
                     <li class="nav-item">
-                        <a th:unless="${evaluation}" href="#results-inactive" class="nav-link">Results</a>
-                        <a th:if="${evaluation}" href="#results-active" class="nav-link active">Results</a>
+                        <a th:unless="${evaluation}" href="#results-inactive" class="nav-link" th:text="#{results}"></a>
+                        <a th:if="${evaluation}" href="#results-active" class="nav-link active" th:text="#{results}"></a>
                     </li>
                     <li class="nav-item">
-                        <a href="#history" class="nav-link">History</a>
+                        <a href="#history" class="nav-link" th:text="#{history}"></a>
                     </li>
                 </ul>
                 <div class="tab-content">
@@ -67,8 +67,12 @@
 
                     <div class="tab-pane fade" id="history">
 <!--                        <h4 class="mt-2">History</h4>-->
-                        <h5 class="mt-2">History-explorer</h5>
+                        <h5 class="mt-2" th:text="#{history.explorer}"></h5>
+                        
+
+                        <h5 class="mt-2" th:text="#{history}"></h5>
                         <div th:insert="~{fragments/general-fragments :: #list_fragmentHistory}"></div>
+
                     </div>
                 </div>
 
