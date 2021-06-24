@@ -34,13 +34,13 @@ public class SessionService {
 
         if (httpSession.getAttribute("uniqueIdHistory") == null) {
             String uniqueId = UUID.randomUUID().toString();
-            File serFile = File.createTempFile(uniqueId, ".ser", new File(exampleFilesFolder));
+            File serFile = File.createTempFile(uniqueId, ".ser", new File("/tmp/"));
             httpSession.setAttribute("uniqueIdHistory", serFile);
         }
 
         if (httpSession.getAttribute("uniqueIdUpload") == null) {
             String uniqueId = UUID.randomUUID().toString();
-            File serFile = File.createTempFile(uniqueId, ".ser", new File(exampleFilesFolder));
+            File serFile = File.createTempFile(uniqueId, ".ser", new File("/tmp/"));
             httpSession.setAttribute("uniqueIdUpload", serFile);
         }
 
