@@ -68,11 +68,14 @@
                     <div class="tab-pane fade" id="history">
 <!--                        <h4 class="mt-2">History</h4>-->
                         <h5 class="mt-2" th:text="#{history.explorer}"></h5>
+                        
+
+                        <h5 class="mt-2" th:text="#{history}"></h5>
                         <div th:insert="~{fragments/general-fragments :: #list_fragmentHistory}"></div>
-                        <h5 class="mt-2" th:text="#{history.classifier}"></h5>
-                        <div th:insert="~{fragments/general-fragments :: #list_fragmentHistory}"></div>
+
                     </div>
                 </div>
+
             </div>
         </div>
     </div>

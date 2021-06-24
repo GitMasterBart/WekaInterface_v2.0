@@ -57,12 +57,12 @@
         <div class="card-body">
             <h5 class="card-title" th:text="#{'' + ${name} + '.name'}"></h5>
             <p class="card-text" th:text="#{'' + ${name} + '.info'}"></p>
-            <p>m.eggink@st.hanze.nl</p>
+            <p th:text="#{'' + ${name} + '.email'}"></p>
         </div>
     </div>
 </div>
 
-<footer th:fragment="footer" class="bg-light text-center text-lg-start">
+<footer th:fragment="footer" class="bg-light text-center text-lg-start fixed-bottom">
     <!-- Copyright -->
     <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
         © 2020 Copyright:
