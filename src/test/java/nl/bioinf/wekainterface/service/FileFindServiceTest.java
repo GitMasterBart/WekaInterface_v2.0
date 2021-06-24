@@ -19,8 +19,8 @@ class FileFindServiceTest {
     void findFile() {
         String filePath = null;
         // tempUploadedFilesFolder doesnt work theirfore change the filepath to the
-        // temp.data.path form the applications.properties
-        File direcotryPath = new File("/Users/bengels/WekaInterface_v2.0/src/test/java/nl/bioinf/wekainterface/service/testFiles");
+        // rout to te path where your version is stored
+        File direcotryPath = new File("/Users/bengels/WekaInterface_v2.0/src/test/java/nl/bioinf/wekainterface/service/");
         File[] fileListIndirecotry = direcotryPath.listFiles();
         String searchFile = "";
         if (fileListIndirecotry != null)
