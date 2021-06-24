@@ -1,33 +1,35 @@
 package nl.bioinf.wekainterface.webcontrol;
 
-import nl.bioinf.wekainterface.model.*;
+import nl.bioinf.wekainterface.model.AlgorithmsInformation;
+import nl.bioinf.wekainterface.model.InstanceReader;
+import nl.bioinf.wekainterface.model.LabelCounter;
+import nl.bioinf.wekainterface.model.WekaClassifier;
 import nl.bioinf.wekainterface.service.SerializationService;
 import nl.bioinf.wekainterface.service.SerializationServiceUploadedFiles;
 import nl.bioinf.wekainterface.service.SessionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import weka.classifiers.evaluation.Evaluation;
 import weka.core.Instances;
 
 import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author Marijke Eggink, Jelle Becirspahic, Bart Engels
  */
 
 @Controller
-public class ExplorerController {
+public class WorkbenchController {
     @Autowired
     private InstanceReader instanceReader;
-    @Autowired
-    private LabelCounter labelCounter;
     @Autowired
     private WekaClassifier wekaClassifier;
     @Autowired
@@ -35,10 +37,12 @@ public class ExplorerController {
     @Autowired
     private SerializationServiceUploadedFiles serializationServiceUploadedFiles;
     @Autowired
+    private LabelCounter labelCounter;
+    @Autowired
     private SessionService sessionService;
 
-    @GetMapping(value = "/workbench/explore")
-    public String getExplorePage(Model model, HttpSession httpSession) {
+    @GetMapping(value = "/workbench")
+    public String getWorkbench(Model model, HttpSession httpSession, RedirectAttributes redirectAttributes) {
         List<String> filenames = instanceReader.getDataSetNames();
         List<String> classifierNames = wekaClassifier.getClassifierNames();
         model.addAttribute("filenames", filenames);
@@ -48,39 +52,42 @@ public class ExplorerController {
             ArrayList<String> deserializationObjectUploadedFile = serializationServiceUploadedFiles.deserialization((File) httpSession.getAttribute("uniqueIdUpload"));
             model.addAttribute("info", deserializationObjectHistory);
             model.addAttribute("uploadedFile", deserializationObjectUploadedFile);
+            redirectAttributes.addFlashAttribute("info", deserializationObjectHistory);
+            redirectAttributes.addFlashAttribute("uploadedFile", deserializationObjectUploadedFile);
         } catch (NullPointerException e) {
             model.addAttribute("msg", "No History");
             model.addAttribute("uploadedFile", "No uploaded files");
-
+            redirectAttributes.addFlashAttribute("msg", "No History");
+            redirectAttributes.addFlashAttribute("uploadedFile", "No uploaded files");
         }
-        model.addAttribute("uploadedFile", httpSession.getAttribute("UploadedFiles"));
         return "workbench";
     }
 
-    @PostMapping(value = "/workbench/explore")
-    public String postExplorePage(@RequestParam Map<String, String> parameters, Model model,
-                                  RedirectAttributes redirect, HttpSession httpSession) throws Exception {
+    @PostMapping(value = "/workbench")
+    public String postWorkbench(@RequestParam(name = "inputFile", required = false) MultipartFile multipart,
+                                @RequestParam(name = "filename", required = false) String demoFileName,
+                                RedirectAttributes redirect, HttpSession httpSession) throws Exception {
 
-        // get classifier name from parameters, and add it as a key value
-        List<String> keys = new ArrayList<>(parameters.keySet());
-        String classifierName = keys.get(0).split("-")[1];
-        parameters.put("classifier", classifierName);
+        sessionService.createSessionObjects(httpSession, demoFileName);
 
-        sessionService.setClassifierName(httpSession, classifierName);
+        ArrayList<AlgorithmsInformation> history = sessionService.setHistory(httpSession, demoFileName, multipart);
+        serializationService.serialization(history, (File) httpSession.getAttribute("uniqueIdHistory"));
 
-        Instances instances = (Instances)httpSession.getAttribute("instances");
+        ArrayList<String> uploadedFiles = sessionService.setUploadedFile(httpSession, multipart);
+        serializationServiceUploadedFiles.serialization(uploadedFiles, (File) httpSession.getAttribute("uniqueIdUpload"));
+
+        Instances instances = sessionService.setInstances(httpSession, multipart, demoFileName);
 
         labelCounter.setInstances(instances);
         labelCounter.setGroups();
         labelCounter.countLabels();
 
-        Evaluation evaluation = wekaClassifier.classify(instances, parameters);
-
         redirect.addFlashAttribute("data", labelCounter.mapToJSON());
         redirect.addFlashAttribute("attributes", labelCounter.getAttributeArray());
         redirect.addFlashAttribute("classLabel", labelCounter.getClassLabel());
+        redirect.addFlashAttribute("instances", instances);
         labelCounter.resetLabelCounter();
-        redirect.addFlashAttribute("evaluation", evaluation);
-        return "redirect:/workbench";
+
+        return "redirect:/workbench/explore";
     }
 }
