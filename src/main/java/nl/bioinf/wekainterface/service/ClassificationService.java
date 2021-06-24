@@ -9,6 +9,7 @@ import weka.core.Instances;
 import java.io.File;
 
 /**
+ * TODO: nog verwijderen
  * Deze class staat er nog in, maar wordt niet meer gebruikt.
  */
 @Service
