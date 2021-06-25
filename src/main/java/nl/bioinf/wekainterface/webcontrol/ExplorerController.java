@@ -48,6 +48,8 @@ public class ExplorerController {
         List<String> classifierNames = wekaClassifier.getClassifierNames();
         model.addAttribute("filenames", filenames);
         model.addAttribute("classifierNames", classifierNames);
+        model.addAttribute("fileName", httpSession.getAttribute("fileName"));
+
         try {
             ArrayList<AlgorithmsInformation> deserializationObjectHistory =
                     serializationService.deserialization((File) httpSession.getAttribute("uniqueIdHistory"));
@@ -76,16 +78,8 @@ public class ExplorerController {
 
         Instances instances = (Instances)httpSession.getAttribute("instances");
 
-        labelCounter.setInstances(instances);
-        labelCounter.setGroups();
-        labelCounter.countLabels();
-
+        labelCounter.setupLabelCounter(instances, redirect);
         Evaluation evaluation = wekaClassifier.classify(instances, parameters);
-
-        redirect.addFlashAttribute("data", labelCounter.mapToJSON());
-        redirect.addFlashAttribute("attributes", labelCounter.getAttributeArray());
-        redirect.addFlashAttribute("classLabel", labelCounter.getClassLabel());
-        labelCounter.resetLabelCounter();
         redirect.addFlashAttribute("evaluation", evaluation);
         return "redirect:/workbench";
     }

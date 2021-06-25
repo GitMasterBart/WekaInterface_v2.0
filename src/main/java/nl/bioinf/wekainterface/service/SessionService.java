@@ -65,9 +65,11 @@ public class SessionService {
         Instances instances;
         if (!multipart.isEmpty()){
             logger.info("File is uploaded: " + multipart.getOriginalFilename());
+            httpSession.setAttribute("fileName", multipart.getOriginalFilename());
             instances = fileService.getInstancesFromMultipart(multipart);
         } else {
             logger.info("Demo file is chosen: " + demoFileName);
+            httpSession.setAttribute("fileName", demoFileName);
             instances = fileService.getInstancesFromDemoFile(demoFileName);
         }
 

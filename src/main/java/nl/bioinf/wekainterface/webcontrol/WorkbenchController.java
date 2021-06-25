@@ -52,6 +52,8 @@ public class WorkbenchController {
         List<String> classifierNames = wekaClassifier.getClassifierNames();
         model.addAttribute("filenames", filenames);
         model.addAttribute("classifierNames", classifierNames);
+        model.addAttribute("fileName", httpSession.getAttribute("fileName"));
+
         try {
             ArrayList<AlgorithmsInformation> deserializationObjectHistory = serializationService.deserialization((File) httpSession.getAttribute("uniqueIdHistory"));
             ArrayList<String> deserializationObjectUploadedFile = serializationServiceUploadedFiles.deserialization((File) httpSession.getAttribute("uniqueIdUpload"));
@@ -85,16 +87,8 @@ public class WorkbenchController {
 
         Instances instances = sessionService.setInstances(httpSession, multipart, demoFileName);
 
-        labelCounter.setInstances(instances);
-        labelCounter.setGroups();
-        labelCounter.countLabels();
-
-        redirect.addFlashAttribute("data", labelCounter.mapToJSON());
-        redirect.addFlashAttribute("attributes", labelCounter.getAttributeArray());
-        redirect.addFlashAttribute("classLabel", labelCounter.getClassLabel());
+        labelCounter.setupLabelCounter(instances, redirect);
         redirect.addFlashAttribute("instances", instances);
-        labelCounter.resetLabelCounter();
-
         return "redirect:/workbench/explore";
     }
 }
