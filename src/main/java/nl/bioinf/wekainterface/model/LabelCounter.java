@@ -2,18 +2,14 @@ package nl.bioinf.wekainterface.model;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import nl.bioinf.wekainterface.errorhandling.InvalidDataSetProcessException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import weka.core.AttributeStats;
 import weka.core.Instance;
 import weka.core.Instances;
 import weka.experiment.Stats;
-
-import java.awt.*;
-import java.io.File;
-import java.io.IOException;
 import java.util.*;
 import java.util.List;
 
@@ -24,6 +20,7 @@ import java.util.List;
 @Component
 public class LabelCounter {
 
+    private Logger logger = LoggerFactory.getLogger(LabelCounter.class);
     private Instances instances;
     private List<String> attributeArray = new ArrayList<>();
     private Map<String, AttributeMap> groups = new HashMap<>();
@@ -31,6 +28,7 @@ public class LabelCounter {
     private boolean onlyTwoAttributes = false;
 
     public void setInstances(Instances instances){
+        logger.info("Instances set for LabelCounter");
         this.instances = instances;
     }
 
@@ -43,6 +41,7 @@ public class LabelCounter {
      * TODO This class can only handle datasets with numeric, nominal or Date class attributes. A String class attribute will cause an exception. This should be handled in a better way.
      */
     public void setGroups(){
+        logger.info("Setting groups for LabelCounter");
         if (this.instances.numAttributes() == 2){
             setGroupsTwoAttributes();
         }
@@ -107,22 +106,23 @@ public class LabelCounter {
      * Set twoAttributesGroups for a dataset with only two attributes.
      */
     private void setGroupsTwoAttributes() {
+        logger.info("Setting groups for dataset with only two attributes");
         onlyTwoAttributes = true;
         AttributeStats stats = this.instances.attributeStats(this.instances.classIndex());
         if (this.instances.classAttribute().isDate() && stats.totalCount == stats.uniqueCount){
             for (int classLabelIndex=0;classLabelIndex< stats.totalCount;classLabelIndex++) {
-                // Setting the class label as the key for the first Map, in the case of weather.nominal = {yes,no}
                 double classValue = this.instances.instance(classLabelIndex).value(this.instances.classIndex());
                 String dateFormat = this.instances.classAttribute().getDateFormat();
                 String classLabel = Util.parseDate(classValue, dateFormat);
-                // creating the 2nd Map with attribute names as keys and labels as value's
                 try{
                     this.twoAttributeGroups.put(classLabel,
                             Double.parseDouble(this.instances.instance(classLabelIndex).toString().split(",")[this.instances.classIndex()-1]));
                 }catch (NumberFormatException e){
-                    System.out.println(e.getMessage());
+                    logger.warn("Second value is not numeric");
                 }
             }
+        }else {
+            logger.warn("Class attribute is not a Date object, no counting will occur");
         }
     }
 
@@ -237,11 +237,11 @@ public class LabelCounter {
      * For each label in the instance, increase it's occurrence count by 1, depending on which class label it has.
      */
     public void countLabels(){
+        logger.info("Counting labels for LabelCounter");
         if (!onlyTwoAttributes){
             for (int instanceIndex = 0; instanceIndex < instances.numInstances(); instanceIndex++){
                 Instance instance = instances.instance(instanceIndex);
                 String key = instance.toString().split(",")[instances.classIndex()];
-                System.out.println("Key = " + key);
                 for (int valueIndex = 0; valueIndex < instance.numValues(); valueIndex++){
                     AttributeMap attributeMap = new AttributeMap();
                     attributeMap = getAttributeMap(key, attributeMap);
@@ -282,10 +282,8 @@ public class LabelCounter {
         LabelMap labelMap = attributeMap.getLabelMap(attribute);
         try{//If stringValue is numeric
             double value = Double.parseDouble(stringValue);
-            System.out.println("Counting Numeric");
             countNumeric(value, labelMap);
         }catch (NumberFormatException e){//Not numeric
-            System.out.println("Counting Nominal!");
             countNominal(stringValue, labelMap);
         }
     }
@@ -337,7 +335,6 @@ public class LabelCounter {
      * @param labelMap labelMap<label, occurrence of label>
      */
     private void countNominal(String label, LabelMap labelMap){
-        System.out.println("Label = " + label);
         labelMap.incrementLabel(label);
     }
 
@@ -363,6 +360,7 @@ public class LabelCounter {
      * @throws JsonProcessingException ...
      */
     public String mapToJSON() throws JsonProcessingException {
+        logger.info("Converting LabelCounter map to JSON format");
         ObjectMapper objectMapper = new ObjectMapper();
 
         if (onlyTwoAttributes){
@@ -380,6 +378,7 @@ public class LabelCounter {
      * for the next dataset.
      */
     public void resetLabelCounter(){
+        logger.info("Resetting LabelCounter variables for next run");
         instances = null;
         attributeArray = new ArrayList<>();
         groups = new HashMap<>();
@@ -387,7 +386,14 @@ public class LabelCounter {
         onlyTwoAttributes = false;
     }
 
+    /**
+     * Given a RedirectAttributes instance, adds a JSON object, attribute name array and class label from the given instances.
+     * @param instances
+     * @param redirect
+     * @throws JsonProcessingException
+     */
     public void setupLabelCounter(Instances instances, RedirectAttributes redirect) throws JsonProcessingException {
+        logger.info("Setting up LabelCounter for the Controller");
         LabelCounter labelCounter = new LabelCounter();
         labelCounter.setInstances(instances);
         labelCounter.setGroups();
