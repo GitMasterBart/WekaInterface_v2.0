@@ -12,6 +12,8 @@ import weka.core.Instances;
 import weka.experiment.Stats;
 
 import java.awt.*;
+import java.io.File;
+import java.io.IOException;
 import java.util.*;
 import java.util.List;
 
@@ -239,11 +241,13 @@ public class LabelCounter {
             for (int instanceIndex = 0; instanceIndex < instances.numInstances(); instanceIndex++){
                 Instance instance = instances.instance(instanceIndex);
                 String key = instance.toString().split(",")[instances.classIndex()];
+                System.out.println("Key = " + key);
                 for (int valueIndex = 0; valueIndex < instance.numValues(); valueIndex++){
                     AttributeMap attributeMap = new AttributeMap();
                     attributeMap = getAttributeMap(key, attributeMap);
                     if(valueIndex != instance.classIndex()){
-                        incrementLabel(key, valueIndex, attributeMap);
+                        String value = instance.toString().split(",")[valueIndex];
+                        incrementLabel(value, valueIndex, attributeMap);
                     }
                 }
             }
@@ -268,7 +272,7 @@ public class LabelCounter {
 
     /**
      * given a stringValue, increment the occurrence of that
-     * TODO add a possibility also count the occurrence of a date. That is currently not possible
+     * TODO add a possibility to also count the occurrence of a date. That is currently not implemented.
      * @param stringValue instance value of index 'valueIndex'
      * @param valueIndex index of the attribute of which the value must be incremented
      * @param attributeMap the attributeMap that holds the labels
@@ -278,8 +282,10 @@ public class LabelCounter {
         LabelMap labelMap = attributeMap.getLabelMap(attribute);
         try{//If stringValue is numeric
             double value = Double.parseDouble(stringValue);
+            System.out.println("Counting Numeric");
             countNumeric(value, labelMap);
         }catch (NumberFormatException e){//Not numeric
+            System.out.println("Counting Nominal!");
             countNominal(stringValue, labelMap);
         }
     }
@@ -331,6 +337,7 @@ public class LabelCounter {
      * @param labelMap labelMap<label, occurrence of label>
      */
     private void countNominal(String label, LabelMap labelMap){
+        System.out.println("Label = " + label);
         labelMap.incrementLabel(label);
     }
 
