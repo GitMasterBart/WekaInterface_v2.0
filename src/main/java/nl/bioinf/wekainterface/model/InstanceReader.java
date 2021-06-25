@@ -1,6 +1,9 @@
 package nl.bioinf.wekainterface.model;
 
 import nl.bioinf.wekainterface.errorhandling.InvalidDataSetProcessException;
+import nl.bioinf.wekainterface.webcontrol.LoggingController;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import weka.core.AttributeStats;
@@ -21,8 +24,10 @@ import java.util.List;
 
 @Component
 public class InstanceReader implements Reader{
+    private final Logger logger = LoggerFactory.getLogger(InstanceReader.class);
     @Value("${example.data.path}")
     private String exampleFilesFolder;
+    //TODO: tempFolder wordt niet gebruikt in deze class
     @Value("${temp.data.path}")
     private String tempFolder;
 
@@ -34,13 +39,19 @@ public class InstanceReader implements Reader{
      * @throws IOException if the file doesn't exist
      */
     @Override
-    public Instances readArff(File file) throws IOException {
-        BufferedReader reader = new BufferedReader(new FileReader(file));
-        ArffLoader.ArffReader arffReader = new ArffLoader.ArffReader(reader);
-        Instances data = arffReader.getData();
-        checkDatasetValidity(data);
-        data.setClassIndex(data.numAttributes() - 1);
-        return data;
+    public Instances readArff(File file) {
+        try {
+            logger.info("Read arff file: " + file.getName() + ", and create instances");
+            BufferedReader reader = new BufferedReader(new FileReader(file));
+            ArffLoader.ArffReader arffReader = new ArffLoader.ArffReader(reader);
+            Instances data = arffReader.getData();
+            checkDatasetValidity(data);
+            data.setClassIndex(data.numAttributes() - 1);
+            return data;
+        } catch (IOException e){
+            logger.error("Error! Something goes wrong with reading arff file " + file.getName());
+            return null;
+        }
     }
 
     /**
@@ -52,14 +63,20 @@ public class InstanceReader implements Reader{
      * @throws IOException if file doesn't exist
      */
     @Override
-    public Instances readCsv(File file, String delimiter) throws IOException {
-        CSVLoader loader = new CSVLoader();
-        loader.setSource(file);
-        loader.setFieldSeparator(delimiter);
-        Instances data = loader.getDataSet();
-        checkDatasetValidity(data);
-        data.setClassIndex(data.numAttributes() - 1);
-        return data;
+    public Instances readCsv(File file, String delimiter) {
+        try {
+            logger.info("Read csv file: " + file.getName() + ", and create instances");
+            CSVLoader loader = new CSVLoader();
+            loader.setSource(file);
+            loader.setFieldSeparator(delimiter);
+            Instances data = loader.getDataSet();
+            checkDatasetValidity(data);
+            data.setClassIndex(data.numAttributes() - 1);
+            return data;
+        } catch (IOException e){
+            logger.error("Error! Something goes wrong with reading csv file " + file.getName());
+            return null;
+        }
     }
 
     /**
@@ -68,13 +85,18 @@ public class InstanceReader implements Reader{
      */
     @Override
     public List<String> getDataSetNames() {
-        File folder = new File(exampleFilesFolder);
-        File[] listOfFiles = folder.listFiles();
-        List<String> fileNames = new ArrayList<>();
-        for (File file: listOfFiles){
-            fileNames.add(file.getName());
+        try {
+            File folder = new File(exampleFilesFolder);
+            File[] listOfFiles = folder.listFiles();
+            List<String> fileNames = new ArrayList<>();
+            for (File file: listOfFiles){
+                fileNames.add(file.getName());
+            }
+            return fileNames;
+        } catch (Exception e){
+            logger.error("Error! something goes wrong in reading the file directory. Please check your path");
+            return null;
         }
-        return fileNames;
     }
 
     /**
@@ -84,7 +106,8 @@ public class InstanceReader implements Reader{
      */
     private void checkDatasetValidity(Instances instances){
         if (instances.numAttributes() <= 1){
-            throw new InvalidDataSetProcessException("Dataset only contains 1 or 0 attributes");
+            logger.error("Dataset only contains 1 or 0 attributes");
+            throw new InvalidDataSetProcessException("");
         }
     }
 }

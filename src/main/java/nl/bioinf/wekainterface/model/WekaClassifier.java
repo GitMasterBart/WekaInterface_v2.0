@@ -1,6 +1,9 @@
 package nl.bioinf.wekainterface.model;
 
 import nl.bioinf.wekainterface.service.FileService;
+import nl.bioinf.wekainterface.webcontrol.LoggingController;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import weka.classifiers.Classifier;
 import weka.classifiers.bayes.NaiveBayes;
@@ -23,6 +26,8 @@ import java.util.*;
 
 @Component
 public class WekaClassifier {
+    private final Logger logger = LoggerFactory.getLogger(WekaClassifier.class);
+
     /**
      * TODO: Zonder parameters, deze moet er nog uit gehaald worden wanneer hij nergens meer wordt gebruikt.
      * This method classifies instances with a 10-fold cross validation.
@@ -65,6 +70,7 @@ public class WekaClassifier {
      * @throws Exception
      */
     public Evaluation classify(Instances instances, Map<String, String> parameterMap) throws Exception {
+        logger.info("Initializing " + parameterMap.get("classifier") + " classification");
         Classifier rule;
         switch (parameterMap.get("classifier")){
             case "ZeroR":
@@ -83,8 +89,10 @@ public class WekaClassifier {
                 rule = iBk(parameterMap);
                 break;
             default:
-                throw new IllegalArgumentException("Error: This classifier name is not supported");
+                logger.error("Error: This classifier name is not supported");
+                throw new IllegalArgumentException();
         }
+        logger.info("Completed " + parameterMap.get("classifier") + " classification");
         Evaluation evaluation = new Evaluation(instances);
         evaluation.crossValidateModel(rule, instances, 10, new Random(1));
         return evaluation;
