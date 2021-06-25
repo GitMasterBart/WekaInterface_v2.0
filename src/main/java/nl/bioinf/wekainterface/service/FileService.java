@@ -1,7 +1,6 @@
 package nl.bioinf.wekainterface.service;
 
 import nl.bioinf.wekainterface.model.InstanceReader;
-import nl.bioinf.wekainterface.webcontrol.LoggingController;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -26,24 +26,17 @@ import java.io.FileNotFoundException;
 @Controller
 public class HistoryController {
 
-    @Value("${example.data.path}")
-    private String exampleFilesFolder;
-
     @Value("${temp.data.path}")
     private String tempUploadedFilesFolder;
 
     @Autowired
-    private SerializationService serializationService;
-
-    @Autowired
     private LabelCounter labelCounter;
-
     @Autowired
     private FileService fileService;
 
 
     @GetMapping(value = "/history/{dataSet}")
-    public String plotHisotryPlots(@PathVariable("dataSet") String dataset, Model model, RedirectAttributes redirect , HttpSession httpSession) throws Exception{
+    public String plotHistoryPlots(@PathVariable("dataSet") String dataset, Model model, RedirectAttributes redirect , HttpSession httpSession) throws Exception{
 
        Instances instances;
         try {

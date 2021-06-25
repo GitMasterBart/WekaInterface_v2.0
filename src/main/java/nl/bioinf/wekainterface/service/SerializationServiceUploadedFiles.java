@@ -40,9 +40,6 @@ public class SerializationServiceUploadedFiles {
             logger.info("Deserializing file: " + uniqueID.getName());
             FileInputStream fileIn = new FileInputStream(uniqueID);
             ObjectInputStream in = new ObjectInputStream(fileIn);
-//            String UloadedFile;
-//            AlgorithmsInformation[] UloadedFiles = new AlgorithmsInformation[5];
-//            ArrayList<String> stringArrayList = new ArrayList<>();
             ArrayList<String> stringArrayList = (ArrayList<String>)in.readObject();
             in.close();
             fileIn.close();

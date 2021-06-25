@@ -1,17 +1,13 @@
 package nl.bioinf.wekainterface.model;
 
 import nl.bioinf.wekainterface.errorhandling.InvalidDataSetProcessException;
-import nl.bioinf.wekainterface.webcontrol.LoggingController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import weka.core.AttributeStats;
 import weka.core.Instances;
 import weka.core.converters.ArffLoader;
-import weka.core.converters.ArffSaver;
 import weka.core.converters.CSVLoader;
-import weka.experiment.Stats;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -107,7 +103,7 @@ public class InstanceReader implements Reader{
     private void checkDatasetValidity(Instances instances){
         if (instances.numAttributes() <= 1){
             logger.error("Dataset only contains 1 or 0 attributes");
-            throw new InvalidDataSetProcessException("");
+            throw new InvalidDataSetProcessException("Dataset only contains 1 or 0 attributes");
         }
     }
 }

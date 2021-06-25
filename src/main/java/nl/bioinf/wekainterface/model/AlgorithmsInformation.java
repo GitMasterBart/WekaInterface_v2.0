@@ -17,7 +17,6 @@ public class AlgorithmsInformation implements Serializable {
 
     public AlgorithmsInformation(String algorithmsInformation, SimpleDateFormat simpleDateFormat) {
         this.algorithmsName = algorithmsInformation;
-        //this.uploadFileDemoFileUsedAlgorithm = algorithmsParameters;
         this.simpleDateFormat = simpleDateFormat;
     }
 
