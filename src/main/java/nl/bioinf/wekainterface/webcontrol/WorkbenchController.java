@@ -7,6 +7,8 @@ import nl.bioinf.wekainterface.model.WekaClassifier;
 import nl.bioinf.wekainterface.service.SerializationService;
 import nl.bioinf.wekainterface.service.SerializationServiceUploadedFiles;
 import nl.bioinf.wekainterface.service.SessionService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -41,8 +43,11 @@ public class WorkbenchController {
     @Autowired
     private SessionService sessionService;
 
+    private final Logger logger = LoggerFactory.getLogger(WorkbenchController.class);
+
     @GetMapping(value = "/workbench")
     public String getWorkbench(Model model, HttpSession httpSession, RedirectAttributes redirectAttributes) {
+        logger.info("Serving workbench..");
         List<String> filenames = instanceReader.getDataSetNames();
         List<String> classifierNames = wekaClassifier.getClassifierNames();
         model.addAttribute("filenames", filenames);
@@ -55,6 +60,7 @@ public class WorkbenchController {
             redirectAttributes.addFlashAttribute("info", deserializationObjectHistory);
             redirectAttributes.addFlashAttribute("uploadedFile", deserializationObjectUploadedFile);
         } catch (NullPointerException e) {
+            logger.info("There is no history yet, and no files uploaded");
             model.addAttribute("msg", "No History");
             model.addAttribute("uploadedFile", "No uploaded files");
             redirectAttributes.addFlashAttribute("msg", "No History");
@@ -68,6 +74,7 @@ public class WorkbenchController {
                                 @RequestParam(name = "filename", required = false) String demoFileName,
                                 RedirectAttributes redirect, HttpSession httpSession) throws Exception {
 
+        logger.info("Handling file upload");
         sessionService.createSessionObjects(httpSession, demoFileName);
 
         ArrayList<AlgorithmsInformation> history = sessionService.setHistory(httpSession, demoFileName, multipart);

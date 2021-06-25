@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import java.net.http.HttpRequest;
 
 @Component
+//TODO: wordt niet gebruikt
 public class ClassifierFactory {
     public static WekaClassifier createClassifier(String classifierName, HttpRequest httpRequest){
         switch (classifierName){

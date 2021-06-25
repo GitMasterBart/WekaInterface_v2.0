@@ -89,7 +89,7 @@ public class WekaClassifier {
                 rule = iBk(parameterMap);
                 break;
             default:
-                logger.error("Error: This classifier name is not supported");
+                logger.error("Error: " + parameterMap.get("classifier") + " is not supported");
                 throw new IllegalArgumentException();
         }
         logger.info("Completed " + parameterMap.get("classifier") + " classification");

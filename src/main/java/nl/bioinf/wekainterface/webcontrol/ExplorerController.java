@@ -4,6 +4,8 @@ import nl.bioinf.wekainterface.model.*;
 import nl.bioinf.wekainterface.service.SerializationService;
 import nl.bioinf.wekainterface.service.SerializationServiceUploadedFiles;
 import nl.bioinf.wekainterface.service.SessionService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -37,8 +39,11 @@ public class ExplorerController {
     @Autowired
     private SessionService sessionService;
 
+    private final Logger logger = LoggerFactory.getLogger(ExplorerController.class);
+
     @GetMapping(value = "/workbench/explore")
     public String getExplorePage(Model model, HttpSession httpSession) {
+        logger.info("Serving data explore feature of workbench");
         List<String> filenames = instanceReader.getDataSetNames();
         List<String> classifierNames = wekaClassifier.getClassifierNames();
         model.addAttribute("filenames", filenames);
@@ -53,7 +58,6 @@ public class ExplorerController {
         } catch (NullPointerException e) {
             model.addAttribute("msg", "No History");
             model.addAttribute("uploadedFile", "No uploaded files");
-
         }
         model.addAttribute("uploadedFile", httpSession.getAttribute("UploadedFiles"));
         return "workbench";
