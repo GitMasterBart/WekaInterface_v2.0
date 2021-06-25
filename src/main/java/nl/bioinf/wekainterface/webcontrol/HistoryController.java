@@ -51,7 +51,7 @@ public class HistoryController {
         }catch (FileNotFoundException fileNotFoundException) {
             FileFindService fileFindService = new FileFindService();
             String uploadedFile = fileFindService.findFile(dataset,new File(tempUploadedFilesFolder));
-            instances = fileService.getInstancesFromUloadedDemoFile(uploadedFile);
+            instances = fileService.getInstancesFromUploadedDemoFile(uploadedFile);
 
         }
         labelCounter.setInstances(instances);

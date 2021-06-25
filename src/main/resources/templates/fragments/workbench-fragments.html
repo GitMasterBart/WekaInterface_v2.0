@@ -32,6 +32,7 @@
 
 <div th:fragment="explorer-tab" id="explorer-tab">
   <h4 class="mt-2" th:text="#{explorer}"></h4>
+  <h6 th:if="${fileName}" th:text="${fileName}"></h6>
   <div th:if="${data}">
     <label for="attribute" th:text="#{explorer.attributes}"></label><br>
     <select id="attribute" th:data-map="${data}" th:data-cl="${classLabel}"
@@ -48,6 +49,7 @@
 
 <div th:fragment="classify-tab" id="classify-tab" class="ml-1">
   <h4 class="mt-2" th:text="#{classify}"></h4>
+  <h6 th:if="${fileName}" th:text="${fileName}"></h6>
   <form id="form-shower">
     <label th:text="#{form.classifier.select}"></label> <br>
     <select class="form-select custom-select" id="classifier" name="classifier" onChange="changeForm(this)">
@@ -70,6 +72,7 @@
 
 <div th:fragment="results" id="results-tab">
   <h4 th:text="#{results}"></h4>
+  <h6 th:if="${fileName}" th:text="${fileName}"></h6>
   <p th:unless="${evaluation}" th:text="#{results.message}"></p>
   <div th:if="${evaluation}">
     <button type="button" class="btn btn-outline-secondary my-2" data-toggle="collapse" data-target="#advanced-stats">Advanced Stats</button>

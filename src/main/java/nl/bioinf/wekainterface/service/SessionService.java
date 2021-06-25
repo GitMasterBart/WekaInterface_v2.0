@@ -1,6 +1,8 @@
 package nl.bioinf.wekainterface.service;
 
 import nl.bioinf.wekainterface.model.AlgorithmsInformation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -25,6 +27,8 @@ public class SessionService {
 
     @Autowired
     private FileService fileService;
+
+    private final Logger logger = LoggerFactory.getLogger(SessionService.class);
 
     public void createSessionObjects(HttpSession httpSession, String demoFileName) throws IOException {
         if (httpSession.getAttribute("history") == null) {
@@ -60,8 +64,12 @@ public class SessionService {
             throws IOException {
         Instances instances;
         if (!multipart.isEmpty()){
+            logger.info("File is uploaded: " + multipart.getOriginalFilename());
+            httpSession.setAttribute("fileName", multipart.getOriginalFilename());
             instances = fileService.getInstancesFromMultipart(multipart);
         } else {
+            logger.info("Demo file is chosen: " + demoFileName);
+            httpSession.setAttribute("fileName", demoFileName);
             instances = fileService.getInstancesFromDemoFile(demoFileName);
         }
 
