@@ -5,6 +5,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <title>Klessify</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script></head>
@@ -19,60 +20,62 @@
 </head>
 <body>
 
-<div th:insert="~{fragments/general-fragments :: navbar}"></div>
+<div id="full-page">
+    <div id="main">
+        <div th:insert="~{fragments/general-fragments :: navbar}"></div>
 
-<div id="workbench" class="container pt-3">
-    <h2>Weka Workbench</h2>
-    <div class="border shadow rounded mb-6">
-        <div class="row">
-            <div class="col-3 ml-1">
-                <div th:insert="~{fragments/workbench-fragments :: file-upload-form}"></div>
-                <div th:insert="~{fragments/general-fragments :: #list_fragmentFileUploads}"></div>
-            </div>
-            <div class="col-8">
-                <ul id="myTab" class="nav nav-tabs">
-                    <li class="nav-item">
-                        <a th:unless="${evaluation}" href="#explorer-active" class="nav-link active" th:text="#{explorer}"></a>
-                        <a th:if="${evaluation}" href="#explorer-inactive" class="nav-link" th:text="#{explorer}"></a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#classify" class="nav-link" th:text="#{classify}"></a>
-                    </li>
-                    <li class="nav-item">
-                        <a th:unless="${evaluation}" href="#results-inactive" class="nav-link" th:text="#{results}"></a>
-                        <a th:if="${evaluation}" href="#results-active" class="nav-link active" th:text="#{results}"></a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#history" class="nav-link" th:text="#{history}"></a>
-                    </li>
-                </ul>
-                <div class="tab-content">
-                    <div th:unless="${evaluation}" class="tab-pane fade show active" id="explorer-active" >
-                        <div th:insert="~{fragments/workbench-fragments :: explorer-tab}"></div>
+        <div id="workbench" class="container pt-3">
+            <h2>Weka Workbench</h2>
+            <div class="border shadow rounded mb-6">
+                <div class="row">
+                    <div class="col-3 ml-1">
+                        <div th:insert="~{fragments/workbench-fragments :: file-upload-form}"></div>
+                        <div th:insert="~{fragments/general-fragments :: #list_fragmentFileUploads}"></div>
                     </div>
-                    <div th:if="${evaluation}" class="tab-pane fade" id="explorer-inactive" >
-                        <div th:insert="~{fragments/workbench-fragments :: explorer-tab}"></div>
-                    </div>
+                    <div class="col-8">
+                        <ul id="myTab" class="nav nav-tabs">
+                            <li class="nav-item">
+                                <a th:unless="${evaluation}" href="#explorer-active" class="nav-link active" th:text="#{explorer}"></a>
+                                <a th:if="${evaluation}" href="#explorer-inactive" class="nav-link" th:text="#{explorer}"></a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#classify" class="nav-link" th:text="#{classify}"></a>
+                            </li>
+                            <li class="nav-item">
+                                <a th:unless="${evaluation}" href="#results-inactive" class="nav-link" th:text="#{results}"></a>
+                                <a th:if="${evaluation}" href="#results-active" class="nav-link active" th:text="#{results}"></a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#history" class="nav-link" th:text="#{history}"></a>
+                            </li>
+                        </ul>
+                        <div class="tab-content">
+                            <div th:unless="${evaluation}" class="tab-pane fade show active" id="explorer-active" >
+                                <div th:insert="~{fragments/workbench-fragments :: explorer-tab}"></div>
+                            </div>
+                            <div th:if="${evaluation}" class="tab-pane fade" id="explorer-inactive" >
+                                <div th:insert="~{fragments/workbench-fragments :: explorer-tab}"></div>
+                            </div>
 
-                    <div class="tab-pane fade" id="classify">
-                        <div th:insert="~{fragments/workbench-fragments :: classify-tab}"></div>
-                    </div>
+                            <div class="tab-pane fade" id="classify">
+                                <div th:insert="~{fragments/workbench-fragments :: classify-tab}"></div>
+                            </div>
 
-                    <div th:unless="${evaluation}" class="tab-pane fade" id="results-inactive">
-                        <div th:insert="~{fragments/workbench-fragments :: results}"></div>
-                    </div>
-                    <div th:if="${evaluation}" class="tab-pane fade show active" id="results-active">
-                        <div th:insert="~{fragments/workbench-fragments :: results}"></div>
-                    </div>
+                            <div th:unless="${evaluation}" class="tab-pane fade" id="results-inactive">
+                                <div th:insert="~{fragments/workbench-fragments :: results}"></div>
+                            </div>
+                            <div th:if="${evaluation}" class="tab-pane fade show active" id="results-active">
+                                <div th:insert="~{fragments/workbench-fragments :: results}"></div>
+                            </div>
 
-                    <div class="tab-pane fade" id="history">
-<!--                        <h4 class="mt-2">History</h4>-->
-                        <h5 class="mt-2" th:text="#{history}"></h5>
-                        <div th:insert="~{fragments/general-fragments :: #list_fragmentHistory}"></div>
+                            <div class="tab-pane fade" id="history">
+                                <h5 class="mt-2" th:text="#{history}"></h5>
+                                <div th:insert="~{fragments/general-fragments :: #list_fragmentHistory}"></div>
 
+                            </div>
+                        </div>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
