@@ -1,5 +1,7 @@
 package nl.bioinf.wekainterface.model;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import weka.core.neighboursearch.*;
 
 import java.util.Map;
@@ -11,6 +13,7 @@ import java.util.Map;
 public class Parameters {
     private final String classifier;
     private final Map<String, String> parameters;
+    private final Logger logger = LoggerFactory.getLogger(InstanceReader.class);
 
     public Parameters(Map<String, String> parameters) {
         this.classifier = parameters.get("classifier");
@@ -89,7 +92,8 @@ public class Parameters {
                 nearestNeighbourSearch = new LinearNNSearch();
                 break;
             default:
-                throw new IllegalArgumentException("Error: this algorithm name is not supported");
+                logger.error("Error: " + algorithm + " is not supported");
+                throw new IllegalArgumentException();
         }
         return nearestNeighbourSearch;
     }
