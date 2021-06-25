@@ -21,7 +21,7 @@ import java.util.UUID;
 @Service
 public class SessionService {
     @Value("${tmp.filePath}")
-    private String exampleFilesFolder;
+    private String tmpFolder;
 
     @Autowired
     private FileService fileService;
@@ -34,13 +34,13 @@ public class SessionService {
 
         if (httpSession.getAttribute("uniqueIdHistory") == null) {
             String uniqueId = UUID.randomUUID().toString();
-            File serFile = File.createTempFile(uniqueId, ".ser", new File(exampleFilesFolder));
+            File serFile = File.createTempFile(uniqueId, ".ser", new File(tmpFolder));
             httpSession.setAttribute("uniqueIdHistory", serFile);
         }
 
         if (httpSession.getAttribute("uniqueIdUpload") == null) {
             String uniqueId = UUID.randomUUID().toString();
-            File serFile = File.createTempFile(uniqueId, ".ser", new File(exampleFilesFolder));
+            File serFile = File.createTempFile(uniqueId, ".ser", new File(tmpFolder));
             httpSession.setAttribute("uniqueIdUpload", serFile);
         }
 
@@ -50,7 +50,7 @@ public class SessionService {
         }
 
         if (httpSession.getAttribute("demofile") == null) {
-            String arffFilePath = exampleFilesFolder + '/' + demoFileName;
+            String arffFilePath = tmpFolder + '/' + demoFileName;
             File arffFile = new File(arffFilePath);
             httpSession.setAttribute("demofile", arffFile);
         }
