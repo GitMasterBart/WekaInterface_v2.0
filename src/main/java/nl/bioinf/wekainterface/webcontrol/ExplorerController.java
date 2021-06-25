@@ -67,21 +67,11 @@ public class ExplorerController {
         List<String> keys = new ArrayList<>(parameters.keySet());
         String classifierName = keys.get(0).split("-")[1];
         parameters.put("classifier", classifierName);
-
         sessionService.setClassifierName(httpSession, classifierName);
-
         Instances instances = (Instances)httpSession.getAttribute("instances");
 
-        labelCounter.setInstances(instances);
-        labelCounter.setGroups();
-        labelCounter.countLabels();
-
+        labelCounter.setupLabelCounter(instances, redirect);
         Evaluation evaluation = wekaClassifier.classify(instances, parameters);
-
-        redirect.addFlashAttribute("data", labelCounter.mapToJSON());
-        redirect.addFlashAttribute("attributes", labelCounter.getAttributeArray());
-        redirect.addFlashAttribute("classLabel", labelCounter.getClassLabel());
-        labelCounter.resetLabelCounter();
         redirect.addFlashAttribute("evaluation", evaluation);
         return "redirect:/workbench";
     }

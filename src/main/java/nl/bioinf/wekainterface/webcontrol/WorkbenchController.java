@@ -41,6 +41,7 @@ public class WorkbenchController {
     @Autowired
     private SessionService sessionService;
 
+
     @GetMapping(value = "/workbench")
     public String getWorkbench(Model model, HttpSession httpSession, RedirectAttributes redirectAttributes) {
         List<String> filenames = instanceReader.getDataSetNames();
@@ -78,15 +79,8 @@ public class WorkbenchController {
 
         Instances instances = sessionService.setInstances(httpSession, multipart, demoFileName);
 
-        labelCounter.setInstances(instances);
-        labelCounter.setGroups();
-        labelCounter.countLabels();
-
-        redirect.addFlashAttribute("data", labelCounter.mapToJSON());
-        redirect.addFlashAttribute("attributes", labelCounter.getAttributeArray());
-        redirect.addFlashAttribute("classLabel", labelCounter.getClassLabel());
+        labelCounter.setupLabelCounter(instances, redirect);
         redirect.addFlashAttribute("instances", instances);
-        labelCounter.resetLabelCounter();
 
         return "redirect:/workbench/explore";
     }
