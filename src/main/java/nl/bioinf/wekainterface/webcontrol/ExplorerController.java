@@ -73,9 +73,7 @@ public class ExplorerController {
         List<String> keys = new ArrayList<>(parameters.keySet());
         String classifierName = keys.get(0).split("-")[1];
         parameters.put("classifier", classifierName);
-
         sessionService.setClassifierName(httpSession, classifierName);
-
         Instances instances = (Instances)httpSession.getAttribute("instances");
 
         labelCounter.setupLabelCounter(instances, redirect);

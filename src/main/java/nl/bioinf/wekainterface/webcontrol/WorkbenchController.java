@@ -45,6 +45,7 @@ public class WorkbenchController {
 
     private final Logger logger = LoggerFactory.getLogger(WorkbenchController.class);
 
+
     @GetMapping(value = "/workbench")
     public String getWorkbench(Model model, HttpSession httpSession, RedirectAttributes redirectAttributes) {
         logger.info("Serving workbench..");

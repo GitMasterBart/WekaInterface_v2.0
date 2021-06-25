@@ -20,7 +20,7 @@ import java.util.List;
 @Component
 public class LabelCounter {
 
-    private Logger logger = LoggerFactory.getLogger(LabelCounter.class);
+    private final Logger logger = LoggerFactory.getLogger(LabelCounter.class);
     private Instances instances;
     private List<String> attributeArray = new ArrayList<>();
     private Map<String, AttributeMap> groups = new HashMap<>();
@@ -37,7 +37,6 @@ public class LabelCounter {
      * a second Map as value. This Map holds each attribute as key and a third Map as its value. This third Map holds
      * the labels for each attribute as its key and the occurrence of those labels as its value. The occurrence is set
      * at 0.
-     * TODO if the class attribute is numeric, discretize the group keys as an interval, just like in setLabelsNumeric()
      * TODO This class can only handle datasets with numeric, nominal or Date class attributes. A String class attribute will cause an exception. This should be handled in a better way.
      */
     public void setGroups(){
@@ -129,7 +128,6 @@ public class LabelCounter {
     /**
      * For every attribute in the dataset creates an entry in a Map with the attribute name as the key and a Map as the
      * value for this key. This Map holds each attribute label as its key and the occurrence of this label as its value.
-     * TODO values that are actually dates are parsed as numeric values, expand the method so that it parses dates correctly.
      * @return Map<Attribute name, Map<Attribute label, Label occurrence>>
      */
     private AttributeMap setAttributes(){
@@ -159,17 +157,22 @@ public class LabelCounter {
     /**
      * For the given attribute/attribute index, add each label to the Map and set its value to 0.
      * @param attributeIndex index of the attribute
-     * @param attributeName attribute name
+     * @param attribute attribute name
      * @param attributeMap Map<Attribute name, Map<Attribute label, Label occurrence>> where attribute labels need to be added
      */
-    private void setLabelsNominal(int attributeIndex, String attributeName, AttributeMap attributeMap){
-        LabelMap labelMap = new LabelMap();
-        int numValues = this.instances.attribute(attributeIndex).numValues();
-        for (int valueIndex = 0;valueIndex < numValues; valueIndex++){
-            String label = this.instances.attribute(attributeIndex).value(valueIndex);
-            labelMap.addLabel(label);
+    private void setLabelsNominal(int attributeIndex, String attribute, AttributeMap attributeMap){
+        if (instances.attributeStats(attributeIndex).distinctCount == 0){
+            logger.warn("Attribute " + attribute + " has no values");
         }
-        attributeMap.addAttribute(attributeName, labelMap);
+        else {
+            LabelMap labelMap = new LabelMap();
+            int numValues = this.instances.attribute(attributeIndex).numValues();
+            for (int valueIndex = 0;valueIndex < numValues; valueIndex++){
+                String label = this.instances.attribute(attributeIndex).value(valueIndex);
+                labelMap.addLabel(label);
+            }
+            attributeMap.addAttribute(attribute, labelMap);
+        }
     }
 
     /**
@@ -182,16 +185,20 @@ public class LabelCounter {
      * @param attributeMap Map<Attribute name, Map< [X - Y] Interval, Label occurrence>>
      */
     private void setLabelsNumeric(int attributeIndex, String attribute, AttributeMap attributeMap){
-        LabelMap labelMap = new LabelMap();
-        Stats stats = this.instances.attributeStats(attributeIndex).numericStats;
+        if (instances.attributeStats(attributeIndex).distinctCount == 0){
+            logger.warn("Attribute " + attribute + " has no values");
+        }else {
+            LabelMap labelMap = new LabelMap();
+            Stats stats = this.instances.attributeStats(attributeIndex).numericStats;
+            IntervalStats intervalStats = setIntervalStats(stats);
 
-        IntervalStats intervalStats = setIntervalStats(stats);
-
-        for (int groupIndex = 0; groupIndex < intervalStats.getNumGroups(); groupIndex++){
-            String intervalLabel = getIntervalLabel(stats, intervalStats, groupIndex);
-            labelMap.addLabel(intervalLabel);
+            for (int groupIndex = 0; groupIndex < intervalStats.getNumGroups(); groupIndex++){
+                String intervalLabel = getIntervalLabel(stats, intervalStats, groupIndex);
+                labelMap.addLabel(intervalLabel);
+            }
+            attributeMap.addAttribute(attribute, labelMap);
         }
-        attributeMap.addAttribute(attribute, labelMap);
+
     }
 
     private String getIntervalLabel(Stats stats, IntervalStats intervalStats, int groupIndex) {
@@ -271,20 +278,21 @@ public class LabelCounter {
     }
 
     /**
-     * given a stringValue, increment the occurrence of that
-     * TODO add a possibility to also count the occurrence of a date. That is currently not implemented.
+     * given a stringValue, increment the occurrence of that value in the labelMap
      * @param stringValue instance value of index 'valueIndex'
      * @param valueIndex index of the attribute of which the value must be incremented
      * @param attributeMap the attributeMap that holds the labels
      */
     private void incrementLabel(String stringValue, int valueIndex, AttributeMap attributeMap) {
-        String attribute = attributeArray.get(valueIndex);
-        LabelMap labelMap = attributeMap.getLabelMap(attribute);
-        try{//If stringValue is numeric
-            double value = Double.parseDouble(stringValue);
-            countNumeric(value, labelMap);
-        }catch (NumberFormatException e){//Not numeric
-            countNominal(stringValue, labelMap);
+        if (instances.attributeStats(valueIndex).distinctCount != 0){
+            String attribute = attributeArray.get(valueIndex);
+            LabelMap labelMap = attributeMap.getLabelMap(attribute);
+            try{//If stringValue is numeric
+                double value = Double.parseDouble(stringValue);
+                countNumeric(value, labelMap);
+            }catch (NumberFormatException e){//Not numeric
+                countNominal(stringValue, labelMap);
+            }
         }
     }
 
@@ -396,8 +404,13 @@ public class LabelCounter {
         logger.info("Setting up LabelCounter for the Controller");
         LabelCounter labelCounter = new LabelCounter();
         labelCounter.setInstances(instances);
-        labelCounter.setGroups();
-        labelCounter.countLabels();
+        if (labelCounter.isOnlyTwoAttributes()){
+            labelCounter.setGroupsTwoAttributes();
+            redirect.addFlashAttribute("hasTwoAttributes", labelCounter.isOnlyTwoAttributes());
+        }else {
+            labelCounter.setGroups();
+            labelCounter.countLabels();
+        }
         redirect.addFlashAttribute("data", labelCounter.mapToJSON());
         redirect.addFlashAttribute("attributes", labelCounter.getAttributeArray());
         redirect.addFlashAttribute("classLabel", labelCounter.getClassLabel());
