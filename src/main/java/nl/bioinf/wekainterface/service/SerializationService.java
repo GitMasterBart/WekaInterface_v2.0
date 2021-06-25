@@ -39,9 +39,6 @@ public class SerializationService {
             logger.info("Deserializing file: " + uniqueID.getName());
             FileInputStream fileIn = new FileInputStream(uniqueID);
             ObjectInputStream objectInputStream = new ObjectInputStream(fileIn);
-//        AlgorithmsInformation algorithmsInformation;
-//        AlgorithmsInformation[] algorithmsInformations = new AlgorithmsInformation[5];
-//        ArrayList<AlgorithmsInformation> algorithmsInformationArrayList = new ArrayList<>();
             ArrayList<AlgorithmsInformation> algorithmsInformationArrayList = (ArrayList<AlgorithmsInformation>)objectInputStream.readObject();
             objectInputStream.close();
             fileIn.close();

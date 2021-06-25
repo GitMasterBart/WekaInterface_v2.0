@@ -1,13 +1,10 @@
 package nl.bioinf.wekainterface.model;
 
-import nl.bioinf.wekainterface.service.FileService;
-import nl.bioinf.wekainterface.webcontrol.LoggingController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import weka.classifiers.Classifier;
 import weka.classifiers.bayes.NaiveBayes;
-import weka.classifiers.evaluation.ConfusionMatrix;
 import weka.classifiers.evaluation.Evaluation;
 import weka.classifiers.lazy.IBk;
 import weka.classifiers.rules.OneR;
@@ -15,9 +12,6 @@ import weka.classifiers.rules.ZeroR;
 import weka.classifiers.trees.J48;
 import weka.core.Instances;
 
-import javax.xml.crypto.Data;
-import java.io.File;
-import java.io.IOException;
 import java.util.*;
 
 /**
@@ -27,40 +21,6 @@ import java.util.*;
 @Component
 public class WekaClassifier {
     private final Logger logger = LoggerFactory.getLogger(WekaClassifier.class);
-
-    /**
-     * TODO: Zonder parameters, deze moet er nog uit gehaald worden wanneer hij nergens meer wordt gebruikt.
-     * This method classifies instances with a 10-fold cross validation.
-     * @param instances instances to be classified.
-     * @param classifier name of the classifier.
-     * @return String with results of 10-fold cross validation.
-     * @throws Exception
-     */
-    public Evaluation test(Instances instances, String classifier) throws Exception {
-        Classifier rule;
-        switch (classifier){
-            case "ZeroR":
-                rule = new ZeroR();
-                break;
-            case "OneR":
-                rule = new OneR();
-                break;
-            case "NaiveBayes":
-                rule = new NaiveBayes();
-                break;
-            case "J48":
-                rule = new J48();
-                break;
-            case "IBK":
-                rule = new IBk();
-                break;
-            default:
-                throw new IllegalArgumentException("Error: This classifier name is not supported");
-        }
-        Evaluation evaluation = new Evaluation(instances);
-        evaluation.crossValidateModel(rule, instances, 10, new Random(1));
-        return evaluation;
-    }
 
     /**
      * This method classifies instances with a 10-fold cross validation, and with the given parameters.
